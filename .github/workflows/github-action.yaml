@@ -3,10 +3,12 @@ on: push
 jobs:
   pipeline:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x']
     steps:
-      - run: echo "npm install"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - run: npm ci
-      - run: echo "ESLint" 
       - run: npx eslint
-      - run: echo "Unit test"
       - run: npm test
