@@ -1,0 +1,6 @@
+services:
+  lab0:
+    container_name: lab0
+    image: lab0
+    build: .
+    

@@ -1,0 +1,10 @@
+{
+  "name":"lab0",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
