@@ -6,7 +6,7 @@ describe('Index.js', () => {
     })
 
     test('Returns 4 when adding 2+2', () => {
-        expect(addition(2, 2)).toBe(5)
+        expect(addition(2, 2)).toBe(4)
     })
 })
     
