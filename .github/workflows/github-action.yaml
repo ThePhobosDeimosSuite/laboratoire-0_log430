@@ -1,0 +1,11 @@
+name: CI
+on: push
+jobs:
+  pipeline:
+    steps:
+      - run: echo "npm install"
+      - run: npm ci
+      - run: echo "ESLint" 
+      - run: npx eslint
+      - run: echo "Unit test"
+      - run: npm test

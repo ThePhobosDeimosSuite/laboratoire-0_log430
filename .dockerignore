@@ -1,5 +1,6 @@
 **/.dockerignore
 **/.gitignore
+**/.github
 **/.vscode
 **/docker-compose*
 **/compose*

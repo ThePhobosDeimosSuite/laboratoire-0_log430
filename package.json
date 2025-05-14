@@ -1,10 +1,12 @@
 {
-  "name":"lab0",
+  "name": "lab0",
   "scripts": {
     "test": "jest",
     "start": "node src/index.js"
   },
   "devDependencies": {
+    "eslint": "^9.26.0",
+    "globals": "^16.1.0",
     "jest": "^29.7.0"
   }
 }
