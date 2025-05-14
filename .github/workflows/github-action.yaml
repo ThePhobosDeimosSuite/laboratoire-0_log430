@@ -11,16 +11,12 @@ jobs:
       - run: npm ci
       - run: npx eslint
       - run: npm test
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
       - 
         name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: Build and push
         uses: docker/build-push-action@v6
