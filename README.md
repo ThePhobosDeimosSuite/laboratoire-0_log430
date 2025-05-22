@@ -35,7 +35,8 @@ Here are the main routes for the REST API
 
 - `/product` : used to create a new product as such: 
     ```json
-    {
+    POST /product
+    { 
         "data": {
             "name":"Chou",
             "stock": 40,

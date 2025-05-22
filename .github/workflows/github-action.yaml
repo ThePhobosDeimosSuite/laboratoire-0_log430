@@ -3,6 +3,14 @@ on: push
 jobs:
   Pipeline:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        container_name: postgres_db
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: lab1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

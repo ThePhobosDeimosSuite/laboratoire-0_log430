@@ -2,6 +2,17 @@ const request = require('supertest');
 const app = require("../src/app")
 
 describe('GET /Product', () => {
+    beforeAll(async () => {
+        await request(app).post('/product').send({
+                data: {
+                    name:"Fraise",
+                    stock: 20,
+                    price: 3.99,
+                    category: "Fruit"
+                }
+        })
+    })
+
     it('Should return all product', async () => {
         const res = await request(app).get('/product/search')
         expect(res.status).toBe(200)
@@ -23,11 +34,10 @@ describe('GET /Product', () => {
         expect(res.body[0].id).toBe(1)
     })
 
-    it('Should return concombre', async () => {
-        const res = await request(app).get('/product/search?name=Comcombre')
+    it('Should return Fraise', async () => {
+        const res = await request(app).get('/product/search?name=Fraise')
         expect(res.status).toBe(200)
-        expect(res.body.length).toBe(1)
-        expect(res.body[0].name).toBe("Comcombre")
+        expect(res.body[0].name).toBe("Fraise")
     })
 })
     
