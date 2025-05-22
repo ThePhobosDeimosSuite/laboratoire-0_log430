@@ -1,0 +1,6 @@
+@startuml update_sales
+actor Employee
+
+Employee -> Store : updateSales(sales:Sales)
+Store --> Employee : Done
+@enduml

@@ -1,0 +1,35 @@
+@startuml class
+class Employee {
+    + searchForProduct(id:Number): Product
+    + searchForProduct(name:String): Product
+    + searchForProduct(category:String): Product
+    + addSales(sales: Sales): Void
+    + updateSales(sales: Sales): Void    
+}
+
+class Product {
+    id: Number
+    name: String
+    category: String
+    price: Number
+    stock: Number
+}
+
+class Sales {
+    productSales: ProductSales[]
+    + getPriceTotal(): Number
+}
+
+class ProductSales {
+    product: Product
+    amount: Number
+}
+
+Employee --> Sales
+
+Employee --> Product
+
+Sales "1" o-- "*" ProductSales
+
+ProductSales "1" o-- "1" Product
+@enduml

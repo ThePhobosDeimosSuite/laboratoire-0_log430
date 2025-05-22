@@ -1,6 +1,20 @@
 services:
-  lab0:
-    container_name: lab0
-    image: lab0
-    build: .
+  lab1:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: lab1
+    environment:
+      DATABASE_URL: postgresql://postgres:123@localhost:5432/lab1
+    image: lab1
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: lab1
+    ports:
+      - "5432:5432"
     

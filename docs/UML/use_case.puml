@@ -1,0 +1,12 @@
+@startuml use_case
+actor Employee
+
+usecase "Search Product" as UC1
+usecase "Register Sale" as UC2
+usecase "Update Sales" as UC3
+
+
+Employee --> UC1
+Employee --> UC2
+Employee --> UC3
+@enduml

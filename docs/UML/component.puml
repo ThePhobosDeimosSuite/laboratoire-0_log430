@@ -1,0 +1,10 @@
+@startuml component
+
+database "Database (PostgreSQL)" as Database
+
+package "Backend Server (Express App)" {
+    [REST API] --> [Prisma ORM]
+    [Prisma ORM] --> [Database]
+}
+
+@enduml

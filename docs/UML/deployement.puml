@@ -1,0 +1,13 @@
+@startuml deployement
+node Postman
+
+node "Application Server\n(Node.js + Express)" as Server {
+    component "API Server"
+    database "Database (PostgreSQL)" as DB
+    component "Prisma"
+}
+
+
+Postman --> Server : HTTP (REST API)
+Server --> DB : SQL via Prisma
+@enduml

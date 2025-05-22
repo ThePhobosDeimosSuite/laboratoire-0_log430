@@ -1,0 +1,7 @@
+@startuml search_for_product
+actor Employee
+
+Employee -> Store : searchForProduct()
+Store --> Employee : Product
+
+@enduml
