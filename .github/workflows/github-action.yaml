@@ -23,8 +23,8 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-        run: npx prisma generate
-        run: npx prisma db push
+      - run: npx prisma generate
+      - run: npx prisma db push
       - run: npx eslint
       - run: npm test
       - 
