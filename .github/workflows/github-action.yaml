@@ -6,6 +6,8 @@ jobs:
     services:
       postgres:
         image: postgres
+        ports:
+          - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123
@@ -15,6 +17,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     env: 
       DATABASE_URL: postgresql://postgres:123@localhost:5432/lab1
     steps:
