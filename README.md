@@ -26,7 +26,7 @@ This project is split into three folders:
 This repo has a pipeline with 4 differents steps:
 
 1. Check syntaxe with ESLint
-2. Run unit tests
+2. Create PostgreSQL database and run unit tests
 3. Create Docker image
 4. Push Docker image to DockerHub under the repository *pebrassard/lab0*
 
