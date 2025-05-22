@@ -6,8 +6,6 @@ jobs:
     services:
       postgres:
         image: postgres
-        port:
-          - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123
