@@ -15,6 +15,7 @@ describe('GET /Product', () => {
 
     it('Should return all product', async () => {
         const res = await request(app).get('/product/search')
+        console.log(res)
         expect(res.status).toBe(200)
         expect(res.body[0]).toHaveProperty('id')
         expect(res.body[0]).toHaveProperty('name')
