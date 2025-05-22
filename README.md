@@ -5,12 +5,12 @@ A **node.js** and **Express.js** app that manages a small shop
 #### Running the project
 - Clone repo
 - Make sure node.js is installed locally
-- Create a Postgresql database and add the url to `prisma/schema.prisma`
+- Create a Postgresql database and add the url to `.env`
 - Run `npm install`
 - Run `npm run dev`
 
-#### Launching using docker compose
-- Run `docker compose up`
+#### Running using docker compose
+- Run `docker compose up --build`
 
 #### Testing the project
 - Run `npm test`
@@ -32,6 +32,18 @@ This repo has a pipeline with 4 differents steps:
 
 ## Routes
 Here are the main routes for the REST API
+
+- `/product` : used to create a new product as such: 
+    ```json
+    {
+        "data": {
+            "name":"Chou",
+            "stock": 40,
+            "price": 3.99,
+            "category": "Légume"
+        }
+    }
+    ```
 
 - `/product/search` : used to search product and the inventory. You can filter out a search using the query params: 
     

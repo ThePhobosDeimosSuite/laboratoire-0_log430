@@ -11,7 +11,7 @@ app.use(bodyParser.json())
 
 
 app.post("/product", async (req: Request, res: Response) => {
-    const data = req.body
+    const { data } = req.body
     await prisma.product.create({
         data 
     })

@@ -4,6 +4,6 @@ COPY ["package*.json", "./"]
 RUN npm install
 RUN npm prune
 COPY . .
-RUN npm run build
 RUN npx prisma generate
+RUN npm run build
 CMD ["npm", "start"]
