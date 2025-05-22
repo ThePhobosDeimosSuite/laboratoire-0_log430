@@ -6,7 +6,6 @@ jobs:
     services:
       postgres:
         image: postgres
-        container_name: postgres_db
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123
@@ -30,4 +29,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: pebrassard/lab0:latest
+          tags: pebrassard/lab1:latest
