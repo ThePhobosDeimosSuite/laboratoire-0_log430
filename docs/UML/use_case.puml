@@ -3,10 +3,12 @@ actor Employee
 
 usecase "Search Product" as UC1
 usecase "Register Sale" as UC2
-usecase "Update Sales" as UC3
+usecase "Cancel Sales" as UC3
+usecase "Get Stocks" as UC4
 
 
 Employee --> UC1
 Employee --> UC2
 Employee --> UC3
+Employee --> UC4
 @enduml

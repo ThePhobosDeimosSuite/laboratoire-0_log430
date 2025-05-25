@@ -1,7 +1,7 @@
 @startuml search_for_product
 actor Employee
 
-Employee -> Store : searchForProduct()
+Employee -> Store : searchForProduct(name: String, id: Number, category: String)
 Store --> Employee : Product
 
 @enduml

@@ -28,7 +28,7 @@ This repo has a pipeline with 4 differents steps:
 1. Check syntaxe with ESLint
 2. Create PostgreSQL database and run unit tests
 3. Create Docker image
-4. Push Docker image to DockerHub under the repository *pebrassard/lab0*
+4. Push Docker image to DockerHub under the repository *pebrassard/lab1*
 
 ## Routes
 Here are the main routes for the REST API
@@ -52,7 +52,7 @@ Here are the main routes for the REST API
     - `?category=Fruit`
     - `?id=2`
 
-- `/sales` : create, get and update sales. Here's an example on how to create a sale: 
+- `/sales` : create and get sales. Here's an example on how to create a sale: 
     ```json
     POST /sales
     {
@@ -69,13 +69,12 @@ Here are the main routes for the REST API
             ]
     }
     ```
+- `/sales/[id]/cancel` :
     A sale can also be cancelled as such : 
     ```json
-    POST /sales/:id
+    POST /sales/:id/cancel
     {
-        "data": 
-        {
-            "isCancelled":true
-        }
     }
     ```
+
+- `/stocks` : Get all products with stocks

@@ -1,13 +1,8 @@
 @startuml deployement
-node Postman
 
-node "Application Server\n(Node.js + Express)" as Server {
-    component "API Server"
-    database "Database (PostgreSQL)" as DB
-    component "Prisma"
-}
+database "Server (PostgreSQL)" as Server
 
+component "Client (Node.js)" as Client
 
-Postman --> Server : HTTP (REST API)
-Server --> DB : SQL via Prisma
+    [Client] -- [Server]
 @enduml

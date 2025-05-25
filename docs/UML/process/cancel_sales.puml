@@ -1,0 +1,6 @@
+@startuml cancel_sales
+actor Employee
+
+Employee -> Store : cancelSales(id:Number)
+Store --> Employee : Done
+@enduml

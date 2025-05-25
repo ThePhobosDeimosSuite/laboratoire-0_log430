@@ -1,10 +1,9 @@
 @startuml class
 class Employee {
-    + searchForProduct(id:Number): Product
-    + searchForProduct(name:String): Product
-    + searchForProduct(category:String): Product
+    + searchForProduct(id:Number, name:String, category:String): Product
     + addSales(sales: Sales): Void
-    + updateSales(sales: Sales): Void    
+    + cancelSales(id: Number): Void    
+    + getStocks(): Void
 }
 
 class Product {

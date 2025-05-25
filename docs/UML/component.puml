@@ -1,10 +1,18 @@
 @startuml component
 
-database "Database (PostgreSQL)" as Database
-
-package "Backend Server (Express App)" {
-    [REST API] --> [Prisma ORM]
-    [Prisma ORM] --> [Database]
+package "Client" {
+    component app.ts
+    component server.ts
 }
+
+package "Prisma" {
+    component schema.prisma
+}
+
+database "Server (PostgreSQL)" as Server
+
+app.ts ..> schema.prisma
+schema.prisma ..> Server
+
 
 @enduml

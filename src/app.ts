@@ -95,17 +95,29 @@ app.post("/sales", async (req: Request, res: Response) => {
     res.status(201).send()
 })
 
-app.patch("/sales/:id", async (req: Request, res: Response) => {
+app.post("/sales/:id/cancel", async (req: Request, res: Response) => {
     const id = Number(req.params.id)
-    const { data } = req.body
 
     await prisma.sales.update({
         where: {
             id
         }, 
-        data
+        data: {
+            isCancelled: true
+        }
     })
     res.send()
+})
+
+app.get("/stocks", async (req: Request, res: Response) => {
+    const response = await prisma.product.findMany({
+        select: {
+            name: true,
+            stock: true
+        }
+    })
+
+    res.send(response)
 })
 
 module.exports = app
