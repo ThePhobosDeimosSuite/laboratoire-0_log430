@@ -7,7 +7,8 @@ A **node.js** and **Express.js** app that manages a small shop
 - Make sure node.js is installed locally
 - Create a Postgresql database and add the url to `.env`
 - Run `npm install`
-- Run `npm run dev`
+- Run `npm run build`
+- Run `npm run start`
 
 #### Running using docker compose
 - Run `docker compose up --build`
@@ -30,7 +31,7 @@ This repo has a pipeline with 4 differents steps:
 3. Create Docker image
 4. Push Docker image to DockerHub under the repository *pebrassard/lab1*
 
-## Routes
+## Routes [[DEPRECATED]]
 Here are the main routes for the REST API
 
 - `/product` : used to create a new product as such: 

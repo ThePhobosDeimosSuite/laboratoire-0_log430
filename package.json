@@ -3,8 +3,9 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts"
+    "start": "node dist/app.js",
+    "api": "node dist/api/server.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/view/menu.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.2",
@@ -18,9 +19,11 @@
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
+    "@types/terminal-kit": "^2.5.7",
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
+    "terminal-kit": "^3.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

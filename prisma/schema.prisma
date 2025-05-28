@@ -17,9 +17,17 @@ model Product {
   id            Int     @id @default(autoincrement())
   name          String
   price         Float
-  stock         Int
   category      String
-  ProductSales  ProductSales[]
+  productSales  ProductSales[]
+  stock         Stock[]
+}
+
+model Stock {
+  id          Int     @id @default(autoincrement())
+  productId   Int
+  product     Product @relation(fields: [productId], references: [id])
+  amount      Int
+  shopId      Int
 }
 
 model ProductSales {
@@ -36,5 +44,6 @@ model Sales {
   productSales    ProductSales[]
   date            DateTime        @default(now())
   isCancelled     Boolean         @default(false)
+  shopId          Int
 }
 
