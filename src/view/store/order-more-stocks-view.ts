@@ -1,6 +1,7 @@
-import { addStocks, searchProduct } from "../../controller/controller"
+import { addOrder, getStocks, searchProduct } from "../../controller/controller"
 import { askNumber, askString } from "../../utils/input-utils"
 import storeView from "./store-view"
+import appConst from "../../utils/app-const"
 
 var term = require( 'terminal-kit' ).terminal
 
@@ -14,11 +15,17 @@ export default async (shopId: number) => {
     term.singleColumnMenu(menu,  { cancelable: true }, async (error, response) => {
         const selectedProduct = products[response.selectedIndex]
 
+        const stocksInSupplyCenter = await getStocks(appConst.supplyCenterShopId, selectedProduct.id)
         term.clear()
+        term.red(`The supply center has (${stocksInSupplyCenter[0]?.amount ?? 0}) ${selectedProduct.name}\n`)
         const amount = await askNumber(`How many ${selectedProduct.name} do you want to order?: `)
 
-        addStocks(selectedProduct.id, amount, -1) // -1 means the supply-center
+        addOrder(selectedProduct.id, amount, shopId)
 
-        storeView(shopId)
+        term.clear()
+        term.green("Order placed!")
+        term.once('key', ()=> {
+            storeView(shopId)
+        })
     })
 }

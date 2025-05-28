@@ -20,14 +20,25 @@ model Product {
   category      String
   productSales  ProductSales[]
   stock         Stock[]
+  order         Order[]
 }
 
-model Stock {
-  id          Int     @id @default(autoincrement())
+model Order {
   productId   Int
   product     Product @relation(fields: [productId], references: [id])
   amount      Int
   shopId      Int
+
+  @@id([productId, shopId])
+}
+
+model Stock {
+  productId   Int
+  product     Product @relation(fields: [productId], references: [id])
+  amount      Int
+  shopId      Int
+
+  @@id([productId, shopId])
 }
 
 model ProductSales {

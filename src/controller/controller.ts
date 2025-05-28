@@ -31,17 +31,7 @@ export async function searchProduct(id: number | undefined, name: string | undef
 export async function createSales(productSales: {productId: number, amount: number}[], shopId: number) {
     // Reduce the stock after a sale
     for(const product of productSales) {
-        await prisma.stock.updateMany({
-            where: {
-                shopId,
-                productId: product.productId
-            },
-            data: {
-                amount: {
-                    decrement: product.amount
-                }
-            }
-        })
+        await decrementStocks(product.productId, product.amount, shopId)
     }
     
     await prisma.sales.create({
@@ -91,20 +81,78 @@ export async function cancelSales(id: number, shopId: number) {
     })
 }
 
-export async function getStocks(shopId:number) {
+export async function getStocks(shopId:number, productId:number | undefined = undefined) {
     return await prisma.stock.findMany({
         where: {
+            productId,
             shopId
+        }, 
+        include: {
+            product:true
         }
     })
 }
 
-export async function addStocks(productId:number, amount: number, shopId:number){
-    await prisma.stock.create({
-        data: {
+export async function addStocks(productId:number, amount: number, shopId:number) {
+    await prisma.stock.upsert({
+        where: {
+            productId_shopId: {
+                productId,
+                shopId
+            }
+        },
+        update: { // Increase stock if row already exists
+            amount: {
+                increment: amount
+            }
+        },
+        create: { // Create row if doesn't exist
             productId,
             amount,
             shopId
         }
     })
 }
+
+export async function decrementStocks(productId: number, amount: number, shopId: number) {
+    await prisma.stock.updateMany({
+        where: {
+            shopId,
+            productId
+        },
+        data: {
+            amount: {
+                decrement: amount
+            }
+        }
+    })
+}
+
+export async function addOrder(productId: number, amount: number, shopId: number) {
+    await prisma.order.create({
+        data: {
+            amount,
+            shopId,
+            productId
+        }
+    })
+}
+
+export async function getOrder() {
+    return await prisma.order.findMany({
+        include: {
+            product: true
+        }
+    })
+} 
+
+export async function removeOrder(productId: number, shopId: number) {
+    return await prisma.order.delete({
+        where: {
+            productId_shopId: {
+                productId,
+                shopId
+            } 
+        }
+    })
+} 
