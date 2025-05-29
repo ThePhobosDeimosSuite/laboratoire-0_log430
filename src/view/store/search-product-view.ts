@@ -1,7 +1,7 @@
 var term = require( 'terminal-kit' ).terminal
 import { searchProduct } from '../../controller/controller'
 import businessView from './store-view'
-import {askInput, askNumber, askString} from '../../utils/input-utils'
+import { askString} from '../../utils/input-utils'
 import { colorizeJSON } from '../../utils/output-utils'
 
 

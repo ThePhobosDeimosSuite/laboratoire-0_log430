@@ -1,4 +1,4 @@
-import { addStocks } from "../../controller/controller"
+import { addStocks, searchProduct } from "../../controller/controller"
 import appConst from "../../utils/app-const"
 import { askNumber } from "../../utils/input-utils"
 import supplyCenterView from "./supply-center-view"
@@ -8,10 +8,19 @@ var term = require( 'terminal-kit' ).terminal
 
 export default async () => {
     term.clear()
-    const productId = await askNumber("productId: ")
-    const amount = await askNumber("\nAmount: ")
+    const products = await searchProduct(undefined, undefined, undefined, appConst.supplyCenterShopId)
+    const menu = products.map(p => `${p.name} (Stock: ${p.stock[0]?.amount ?? 0})`)
 
-    await addStocks(productId, amount, appConst.supplyCenterShopId)
-
-    supplyCenterView()
+    term.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
+        if (response.canceled) {
+            supplyCenterView()
+        } else {
+            const productId = products[response.selectedIndex].id
+            const amount = await askNumber("\nAmount: ")
+        
+            await addStocks(productId, amount, appConst.supplyCenterShopId)
+        
+            supplyCenterView()
+        }
+    })
 }

@@ -1,6 +1,7 @@
 import menuView from "../menu-view"
 import addProductView from "./add-product-view"
-import reportView from "./report-view"
+import dashboardView from "./dashboard-view"
+import salesReportView from "./sales-report-view"
 import updateProductView from "./update-product-view"
 
 var term = require( 'terminal-kit' ).terminal
@@ -25,7 +26,10 @@ export default () => {
                 term.processExit()
             break
             case "1":
-                reportView()
+                salesReportView()
+            break
+            case "2":
+                dashboardView()
             break
             case "3":
                 addProductView() 
