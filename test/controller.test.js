@@ -40,7 +40,6 @@ describe('Sales', () => {
 
 describe('Orders', () => {
     beforeAll(async () => {
-        await removeOrder(1, 5)
         await addOrder(1, 5, 5)
     })
 
