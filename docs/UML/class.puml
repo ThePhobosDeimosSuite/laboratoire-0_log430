@@ -16,7 +16,21 @@ class Product {
 
 class Sales {
     productSales: ProductSales[]
+    date: DateTime
+    isCancelled: Boolean
     + getPriceTotal(): Number
+}
+
+class Stock {
+    product: Product
+    amount: Number
+    storeId: Number
+}
+
+class Order {
+    product: Product
+    amount: Number
+    storeId: Number
 }
 
 class ProductSales {
@@ -28,7 +42,15 @@ Employee --> Sales
 
 Employee --> Product
 
+Employee --> Stock
+
+Employee --> Order
+
 Sales "1" o-- "*" ProductSales
 
-ProductSales "1" o-- "1" Product
+ProductSales "*" o-- "1" Product
+
+Stock "*" o-- "1" Product
+
+Order "*" o-- "1" Product
 @enduml
