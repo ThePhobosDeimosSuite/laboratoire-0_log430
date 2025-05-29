@@ -47,6 +47,9 @@ export default (shopId: number) => {
             case "7": 
                 menuView()
             break
+            default:
+                menuView()
+            break
         }
     })
 }

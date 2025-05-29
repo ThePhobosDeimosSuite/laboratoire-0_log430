@@ -14,16 +14,24 @@ export default async (shopId: number) => {
         const productId = await askNumber("Enter product id:")
         const amount = await askNumber("\nEnter quantity sold:")
 
-        productSales.push({
-            productId,
-            amount
-        })
-
-        const res = await askInput("\n Add more product ? (yes/no):")
-        if(res == "yes") {
-            await createProductSales()
+        if (productId == 0 || amount == 0) {
+            term.red("Invalid input!")
+            term.once('key', () => {
+                businessView(shopId)
+                return
+            })
         } else {
-            pushSales()
+            productSales.push({
+                productId,
+                amount
+            })
+
+            const res = await askInput("\n Add more product ? (yes/no):")
+            if (res == "yes") {
+                await createProductSales()
+            } else {
+                pushSales()
+            }
         }
     }
 

@@ -11,7 +11,23 @@ export async function addProduct(name: string, price: number, category: string) 
     })
 }
 
-export async function searchProduct(id: number | undefined, name: string | undefined, category: string | undefined, shopId: number) {
+export async function updateProduct(id: number, name: string, price: number, category: string) {
+    await prisma.product.update({
+        where: {
+            id
+        },
+        data: {
+            name,
+            price,
+            category
+        }
+    })
+}
+
+export async function searchProduct(id: number | undefined = undefined, 
+    name: string | undefined = undefined, 
+    category: string | undefined = undefined, 
+    shopId: number | undefined = undefined) {
     return await prisma.product.findMany({
         where: {
             id,
@@ -44,7 +60,11 @@ export async function createSales(productSales: {productId: number, amount: numb
     })
 }
 
-export async function searchSales(id: number, shopId: number) {
+// export async function getAllSales() {
+//     return await prisma.sales.findMany()
+// }
+
+export async function searchSales(id: number | undefined, shopId: number) {
     const sales = await prisma.sales.findMany({
         where:{
             id,

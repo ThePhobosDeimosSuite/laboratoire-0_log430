@@ -1,5 +1,7 @@
 import menuView from "../menu-view"
 import addProductView from "./add-product-view"
+import reportView from "./report-view"
+import updateProductView from "./update-product-view"
 
 var term = require( 'terminal-kit' ).terminal
 
@@ -7,11 +9,10 @@ var term = require( 'terminal-kit' ).terminal
 export default () => {
     term.clear()
     term.green("1-Create report for each store\n")
-    term.green("2-Check stocks\n")
-    term.green("3-Dashboard\n")
-    term.green("4-Create product\n")
-    term.green("5-Update product\n")
-    term.green("6-Main menu\n")
+    term.green("2-Dashboard\n")
+    term.green("3-Create product\n")
+    term.green("4-Update product\n")
+    term.green("5-Main menu\n")
     term("Type 'exit' to exit\n")
     term("Enter value: ")
 
@@ -20,14 +21,21 @@ export default () => {
         cancelable: true 
     }, async (error, input) => {
         switch(input) {
-            case "exit": 
+            case "exit":
                 term.processExit()
             break
-            case "4":
+            case "1":
+                reportView()
+            break
+            case "3":
                 addProductView() 
             break
-            case "6": 
+            case "4":
+                updateProductView()
+            break
+            default:
                 menuView()
+            break
         }
     })
 }

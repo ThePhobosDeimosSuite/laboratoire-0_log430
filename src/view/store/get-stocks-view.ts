@@ -7,7 +7,12 @@ var term = require( 'terminal-kit' ).terminal
 
 export default async (shopId: number) => {
     term.clear()
-    const res = await getStocks(shopId)
+    const stocks = await getStocks(shopId)
+    const res = stocks.map(s => ({
+        amount: s.amount,
+        name: s.product.name,
+        id: s.product.id
+    }))
 
     colorizeJSON(res)
     term.once('key', () => {

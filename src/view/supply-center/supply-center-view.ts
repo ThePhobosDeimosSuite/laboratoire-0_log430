@@ -30,6 +30,9 @@ export default () => {
             case "exit":
                 term.processExit()
             break
+            default:
+                menuView()
+            break
         }
     })
 }
