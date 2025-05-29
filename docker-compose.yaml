@@ -5,10 +5,10 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: lab1
+    container_name: lab2
     environment:
-      DATABASE_URL: postgresql://postgres:123@postgres_db:5432/lab1
-    image: lab1
+      DATABASE_URL: postgresql://postgres:123@postgres_db:5432/lab2
+    image: lab2
     command: sh -c "npx prisma migrate deploy && npm start"
     ports:
       - "3000:3000"
@@ -19,7 +19,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: lab1
+      POSTGRES_DB: lab2
     ports:
       - "5432:5432"
     

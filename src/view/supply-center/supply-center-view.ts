@@ -12,7 +12,7 @@ export default () => {
     term.yellow("1-deliver stock to a store\n")
     term.yellow("2-See supply center stock\n")
     term.yellow("3-Create new stock\n")
-    term("3-Main menu\n")
+    term.yellow("4-Main menu\n")
     term("Type 'exit' to exit\n")
     term("Enter value: ")
 
