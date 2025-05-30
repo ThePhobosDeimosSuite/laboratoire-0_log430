@@ -1,4 +1,4 @@
-import { searchSales, cancelSales } from "../../controller/controller"
+import StoreEmployee from "../../controller/store-employee"
 import { askNumber } from "../../utils/input-utils"
 import businessView from "./store-view"
 
@@ -10,8 +10,8 @@ export default async (shopId: number) => {
 
     const id = await askNumber("Enter sales id:")
 
-    await cancelSales(id, shopId)
-    const res = await searchSales(id, shopId)
+    await StoreEmployee.cancelSales(id, shopId)
+    const res = await StoreEmployee.searchSales(id, shopId)
 
     term.clear()
     term(JSON.stringify(res))

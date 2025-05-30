@@ -1,5 +1,5 @@
 
-import { getStocks, searchSales } from "../../controller/controller"
+import Manager from '../../controller/manager'
 import appConst from "../../utils/app-const"
 import { colorizeJSON } from "../../utils/output-utils"
 import mainBusinessView from "./main-business-view"
@@ -18,7 +18,7 @@ export default async () => {
             // List of all sales 
             const selectedStoreId = appConst.storeShopId[response.selectedIndex]
             term.clear()
-            const sales = await searchSales(undefined, selectedStoreId)
+            const sales = await Manager.searchSales(undefined, selectedStoreId)
 
             const formatedSales = sales.map(s => ({
                 isCancelled: s.isCancelled,
@@ -60,7 +60,7 @@ export default async () => {
                     }
 
 
-                    term.cyan(`MOST SOLD PRODUCT: \n`)
+                    term.cyan(`MOST SOLD PRODUCT (total product sold): \n`)
                     colorizeJSON(groupedProductSales)
 
                     term.once('key', async () => {
@@ -68,7 +68,7 @@ export default async () => {
 
                         term.cyan(`REMAINING STOCKS: \n`)
 
-                        const stocks = await getStocks(selectedStoreId)
+                        const stocks = await Manager.getStocks(selectedStoreId)
                         const formatedStocks = stocks.map(s => ({
                             amount: s.amount,
                             name: s.product.name

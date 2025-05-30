@@ -1,9 +1,21 @@
 @startuml class
-class Employee {
+class StoreEmployee {
     + searchForProduct(id:Number, name:String, category:String): Product
     + addSales(sales: Sales): Void
     + cancelSales(id: Number): Void    
     + getStocks(): Void
+    + orderMoreStocks(productId: Number, amount: Number): Void
+}
+
+class SupplyCenterEmployee {
+    + deliverStocks(productId: Number, storeId: Number): Void
+}
+
+class Manager {
+    + addProduct(name: String, category: String, price:Number): Void
+    + updateProduct(id:Number, name: String, category: String, price:Number): Void
+    + getSalesReport(): String
+    + getDashboardView(): String
 }
 
 class Product {
@@ -11,42 +23,42 @@ class Product {
     name: String
     category: String
     price: Number
-    stock: Number
 }
 
 class Sales {
-    productSales: ProductSales[]
     date: DateTime
     isCancelled: Boolean
+    storeId: Number
     + getPriceTotal(): Number
 }
 
 class Stock {
-    product: Product
     amount: Number
     storeId: Number
 }
 
 class Order {
-    product: Product
     amount: Number
     storeId: Number
 }
 
 class ProductSales {
-    product: Product
     amount: Number
 }
 
-Employee --> Sales
+StoreEmployee ..> Sales
 
-Employee --> Product
+StoreEmployee ..> Product
 
-Employee --> Stock
+StoreEmployee ..> Stock
 
-Employee --> Order
+StoreEmployee ..> Order
 
-Sales "1" o-- "*" ProductSales
+SupplyCenterEmployee --|> StoreEmployee
+
+Manager --|> SupplyCenterEmployee
+
+Sales "1" *-- "*" ProductSales
 
 ProductSales "*" o-- "1" Product
 

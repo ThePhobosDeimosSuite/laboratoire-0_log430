@@ -1,6 +1,6 @@
 var term = require( 'terminal-kit' ).terminal
 import businessView from "./store/store-view"
-import mainBusinessView from "./main-business/main-business-view"
+import mainBusinessView from "./manager/main-business-view"
 import supplyCenterView from "./supply-center/supply-center-view"
 
 export default () => {   

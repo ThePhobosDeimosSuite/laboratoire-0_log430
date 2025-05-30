@@ -1,5 +1,5 @@
 {
-  "name": "lab0",
+  "name": "lab2",
   "scripts": {
     "test": "jest",
     "build": "tsc",

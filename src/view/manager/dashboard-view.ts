@@ -1,4 +1,4 @@
-import { searchProduct, searchSales } from "../../controller/controller"
+import Manager from '../../controller/manager'
 import appConst from "../../utils/app-const"
 import { colorizeJSON } from "../../utils/output-utils"
 import mainBusinessView from "./main-business-view"
@@ -20,7 +20,7 @@ export default async () => {
     const allSalesPerStore = {}
 
     for(const storeId of appConst.storeShopId) {
-        const sales = await searchSales(undefined, storeId)
+        const sales = await Manager.searchSales(undefined, storeId)
         const totalSalesPrice = sales.reduce((partialsum, a) => partialsum + a.totalPrice, 0)
         allSalesPerStore[`Store ${storeId}`] = totalSalesPrice + " $"
     }
@@ -32,7 +32,7 @@ export default async () => {
         const lowStocksPerStore: StocksPerStore[] = []
 
         for (const storeId of appConst.storeShopId) {
-            const allProduct = await searchProduct(undefined, undefined, undefined, storeId)
+            const allProduct = await Manager.searchProduct(undefined, undefined, undefined, storeId)
             const lowStockProduct = allProduct
                 .filter(p => p.stock.length == 0 || p.stock[0]?.amount <= 5)
                 .map(p => ({ name: p.name, amount: p.stock[0]?.amount ?? 0 }))
@@ -53,7 +53,7 @@ export default async () => {
             const highStocksPerStore: StocksPerStore[] = []
 
             for (const storeId of appConst.storeShopId) {
-                const allProduct = await searchProduct(undefined, undefined, undefined, storeId)
+                const allProduct = await Manager.searchProduct(undefined, undefined, undefined, storeId)
                 const highStockProduct = allProduct
                     .filter(p => p.stock.length > 0 && p.stock[0].amount >= 100)
                     .map(p => ({ name: p.name, amount: p.stock[0]?.amount ?? 0 }))

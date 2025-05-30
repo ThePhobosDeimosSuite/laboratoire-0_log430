@@ -1,4 +1,4 @@
-import { addStocks, decrementStocks, getOrder, getStocks, removeOrder } from "../../controller/controller"
+import SupplyCenterEmployee from "../../controller/supply-center-employee"
 import appConst from "../../utils/app-const"
 import { colorizeJSON } from "../../utils/output-utils"
 import supplyCenterView from "./supply-center-view"
@@ -6,7 +6,7 @@ import supplyCenterView from "./supply-center-view"
 var term = require( 'terminal-kit' ).terminal
 
 export default async () => {
-    const orders = await getOrder() 
+    const orders = await SupplyCenterEmployee.getOrder() 
     term.clear()
     term.yellow("List of current orders (press enter to accept, escape to cancel): ")
 
@@ -25,12 +25,12 @@ export default async () => {
             } else {
                 const selectedOrder = orders[response.selectedIndex]
 
-                await removeOrder(selectedOrder.productId, selectedOrder.shopId) // Delete order
-                await decrementStocks(
+                await SupplyCenterEmployee.removeOrder(selectedOrder.productId, selectedOrder.shopId) // Delete order
+                await SupplyCenterEmployee.decrementStocks(
                     selectedOrder.productId,
                     selectedOrder.amount,
                     appConst.supplyCenterShopId) // Decrement stock for supply center
-                await addStocks(
+                await SupplyCenterEmployee.addStocks(
                     selectedOrder.productId,
                     selectedOrder.amount,
                     selectedOrder.shopId) //Increase stock for store

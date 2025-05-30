@@ -1,6 +1,6 @@
 var term = require( 'terminal-kit' ).terminal
 import { askInput, askNumber } from "../../utils/input-utils"
-import { createSales, searchProduct } from "../../controller/controller"
+import StoreEmployee from "../../controller/store-employee"
 import businessView from "./store-view"
 
 var term = require( 'terminal-kit' ).terminal
@@ -12,7 +12,7 @@ export default async (shopId: number) => {
     async function createProductSales() {
         term.clear()
 
-        const products = await searchProduct(undefined, undefined, undefined, shopId)
+        const products = await StoreEmployee.searchProduct(undefined, undefined, undefined, shopId)
         const menu = products.map(p => `${p.name} (Stock: ${p.stock[0]?.amount ?? 0})`)
         
         term.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
@@ -48,7 +48,7 @@ export default async (shopId: number) => {
     }
 
     async function pushSales() {
-        createSales(productSales, shopId)
+        StoreEmployee.createSales(productSales, shopId)
         businessView(shopId)
     }
 

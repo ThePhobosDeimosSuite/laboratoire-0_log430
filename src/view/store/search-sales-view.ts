@@ -1,4 +1,4 @@
-import { searchSales } from "../../controller/controller"
+import StoreEmployee from "../../controller/store-employee"
 import { askNumber } from "../../utils/input-utils"
 import { colorizeJSON } from "../../utils/output-utils"
 import businessView from "./store-view"
@@ -11,7 +11,7 @@ export default async (shopId: number) => {
 
     const id = await askNumber("Enter sales id (empty to view all sales):")
 
-    const res = await searchSales(id == 0 ? undefined : id, shopId)
+    const res = await StoreEmployee.searchSales(id == 0 ? undefined : id, shopId)
 
     term.clear()
     colorizeJSON(res)
