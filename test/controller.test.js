@@ -47,7 +47,7 @@ describe('Orders', () => {
 
     
     it('Should delete the order', async ()=> {
-        await removeOrder(1, 5)
+        await Manager.removeOrder(1, 5)
         const res = await Manager.getOrder()
         expect(res.find(r => r.productId == 1 && r.shopId == 5 && r.amount == 5)).toBeFalsy()
     })
