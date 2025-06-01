@@ -1,32 +1,31 @@
-var term = require( 'terminal-kit' ).terminal
-import { askInput, askNumber } from "../../utils/input-utils"
-import StoreEmployee from "../../controller/store-employee"
-import businessView from "./store-view"
-
-var term = require( 'terminal-kit' ).terminal
+import { askInput, askNumber } from "../../utils/input-utils.js"
+import StoreEmployee from "../../controller/store-employee.js"
+import businessView from "./store-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export default async (shopId: number) => {
     const productSales: {productId: number, amount: number}[] = []
 
     async function createProductSales() {
-        term.clear()
+        terminal.clear()
 
         const products = await StoreEmployee.searchProduct(undefined, undefined, undefined, shopId)
         const menu = products.map(p => `${p.name} (Stock: ${p.stock[0]?.amount ?? 0})`)
         
-        term.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
+        terminal.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
             if (response.canceled) {
                 businessView(shopId)
             } else {
 
-                term.clear()
+                terminal.clear()
                 const productId = products[response.selectedIndex].id
                 const amount = await askNumber("\nEnter quantity sold:")
 
                 if (productId == 0 || amount == 0) {
-                    term.red("Invalid input!")
-                    term.once('key', () => {
+                    terminal.red("Invalid input!")
+                    terminal.once('key', () => {
                         businessView(shopId)
                         return
                     })

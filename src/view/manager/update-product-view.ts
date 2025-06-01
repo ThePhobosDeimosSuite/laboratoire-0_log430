@@ -1,29 +1,29 @@
-import Manager from '../../controller/manager'
-import { askNumber, askString } from "../../utils/input-utils"
-import mainBusinessView from "./main-business-view"
-
-var term = require( 'terminal-kit' ).terminal
+import Manager from '../../controller/manager.js'
+import { askNumber, askString } from "../../utils/input-utils.js"
+import mainBusinessView from "./main-business-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 export default async () => {
-    term.clear()
+    terminal.clear()
     const products = await Manager.searchProduct()
     const menu = products.map(p => `Id: ${p.id}, Name: ${p.name}, Price: ${p.price}, Category: ${p.category}`)
 
-    term.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
+    terminal.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
         if (response.canceled) {
             mainBusinessView()
         } else {
             const selectedProduct = products[response.selectedIndex]
-            term.clear()
+            terminal.clear()
             const name = await askString("\nEnter product name: ", selectedProduct.name)
             const price = await askNumber("\nEnter product price: ", selectedProduct.price.toString())
             const category = await askString("\nEnter category: ", selectedProduct.category)
 
             Manager.updateProduct(selectedProduct.id, name, price, category)
 
-            term.clear()
-            term.green(`Product updated: \nId:${selectedProduct.id}\nName: ${name}\nPrice: ${price}\nCategory: ${category}`)
-            term.once('key', () => {
+            terminal.clear()
+            terminal.green(`Product updated: \nId:${selectedProduct.id}\nName: ${name}\nPrice: ${price}\nCategory: ${category}`)
+            terminal.once('key', () => {
                 mainBusinessView()
             })
         }

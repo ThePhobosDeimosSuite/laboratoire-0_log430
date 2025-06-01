@@ -9,23 +9,19 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/view/menu.ts"
   },
   "devDependencies": {
-    "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
     "jest": "^29.7.0",
     "prisma": "^6.8.2",
-    "supertest": "^7.1.1",
-    "ts-jest": "^29.3.4"
+    "ts-jest": "^29.3.4",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "@types/terminal-kit": "^2.5.7",
-    "body-parser": "^2.2.0",
-    "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "terminal-kit": "^3.1.2",
-    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }

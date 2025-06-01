@@ -1,29 +1,29 @@
-import menuView from "../menu-view"
-import addProductView from "./add-product-view"
-import dashboardView from "./dashboard-view"
-import salesReportView from "./sales-report-view"
-import updateProductView from "./update-product-view"
-
-var term = require( 'terminal-kit' ).terminal
+import menuView from "../menu-view.js"
+import addProductView from "./add-product-view.js"
+import dashboardView from "./dashboard-view.js"
+import salesReportView from "./sales-report-view.js"
+import updateProductView from "./update-product-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export default () => {
-    term.clear()
-    term.green("1-Create report for each store\n")
-    term.green("2-Dashboard\n")
-    term.green("3-Create product\n")
-    term.green("4-Update product\n")
-    term.green("5-Main menu\n")
-    term("Type 'exit' to exit\n")
-    term("Enter value: ")
+    terminal.clear()
+    terminal.brightMagenta("1-Create report for each store\n")
+    terminal.brightMagenta("2-Dashboard\n")
+    terminal.brightMagenta("3-Create product\n")
+    terminal.brightMagenta("4-Update product\n")
+    terminal.red("5-Main menu\n")
+    terminal("Type 'exit' to exit\n")
+    terminal("Enter value: ")
 
-    term.inputField({ 
+    terminal.inputField({ 
         echo: true, 
         cancelable: true 
     }, async (error, input) => {
         switch(input) {
             case "exit":
-                term.processExit()
+                terminal.processExit(0)
             break
             case "1":
                 salesReportView()

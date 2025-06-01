@@ -1,22 +1,22 @@
-import appConst from "../../utils/app-const"
-import menuView from "../menu-view"
-import getStocksView from "../store/get-stocks-view"
-import createStockView from "./create-stock-view"
-import deliverStockView from "./deliver-stock-view"
-
-var term = require( 'terminal-kit' ).terminal
+import appConst from "../../utils/app-const.js"
+import menuView from "../menu-view.js"
+import getStocksView from "../store/get-stocks-view.js"
+import createStockView from "./create-stock-view.js"
+import deliverStockView from "./deliver-stock-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export default () => {
-    term.clear()
-    term.yellow("1-deliver stock to a store\n")
-    term.yellow("2-See supply center stock\n")
-    term.yellow("3-Create new stock\n")
-    term.yellow("4-Main menu\n")
-    term("Type 'exit' to exit\n")
-    term("Enter value: ")
+    terminal.clear()
+    terminal.yellow("1-Deliver stock to a store\n")
+    terminal.yellow("2-See supply center stock\n")
+    terminal.yellow("3-Create new supply center stock\n")
+    terminal.red("4-Main menu\n")
+    terminal("Type 'exit' to exit\n")
+    terminal("Enter value: ")
 
-    term.inputField({ 
+    terminal.inputField({ 
         echo: true, 
         cancelable: true 
     }, async (error, input) => {
@@ -31,7 +31,7 @@ export default () => {
                 createStockView()
             break;
             case "exit":
-                term.processExit()
+                terminal.processExit(0)
             break
             default:
                 menuView()

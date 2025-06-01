@@ -1,12 +1,14 @@
-import StoreEmployee from "../../controller/store-employee"
-import { colorizeJSON } from "../../utils/output-utils"
-import businessView from "./store-view"
-
-var term = require( 'terminal-kit' ).terminal
+import StoreEmployee from "../../controller/store-employee.js"
+import appConst from "../../utils/app-const.js";
+import { colorizeJSON } from "../../utils/output-utils.js"
+import supplyCenterView from "../supply-center/supply-center-view.js";
+import businessView from "./store-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export default async (shopId: number) => {
-    term.clear()
+    terminal.clear()
     const stocks = await StoreEmployee.getStocks(shopId)
     const res = stocks.map(s => ({
         amount: s.amount,
@@ -15,7 +17,11 @@ export default async (shopId: number) => {
     }))
 
     colorizeJSON(res)
-    term.once('key', () => {
-        businessView(shopId)
+    terminal.once('key', () => {
+        if(shopId == appConst.supplyCenterShopId) {
+            supplyCenterView()
+        } else {
+            businessView(shopId)
+        }
     })
 }

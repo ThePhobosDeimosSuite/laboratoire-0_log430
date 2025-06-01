@@ -1,23 +1,23 @@
 
-import Manager from '../../controller/manager'
-import appConst from "../../utils/app-const"
-import { colorizeJSON } from "../../utils/output-utils"
-import mainBusinessView from "./main-business-view"
-
-var term = require( 'terminal-kit' ).terminal
+import Manager from '../../controller/manager.js'
+import appConst from "../../utils/app-const.js"
+import { colorizeJSON } from "../../utils/output-utils.js"
+import mainBusinessView from "./main-business-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export default async () => {
-    term.clear()
+    terminal.clear()
 
     const menu = appConst.storeShopId.map(id => `Store: ${id}`)
-    term.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
+    terminal.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
         if (response.canceled) {
             mainBusinessView()
         } else {
             // List of all sales 
             const selectedStoreId = appConst.storeShopId[response.selectedIndex]
-            term.clear()
+            terminal.clear()
             const sales = await Manager.searchSales(undefined, selectedStoreId)
 
             const formatedSales = sales.map(s => ({
@@ -30,19 +30,19 @@ export default async () => {
                 }))
             }))
 
-            term.cyan(`LIST OF ALL SALES FOR STORE (${selectedStoreId})\n`)
+            terminal.cyan(`LIST OF ALL SALES FOR STORE (${selectedStoreId})\n`)
             colorizeJSON(formatedSales)
             
-            term.once('key', () => {
+            terminal.once('key', () => {
                 // Total of all sales
                 const totalSalesPrice = sales.reduce((partialsum, a) => partialsum + a.totalPrice, 0)
 
-                term.clear()
-                term.cyan(`TOTAL SALES PRICE FOR (Store ${selectedStoreId}): ${totalSalesPrice} $`)
+                terminal.clear()
+                terminal.cyan(`TOTAL SALES PRICE FOR (Store ${selectedStoreId}): ${totalSalesPrice} $`)
 
-                term.once('key', () => {
+                terminal.once('key', () => {
                     // Total time a product has been sold
-                    term.clear()
+                    terminal.clear()
                     const groupedProductSales = {}
 
                     for(const sale of sales) {
@@ -60,13 +60,13 @@ export default async () => {
                     }
 
 
-                    term.cyan(`MOST SOLD PRODUCT (total product sold): \n`)
+                    terminal.cyan(`MOST SOLD PRODUCT (total product sold): \n`)
                     colorizeJSON(groupedProductSales)
 
-                    term.once('key', async () => {
-                        term.clear()
+                    terminal.once('key', async () => {
+                        terminal.clear()
 
-                        term.cyan(`REMAINING STOCKS: \n`)
+                        terminal.cyan(`REMAINING STOCKS: \n`)
 
                         const stocks = await Manager.getStocks(selectedStoreId)
                         const formatedStocks = stocks.map(s => ({
@@ -76,7 +76,7 @@ export default async () => {
                         colorizeJSON(formatedStocks)
 
 
-                        term.once('key', () => {    
+                        terminal.once('key', () => {    
                             mainBusinessView()
                         })
                     })

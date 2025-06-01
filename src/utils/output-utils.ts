@@ -1,35 +1,35 @@
-
-var term = require( 'terminal-kit' ).terminal
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export function colorizeJSON(obj, indent = 2, level = 0) {
     const spacing = ' '.repeat(level * indent);
     if (Array.isArray(obj)) {
-        term(`[`);
+        terminal(`[`);
         obj.forEach((item, i) => {
-            term('\n' + spacing + ' '.repeat(indent));
+            terminal('\n' + spacing + ' '.repeat(indent));
             colorizeJSON(item, indent, level + 1);
-            if (i < obj.length - 1) term(',');
+            if (i < obj.length - 1) terminal(',');
         });
-        term('\n' + spacing + `]`);
+        terminal('\n' + spacing + `]`);
     } else if (typeof obj === 'object' && obj !== null) {
-        term(`{`);
+        terminal(`{`);
         const keys = Object.keys(obj);
         keys.forEach((key, i) => {
-            term('\n' + spacing + ' '.repeat(indent));
-            term.brightCyan(`"${key}"`);
-            term(`: `);
+            terminal('\n' + spacing + ' '.repeat(indent));
+            terminal.brightCyan(`"${key}"`);
+            terminal(`: `);
             colorizeJSON(obj[key], indent, level + 1);
-            if (i < keys.length - 1) term(',');
+            if (i < keys.length - 1) terminal(',');
         });
-        term('\n' + spacing + `}`);
+        terminal('\n' + spacing + `}`);
     } else if (typeof obj === 'string') {
-        term.brightGreen(`"${obj}"`);
+        terminal.brightGreen(`"${obj}"`);
     } else if (typeof obj === 'number') {
-        term.yellow(obj.toString());
+        terminal.yellow(obj.toString());
     } else if (typeof obj === 'boolean') {
-        term.magenta(obj.toString());
+        terminal.magenta(obj.toString());
     } else if (obj === null) {
-        term.gray('null');
+        terminal.gray('null');
     }
 }

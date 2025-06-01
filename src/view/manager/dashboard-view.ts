@@ -1,9 +1,9 @@
-import Manager from '../../controller/manager'
-import appConst from "../../utils/app-const"
-import { colorizeJSON } from "../../utils/output-utils"
-import mainBusinessView from "./main-business-view"
-
-var term = require( 'terminal-kit' ).terminal
+import Manager from '../../controller/manager.js'
+import appConst from "../../utils/app-const.js"
+import { colorizeJSON } from "../../utils/output-utils.js"
+import mainBusinessView from "./main-business-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 interface StocksPerStore {
     storeId:number, 
@@ -15,7 +15,7 @@ interface StocksPerStore {
 }
 
 export default async () => {
-    term.clear()
+    terminal.clear()
 
     const allSalesPerStore = {}
 
@@ -25,10 +25,10 @@ export default async () => {
         allSalesPerStore[`Store ${storeId}`] = totalSalesPrice + " $"
     }
 
-    term.cyan("TOTAL SALES PER STORE: ")
+    terminal.cyan("TOTAL SALES PER STORE: ")
     colorizeJSON(allSalesPerStore)
 
-    term.once('key', async () => {
+    terminal.once('key', async () => {
         const lowStocksPerStore: StocksPerStore[] = []
 
         for (const storeId of appConst.storeShopId) {
@@ -44,11 +44,11 @@ export default async () => {
             }
         }
 
-        term.clear()
-        term.red("LOW STOCK (below 5): \n")
+        terminal.clear()
+        terminal.red("LOW STOCK (below 5): \n")
         colorizeJSON(lowStocksPerStore)
 
-        term.once('key', async () => {
+        terminal.once('key', async () => {
 
             const highStocksPerStore: StocksPerStore[] = []
 
@@ -65,12 +65,12 @@ export default async () => {
                 }
             }
 
-            term.clear()
+            terminal.clear()
 
-            term.green("HIGH STOCK (above 100): \n")
+            terminal.green("HIGH STOCK (above 100): \n")
             colorizeJSON(highStocksPerStore)
 
-            term.once('key', async () => {
+            terminal.once('key', async () => {
                 mainBusinessView()
             })
         })

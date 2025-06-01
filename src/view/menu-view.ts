@@ -1,32 +1,33 @@
-var term = require( 'terminal-kit' ).terminal
-import businessView from "./store/store-view"
-import mainBusinessView from "./manager/main-business-view"
-import supplyCenterView from "./supply-center/supply-center-view"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
+import businessView from "./store/store-view.js"
+import mainBusinessView from "./manager/main-business-view.js"
+import supplyCenterView from "./supply-center/supply-center-view.js"
 
 export default () => {   
-    term.clear()
-    term("Who are you?\n")
-    term.brightCyan("1-Store 1\n")
-    term.brightCyan("2-Store 2\n")
-    term.brightCyan("3-Store 3\n")
-    term.brightCyan("4-Store 4\n")
-    term.brightCyan("5-Store 5\n")
-    term.green("6-Main business\n")
-    term.yellow("7-Supply center\n")
-    term("Type 'exit' to exit\n")
-    term("Enter value: ")    
-    term.inputField({ 
+    terminal.clear()
+    terminal("Who are you?\n")
+    terminal.brightCyan("1-Store 1\n")
+    terminal.brightCyan("2-Store 2\n")
+    terminal.brightCyan("3-Store 3\n")
+    terminal.brightCyan("4-Store 4\n")
+    terminal.brightCyan("5-Store 5\n")
+    terminal.yellow("6-Supply center\n")
+    terminal.brightMagenta("7-Main business\n")
+    terminal("Type 'exit' to exit\n")
+    terminal("Enter value: ")    
+    terminal.inputField({ 
         echo: true, 
         cancelable: true 
     }, (error, input) => {
-        if(input <= 1 || input <= 5) {
+        if(Number(input) <= 1 || Number(input) <= 5) {
             businessView(Number(input))
         } else if (input == "6") {
-            mainBusinessView()
-        } else if (input == "7") {
             supplyCenterView()
+        } else if (input == "7") {
+            mainBusinessView()
         } else {
-            term.processExit();
+            terminal.processExit(0);
         }
     })
 }

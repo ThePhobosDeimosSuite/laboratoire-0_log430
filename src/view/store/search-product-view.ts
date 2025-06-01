@@ -1,12 +1,13 @@
-var term = require( 'terminal-kit' ).terminal
-import StoreEmployee from "../../controller/store-employee"
-import businessView from './store-view'
-import { askString} from '../../utils/input-utils'
-import { colorizeJSON } from '../../utils/output-utils'
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
+import StoreEmployee from "../../controller/store-employee.js"
+import businessView from './store-view.js'
+import { askString} from '../../utils/input-utils.js'
+import { colorizeJSON } from '../../utils/output-utils.js'
 
 
 export default async (shopId: number) => {
-    term.clear()
+    terminal.clear()
 
     const id = await askString("Enter id (press enter to dismiss): ")
     const name = await askString("\nEnter name (press enter to dismiss): ")
@@ -18,10 +19,10 @@ export default async (shopId: number) => {
         category == "" ? undefined : category,
         shopId
     )
-    term.clear()
+    terminal.clear()
     colorizeJSON(res)
     
-    term.inputField((error, input) => {
+    terminal.inputField((error, input) => {
         businessView(shopId)
     })
 }

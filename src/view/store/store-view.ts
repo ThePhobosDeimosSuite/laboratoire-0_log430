@@ -1,30 +1,31 @@
-var term = require( 'terminal-kit' ).terminal
-import cancelSales from "./cancel-sales-view"
-import createSales from "./create-sales-view"
-import getStocks from "./get-stocks-view"
-import menuView from "../menu-view"
-import searchProduct from "./search-product-view"
-import searchSales from "./search-sales-view"
-import orderMoreStocksView from "./order-more-stocks-view"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
+import cancelSales from "./cancel-sales-view.js"
+import createSales from "./create-sales-view.js"
+import getStocks from "./get-stocks-view.js"
+import menuView from "../menu-view.js"
+import searchProduct from "./search-product-view.js"
+import searchSales from "./search-sales-view.js"
+import orderMoreStocksView from "./order-more-stocks-view.js"
 
 export default (shopId: number) => {
-    term.clear()
-    term.brightCyan("1-Search product\n")
-    term.brightCyan("2-Create sales\n")
-    term.brightCyan("3-Search sales\n")
-    term.brightCyan("4-Cancel sales\n")
-    term.brightCyan("5-Get stocks\n")
-    term.brightCyan("6-Order more stocks\n")
-    term.brightCyan("7-Main menu\n")
-    term("Type 'exit' to exit\n")
-    term("Enter value: ")
-    term.inputField({ 
+    terminal.clear()
+    terminal.brightCyan("1-Search product\n")
+    terminal.brightCyan("2-Create sales\n")
+    terminal.brightCyan("3-Search sales\n")
+    terminal.brightCyan("4-Cancel sales\n")
+    terminal.brightCyan("5-Get stocks\n")
+    terminal.brightCyan("6-Order more stocks\n")
+    terminal.red("7-Main menu\n")
+    terminal("Type 'exit' to exit\n")
+    terminal("Enter value: ")
+    terminal.inputField({ 
         echo: true, 
         cancelable: true 
     }, async (error, input) => {
         switch(input) {
             case "exit": 
-                term.processExit()
+                terminal.processExit(0)
             break
             case "1":
                 searchProduct(shopId)

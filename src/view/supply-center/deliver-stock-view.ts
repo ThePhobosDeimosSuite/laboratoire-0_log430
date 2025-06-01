@@ -1,25 +1,24 @@
-import SupplyCenterEmployee from "../../controller/supply-center-employee"
-import appConst from "../../utils/app-const"
-import { colorizeJSON } from "../../utils/output-utils"
-import supplyCenterView from "./supply-center-view"
-
-var term = require( 'terminal-kit' ).terminal
+import SupplyCenterEmployee from "../../controller/supply-center-employee.js"
+import appConst from "../../utils/app-const.js"
+import supplyCenterView from "./supply-center-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 export default async () => {
     const orders = await SupplyCenterEmployee.getOrder() 
-    term.clear()
-    term.yellow("List of current orders (press enter to accept, escape to cancel): ")
+    terminal.clear()
+    terminal.yellow("List of current orders (press enter to accept, escape to cancel): ")
 
     const menu = orders.map(o => `Store : ${o.shopId}, Product: ${o.product.name}, Amount: ${o.amount}`)
 
     if (menu.length <= 0) {
-        term.clear()
-        term.red("No orders")
-        term.once('key', () => {
+        terminal.clear()
+        terminal.red("No orders")
+        terminal.once('key', () => {
             supplyCenterView()
         })
     } else {
-        term.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
+        terminal.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
             if(response.canceled) {
                 supplyCenterView()
             } else {
@@ -35,8 +34,8 @@ export default async () => {
                     selectedOrder.amount,
                     selectedOrder.shopId) //Increase stock for store
 
-                term.green("Order sent!")
-                term.once('key', () => {
+                terminal.green("Order sent!")
+                terminal.once('key', () => {
                     supplyCenterView()
                 })
             }

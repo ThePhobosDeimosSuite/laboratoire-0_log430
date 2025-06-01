@@ -1,22 +1,22 @@
-import StoreEmployee from "../../controller/store-employee"
-import { askNumber } from "../../utils/input-utils"
-import businessView from "./store-view"
-
-var term = require( 'terminal-kit' ).terminal
+import StoreEmployee from "../../controller/store-employee.js"
+import { askNumber } from "../../utils/input-utils.js"
+import businessView from "./store-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
 export default async (shopId: number) => {
-    term.clear()
+    terminal.clear()
 
     const id = await askNumber("Enter sales id:")
 
     await StoreEmployee.cancelSales(id, shopId)
     const res = await StoreEmployee.searchSales(id, shopId)
 
-    term.clear()
-    term(JSON.stringify(res))
+    terminal.clear()
+    terminal(JSON.stringify(res))
         
-    term.inputField((error, input) => {
+    terminal.inputField((error, input) => {
         businessView(shopId)
     })
 }
