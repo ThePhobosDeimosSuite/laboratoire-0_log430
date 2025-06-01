@@ -1,7 +1,8 @@
 {
   "name": "lab2",
+  "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "tsc",
     "start": "node dist/app.js",
     "api": "node dist/api/server.js",

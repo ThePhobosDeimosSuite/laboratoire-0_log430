@@ -64,13 +64,41 @@ export default class StoreEmployee {
     }
 
     static async cancelSales(id: number, shopId: number) {
-        await prisma.sales.update({
+        const sales = await prisma.sales.update({
             where: {
                 id,
                 shopId
             },
             data: {
                 isCancelled: true
+            },
+            include: {
+                productSales: true
+            }
+        })
+         // Re-add stock???
+        for(const productSale of sales.productSales) {
+            await this.addStocks(productSale.productId, productSale.amount, shopId)
+        }
+    }
+
+    protected static async addStocks(productId: number, amount: number, shopId: number) {
+        await prisma.stock.upsert({
+            where: {
+                productId_shopId: {
+                    productId,
+                    shopId
+                }
+            },
+            update: { // Increase stock if row already exists
+                amount: {
+                    increment: amount
+                }
+            },
+            create: { // Create row if doesn't exist
+                productId,
+                amount,
+                shopId
             }
         })
     }
