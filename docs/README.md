@@ -6,11 +6,11 @@
 ### Typescript
 I still think having types can be useful sometimes, of instance it can be useful when dealing with data coming from the ORM.
 
-### Express
-I decided to go with *Express.js* mainly because i've worked with it before. It's still very popular these days even though it's been around for a while.
+### Terminal-kit
+I've never used this library before, but from what i've seen on the readme page it seems to be a very versatile tool. Simple tasks like asking the user for input can aslo be done very easily.
 
 ### Prisma
 I've never worked with this library before, but there seems to be a huge amount of documentation online. I'm also somewhat unfamiliar with ORMs so i just asked *ChatGPT* for the best library for this paticular project.
 
 ### Jest
-This is what i've always used.
+This is what i've always used. It was my first time setting up the environment for Jest and I had a hard time making it work with *ESM*.

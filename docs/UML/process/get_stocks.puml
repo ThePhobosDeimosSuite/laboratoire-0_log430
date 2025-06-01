@@ -1,6 +1,0 @@
-@startuml get_stocks
-actor Employee
-
-Employee -> Store : getStocks()
-Store --> Employee : Stocks
-@enduml

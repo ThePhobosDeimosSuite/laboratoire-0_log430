@@ -1,0 +1,9 @@
+@startuml save-sales
+actor StoreEmployee
+
+StoreEmployee -> StoreEmployeeView : addSales(sales:Sales)
+StoreEmployeeView -> StoreEmployeeController : addSales(sales:Sales)
+StoreEmployeeController --> StoreEmployeeController : updateStocksCount()
+StoreEmployeeController --> StoreEmployeeView : Done
+StoreEmployeeView --> StoreEmployee : Done
+@enduml

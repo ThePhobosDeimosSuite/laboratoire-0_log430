@@ -1,0 +1,9 @@
+@startuml cancel-sales
+actor StoreEmployee
+
+StoreEmployee -> StoreEmployeeView : cancelSales(id:Number)
+StoreEmployeeView -> StoreEmployeeController : cancelSales(id:Number)
+StoreEmployeeController --> StoreEmployeeController : updateStocksCount()
+StoreEmployeeController --> StoreEmployeeView : Done
+StoreEmployeeView --> StoreEmployee : Done
+@enduml

@@ -1,8 +1,12 @@
 @startuml deployement
 
-database "Server (PostgreSQL)" as Server
+node "Database container" {
+    database "Server (PostgreSQL)" as Server
+}
 
-component "Client (Node.js)" as Client
+node "App container"  {
+    artifact "Node.js CLI" as Client
+}
 
-    [Client] -- [Server]
+    [Client] --> "Prisma over TCP" [Server]
 @enduml

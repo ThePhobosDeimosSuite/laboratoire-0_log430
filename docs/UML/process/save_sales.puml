@@ -1,7 +1,0 @@
-@startuml save_sales
-actor Employee
-
-Employee -> Store : addSales(sales:Sales)
-Store -> Store : updateProductCount()
-Store --> Employee : Done
-@enduml

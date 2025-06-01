@@ -1,0 +1,8 @@
+@startuml update-product
+actor Manager
+
+Manager -> ManagerView : updateProduct(id:Number, name: String, category: String, price:Number)
+ManagerView -> ManagerController : updateProduct(id:Number, name: String, category: String, price:Number)
+ManagerController --> ManagerView  :Success
+ManagerView --> Manager : Success
+@enduml

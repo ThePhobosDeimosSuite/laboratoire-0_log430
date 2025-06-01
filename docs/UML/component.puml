@@ -1,8 +1,16 @@
 @startuml component
 
-package "Client" {
-    component app.ts
-    component server.ts
+package "Controller" {
+    component "manager.ts" as manager
+    component "store-employee.ts" as storeEmployee
+    component "supply-center-employee.ts" as supplyCenterEmployee
+}
+
+package "View" {
+    component "manager-views" as managerView
+    component "store-employee-views" as storeEmployeeView
+    component "supply-center-employee-views" as supplyCenterEmployeeView
+    component "main-menu-views" as mainMenuView
 }
 
 package "Prisma" {
@@ -11,8 +19,16 @@ package "Prisma" {
 
 database "Server (PostgreSQL)" as Server
 
-app.ts ..> schema.prisma
 schema.prisma ..> Server
 
+supplyCenterEmployeeView ..> supplyCenterEmployee
+managerView ..> manager
+storeEmployeeView ..> storeEmployee
+storeEmployee ..> schema.prisma
+manager ..> schema.prisma
+supplyCenterEmployee ..> schema.prisma
+mainMenuView ..> storeEmployeeView
+mainMenuView ..> managerView
+mainMenuView ..> supplyCenterEmployeeView
 
 @enduml

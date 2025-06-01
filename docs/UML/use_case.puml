@@ -1,14 +1,29 @@
 @startuml use_case
-actor Employee
+actor StoreEmployee
+actor SupplyCenterEmployee
+actor Manager
 
 usecase "Search Product" as UC1
 usecase "Register Sale" as UC2
-usecase "Cancel Sales" as UC3
+usecase "Cancel Sale" as UC3
 usecase "Get Stocks" as UC4
+usecase "Order more stocks" as UC5
 
+usecase "Deliver more stocks" as UC6
 
-Employee --> UC1
-Employee --> UC2
-Employee --> UC3
-Employee --> UC4
+usecase "Generate sales report" as UC7
+usecase "View dashboard" as UC8
+usecase "Edit product" as UC9
+usecase "Create product" as UC10
+
+StoreEmployee --> UC1
+StoreEmployee --> UC2
+StoreEmployee --> UC3
+StoreEmployee --> UC4
+StoreEmployee --> UC5
+SupplyCenterEmployee --> UC6
+Manager --> UC7
+Manager --> UC8
+Manager --> UC9
+Manager --> UC10
 @enduml

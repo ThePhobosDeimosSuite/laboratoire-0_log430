@@ -1,0 +1,8 @@
+@startuml add-product
+actor Manager
+
+Manager -> ManagerView : addProduct(name: String, category: String, price:Number)
+ManagerView -> ManagerController : addProduct(name: String, category: String, price:Number)
+ManagerController --> ManagerView  :Success
+ManagerView --> Manager : Success
+@enduml

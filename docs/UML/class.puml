@@ -4,7 +4,7 @@ class StoreEmployee {
     + addSales(sales: Sales): Void
     + cancelSales(id: Number): Void    
     + getStocks(): Void
-    + orderMoreStocks(productId: Number, amount: Number): Void
+    + orderStocks(productId: Number, amount: Number): Void
 }
 
 class SupplyCenterEmployee {
@@ -14,7 +14,7 @@ class SupplyCenterEmployee {
 class Manager {
     + addProduct(name: String, category: String, price:Number): Void
     + updateProduct(id:Number, name: String, category: String, price:Number): Void
-    + getSalesReport(): String
+    + getSalesReport(storeId:Number): String
     + getDashboardView(): String
 }
 

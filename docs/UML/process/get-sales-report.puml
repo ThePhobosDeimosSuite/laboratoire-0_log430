@@ -1,0 +1,8 @@
+@startuml get-sales-report
+actor Manager
+
+Manager -> ManagerView : getSalesReport(storeId:Number)
+ManagerView -> ManagerController : getSalesReport(storeId:Number)
+ManagerController --> ManagerView  : Sales, most sold product and remaining stocks per store
+ManagerView --> Manager : Sales, most sold product and remaining stocks per store
+@enduml

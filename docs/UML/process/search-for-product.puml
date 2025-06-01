@@ -1,0 +1,9 @@
+@startuml search-for-product
+actor StoreEmployee
+
+StoreEmployee -> StoreEmployeeView : searchForProduct(id:Number, name:String, category:String)
+StoreEmployeeView -> StoreEmployeeController : searchForProduct(id:Number, name:String, category:String)
+StoreEmployeeController --> StoreEmployeeView : Product
+StoreEmployeeView --> StoreEmployee : Product
+
+@enduml
