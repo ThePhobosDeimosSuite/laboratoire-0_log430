@@ -1,10 +1,10 @@
 # MVC
 
 ### Context
-This app needs a basic console interface allowing the user to send and retrieve data from a **postgres** database.
+This app needs a basic console interface allowing the user to send and retrieve data from a **postgreSQL** database.
 
 ### Decision
-The **MVC** architecture is flexible yet simple, the code is easy to understand and everything can be put in place fairly quickly. There's still the ability to scale up the app in the future in case new features are needed. It's also a very easy architecture to test because the view doesn't really need testing, thus we can focus on testing the controller and model.
+The **MVC** architecture is flexible yet simple, the code is easy to understand and everything can be put in place fairly quickly. There's still the ability to scale up the app in the future in case new features are needed. It's also a very easy architecture to test because the view doesn't really need testing, thus we can focus on testing the controller and model. The projet isn't going to grow very much in the future so we don't need an architecture that could support stuff like networking.
 
 ### Status
 Accepted
