@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import StoreEmployee from "./store-employee";
+import StoreEmployee from "./store-employee.js";
 
 const prisma = new PrismaClient()
 

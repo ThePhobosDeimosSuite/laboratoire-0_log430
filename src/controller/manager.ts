@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import SupplyCenterEmployee from './supply-center-employee'
+import SupplyCenterEmployee from './supply-center-employee.js'
 const prisma = new PrismaClient()
 
 export default class Manager extends SupplyCenterEmployee {
