@@ -1,5 +1,6 @@
-import StoreEmployee from "./store-employee.js";
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client"
+import StoreEmployee from "./store-employee";
+
 const prisma = new PrismaClient()
 
 export default class SupplyCenterEmployee extends StoreEmployee {
