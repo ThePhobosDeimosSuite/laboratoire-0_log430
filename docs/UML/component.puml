@@ -1,5 +1,5 @@
 @startuml component
-
+title Component Diagram
 package "Controller" {
     component "manager.ts" as manager
     component "store-employee.ts" as storeEmployee

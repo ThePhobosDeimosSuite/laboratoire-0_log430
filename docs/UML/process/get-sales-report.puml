@@ -1,4 +1,5 @@
 @startuml get-sales-report
+title Get Sales Report
 actor Manager
 
 Manager -> ManagerView : getSalesReport(storeId:Number)

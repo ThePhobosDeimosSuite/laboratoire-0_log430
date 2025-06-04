@@ -1,4 +1,5 @@
 @startuml deliver-stocks
+title Deliver Stocks
 actor SupplyStoreEmployee
 
 SupplyStoreEmployee -> SupplyStoreEmployeeView : deliverStocks(productId: Number, storeId: Number)

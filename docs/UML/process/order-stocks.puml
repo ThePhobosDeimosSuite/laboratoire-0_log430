@@ -1,4 +1,5 @@
 @startuml order-stocks
+title Order Stocks
 actor StoreEmployee
 
 StoreEmployee -> StoreEmployeeView : orderStocks(productId: Number, amount: Number)

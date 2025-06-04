@@ -1,4 +1,5 @@
 @startuml get-dashboard-view
+title Get Dashboard View
 actor Manager
 
 Manager -> ManagerView : getDashboardView()

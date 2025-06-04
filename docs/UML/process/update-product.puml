@@ -1,4 +1,5 @@
 @startuml update-product
+title Update Product
 actor Manager
 
 Manager -> ManagerView : updateProduct(id:Number, name: String, category: String, price:Number)

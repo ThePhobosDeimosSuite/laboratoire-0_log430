@@ -1,4 +1,5 @@
 @startuml cancel-sales
+title Cancel Sales
 actor StoreEmployee
 
 StoreEmployee -> StoreEmployeeView : cancelSales(id:Number)

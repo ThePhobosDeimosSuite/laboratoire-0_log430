@@ -1,4 +1,5 @@
 @startuml use_case
+title Use case
 actor StoreEmployee
 actor SupplyCenterEmployee
 actor Manager

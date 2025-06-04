@@ -1,4 +1,5 @@
 @startuml add-product
+title Add Product
 actor Manager
 
 Manager -> ManagerView : addProduct(name: String, category: String, price:Number)

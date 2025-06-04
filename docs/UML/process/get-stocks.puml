@@ -1,4 +1,5 @@
 @startuml get-stocks
+title Get Stocks
 actor StoreEmployee
 
 StoreEmployee -> StoreEmployeeView : getStocks()
