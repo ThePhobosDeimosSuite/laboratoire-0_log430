@@ -33,10 +33,10 @@ After reading the requirement for lab2, i don't think a REST API is a good idea.
 I still think having types is handy sometimes, of instance it can be useful when dealing with data coming from the ORM.
 
 ### Terminal-kit
-I've never used this library before, but from what i've seen on the readme page it seems to be a very versatile tool. Simple tasks like asking the user for input can aslo be done very easily.
+I've never used this library before, but from what I've seen on the readme page it seems to be a very versatile tool. Simple tasks like asking the user for input can also be done very easily.
 
 ### Prisma
-I've never worked with this library before, but there seems to be a huge amount of documentation online. I'm also somewhat unfamiliar with ORMs so i just asked *ChatGPT* for the best library for this paticular project.
+I've never worked with this library before, but there seems to be a huge amount of documentation online. I'm also somewhat unfamiliar with ORMs so i just asked *ChatGPT* for the best library for this particular project.
 
 ### Jest
-This is what i've always used. It was my first time setting up the environment for Jest and I had a hard time making it work with *ESM* and *Typescript*.
+This is what I've always used. It was my first time setting up the environment for Jest and I had a hard time making it work with *ESM* and *Typescript*.
