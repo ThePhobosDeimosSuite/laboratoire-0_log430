@@ -8,5 +8,5 @@
     "skipLibCheck": true
   },
 
-  "exclude": ["test", "jest.config.js", "custom-resolver.ts"]
+  "exclude": ["test", "jest.config.ts"]
 }

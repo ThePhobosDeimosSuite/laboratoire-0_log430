@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export default class StoreEmployee {
+
     static async searchProduct(id: number | undefined = undefined,
         name: string | undefined = undefined,
         category: string | undefined = undefined,
@@ -13,13 +14,15 @@ export default class StoreEmployee {
                 category,
                 name
             },
-            include: {
-                stock: {
-                    where: {
-                        shopId
+            ...(shopId !== undefined && {
+                include: {
+                    stock: {
+                        where: {
+                            shopId
+                        }
                     }
                 }
-            }
+            })
         })
     }
 
