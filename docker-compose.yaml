@@ -1,15 +1,13 @@
 services:
-  lab1:
+  shop:
     depends_on:
       - db
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: lab2
     environment:
       DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
-    image: lab2
-    command: sh -c "npx prisma migrate deploy && npm start"
+    command: sh -c "npx prisma migrate deploy && npm run start"
     ports:
       - "3000:3000"
   db:
