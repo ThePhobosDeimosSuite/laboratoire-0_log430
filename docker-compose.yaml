@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
-    command: sh -c "npx prisma migrate deploy && npm run api"
+    command: sh -c "npx prisma db push && npm run api"
     ports:
       - "3000:3000"
   db:
