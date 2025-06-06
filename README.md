@@ -6,9 +6,11 @@ A **node.js** app that manages 5 small shops, a supply center an a main store
 - Clone repo
 - Make sure node.js is installed locally
 - Create a Postgresql database and add the url to `.env`
+    - OR run this command: `docker run -d --name shop -e POSTGRES_PASSWORD=123 -p 5432:5432 postgres`
 - Run `npm install`
 - Run `npm run build`
 - Run `npx prisma generate`
+- Run `npx prisma migrate deploy`
 - Run `npm run start`
 
 #### Running using docker compose
