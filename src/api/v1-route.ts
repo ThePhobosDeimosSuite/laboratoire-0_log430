@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import Manager from '../controller/manager.js'
-import StoreEmployee, { ProductSales } from '../controller/store-employee.js'
+import StoreEmployee from '../controller/store-employee.js'
 const router = express.Router()
 
 router.get('/store/:id/sales-report', async (req: Request, res: Response) => {

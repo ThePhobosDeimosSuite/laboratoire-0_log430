@@ -17,6 +17,9 @@ A **node.js** app that manages 5 small shops, a supply center an a main store
 It's possible to use docker compose to create the database automatically. Credentials for this database are in `.env` by default:
 - Run `docker compose up --build`
 
+
+**TODO add run api**
+
 #### Testing the project
 - Run `npm test`
 
