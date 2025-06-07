@@ -7,13 +7,23 @@ export default class StoreEmployee {
     static async searchProduct(id: number | undefined = undefined,
         name: string | undefined = undefined,
         category: string | undefined = undefined,
-        shopId: number | undefined = undefined) {
+        shopId: number | undefined = undefined,
+        page: number | undefined = undefined,
+        size: number | undefined = undefined) {
         return await prisma.product.findMany({
             where: {
                 id,
                 category,
                 name
             },
+            ...(size !== undefined &&
+            {
+                take: size
+            }),
+            ...(page !== undefined && size !== undefined &&
+            {
+                skip: (page - 1) * size,
+            }),
             ...(shopId !== undefined && {
                 include: {
                     stock: {
@@ -42,12 +52,23 @@ export default class StoreEmployee {
         })
     }
 
-    static async searchSales(id: number | undefined, shopId: number) {
+    static async searchSales(id: number | undefined, shopId: number,
+        page: number | undefined = undefined,
+        size: number | undefined = undefined
+    ) {
         const sales = await prisma.sales.findMany({
             where: {
                 id,
                 shopId
             },
+            ...(size !== undefined &&
+            {
+                take: size
+            }),
+            ...(page !== undefined && size !== undefined &&
+            {
+                skip: (page - 1) * size,
+            }),
             include: {
                 productSales: {
                     include: {
@@ -107,12 +128,23 @@ export default class StoreEmployee {
         })
     }
 
-    static async getStocks(shopId: number, productId: number | undefined = undefined) {
+    static async getStocks(shopId: number, productId: number | undefined = undefined,
+        page: number | undefined = undefined,
+        size: number | undefined = undefined
+    ) {
         return await prisma.stock.findMany({
             where: {
                 productId,
                 shopId
             },
+            ...(size !== undefined &&
+            {
+                take: size
+            }),
+            ...(page !== undefined && size !== undefined &&
+            {
+                skip: (page - 1) * size,
+            }),
             include: {
                 product: true
             }

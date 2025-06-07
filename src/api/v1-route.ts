@@ -12,21 +12,28 @@ router.get('/store/:id/sales-report', async (req: Request, res: Response) => {
 
 router.get('/store/:id/stock', async (req: Request, res: Response) => {
     const { id } = req.params
+    const { page, size } = req.query //TODO add page to thing below
     const stocks = await StoreEmployee.getStocks(Number(id))
 
     res.json(stocks).send()
 })
 
+
 router.get('/store/:id/sales', async (req: Request, res: Response) => {
     const { id } = req.params
-    const sales = await StoreEmployee.searchSales(undefined, Number(id))
-
+    const { page, size } = req.query
+    const sales = await StoreEmployee.searchSales(undefined, Number(id),
+        page != undefined ? Number(page) : undefined,
+        size != undefined ? Number(size) : undefined)
     res.json(sales).send
 })
 
 router.get('/store/:id/sales/:salesId', async (req: Request, res: Response) => {
     const { id, salesId } = req.params
-    const sales = await StoreEmployee.searchSales(Number(salesId), Number(id))
+    const { page, size } = req.query
+    const sales = await StoreEmployee.searchSales(Number(salesId), Number(id),
+        page != undefined ? Number(page) : undefined,
+        size != undefined ? Number(size) : undefined)
 
     res.json(sales).send
 })
@@ -58,12 +65,15 @@ router.get('/dashboard', async (req: Request, res: Response) => {
 })
 
 router.get('/product', async (req: Request, res: Response) => {
-    const { name, id, category } = req.query
+    const { name, id, category, size, page } = req.query
 
     const product = await StoreEmployee.searchProduct(
         id != undefined ? Number(id) : undefined,
         name != undefined ? String(name) : undefined,
-        category != undefined ? String(category) : undefined
+        category != undefined ? String(category) : undefined, 
+        undefined,
+        page != undefined ? Number(page) : undefined,
+        size != undefined ? Number(size) : undefined
     )
 
     res.json(product).send()

@@ -41,4 +41,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: pebrassard/lab2:latest
+          tags: pebrassard/lab3:latest
