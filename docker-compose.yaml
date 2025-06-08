@@ -4,9 +4,7 @@ services:
       - db
     build:
       context: ./
-      dockerfile: Dockerfile
-    stdin_open: true 
-    tty: true  
+      dockerfile: Dockerfile 
     environment:
       DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
     command: sh -c "npx prisma db push && npm run api"
