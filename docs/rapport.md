@@ -1,3 +1,9 @@
+**Pierre-Émile Brassard**
+
+https://github.com/ThePhobosDeimosSuite/laboratoire-0_log430/tree/lab2
+
+
+
 ## A look back at lab0/lab1
 After reading the requirement for lab2, i don't think a REST API is a good idea. First thing I'll do is to port everything to an MVC architecture with *terminal-kit* and then work on implementing the features for lab2. At least i won't have to change anything regarding the controller and database.
 
