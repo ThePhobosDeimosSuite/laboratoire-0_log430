@@ -24,11 +24,11 @@ describe('Sales', () => {
         await Manager.createSales([{
             productId: 1,
             amount: 5
-        }], 5)
+        }], 4)
     })
 
     it('Should find sales', async () => {
-        const res = await Manager.searchSales(undefined, 5)
+        const res = await Manager.searchSales(undefined, 4)
         expect(res.length).toBeGreaterThan(0)
         expect(res[0].totalPrice).toBe(25)
         expect(res[0].productSales[0].amount).toBe(5)
@@ -37,18 +37,18 @@ describe('Sales', () => {
 
 describe('Orders', () => {
     beforeAll(async () => {
-        await Manager.addOrder(1, 5, 5)
+        await Manager.addOrder(1, 5, 4)
     })
 
     it('Should find the order', async ()=> {
         const res = await Manager.getOrder()
-        expect(res.find(r => r.productId == 1 && r.shopId == 5 && r.amount == 5)).toBeTruthy()
+        expect(res.find(r => r.productId == 1 && r.shopId == 4 && r.amount == 5)).toBeTruthy()
     })
 
     
     it('Should delete the order', async ()=> {
         await Manager.removeOrder(1, 5)
         const res = await Manager.getOrder()
-        expect(res.find(r => r.productId == 1 && r.shopId == 5 && r.amount == 5)).toBeFalsy()
+        expect(res.find(r => r.productId == 1 && r.shopId == 4 && r.amount == 5)).toBeFalsy()
     })
 })
