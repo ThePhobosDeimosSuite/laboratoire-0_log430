@@ -1,0 +1,294 @@
+{
+	"info": {
+		"_postman_id": "8da71113-16bc-409b-9da5-874d5a621f34",
+		"name": "lab3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45169156",
+		"_collection_link": "https://grey-water-8302731.postman.co/workspace/Pierre-%C3%89mile-Brassard's-Workspa~cc4746b0-8da3-4e37-8882-fed8bad492c0/collection/45169156-8da71113-16bc-409b-9da5-874d5a621f34?action=share&source=collection_link&creator=45169156"
+	},
+	"item": [
+		{
+			"name": "Sales-report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/1/sales-report",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"1",
+						"sales-report"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/dashboard",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stock",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/1/stock",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"1",
+						"stock"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"citron\",\r\n    \"category\": \"fruit\",\r\n    \"price\": 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/product/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"cribbage7\",\r\n    \"category\": \"jeu\",\r\n    \"price\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/product",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/product?size=1&page=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "concombre",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "1"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get sales",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/1/sales",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"1",
+						"sales"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create sales",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productSales\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"amount\": 4\r\n        },\r\n                {\r\n            \"productId\": 2,\r\n            \"amount\": 10\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/store/1/sales",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"1",
+						"sales"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Swagger",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api-docs",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api-docs"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "123",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "localhost:3000",
+			"type": "string"
+		}
+	]
+}

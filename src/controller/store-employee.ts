@@ -9,13 +9,19 @@ export default class StoreEmployee {
         category: string | undefined = undefined,
         shopId: number | undefined = undefined,
         page: number | undefined = undefined,
-        size: number | undefined = undefined) {
+        size: number | undefined = undefined,
+        sort: string[] | undefined = undefined) {
         return await prisma.product.findMany({
             where: {
                 id,
                 category,
                 name
             },
+            ...(sort != undefined && {
+                orderBy: {
+                    [sort[0]]: sort[1]
+                }
+            }),
             ...(size !== undefined &&
             {
                 take: size
@@ -54,13 +60,19 @@ export default class StoreEmployee {
 
     static async searchSales(id: number | undefined, shopId: number,
         page: number | undefined = undefined,
-        size: number | undefined = undefined
+        size: number | undefined = undefined,
+        sort: string[] | undefined = undefined
     ) {
         const sales = await prisma.sales.findMany({
             where: {
                 id,
                 shopId
             },
+            ...(sort != undefined && {
+                orderBy: {
+                    [sort[0]]: sort[1]
+                }
+            }),
             ...(size !== undefined &&
             {
                 take: size
@@ -130,18 +142,24 @@ export default class StoreEmployee {
 
     static async getStocks(shopId: number, productId: number | undefined = undefined,
         page: number | undefined = undefined,
-        size: number | undefined = undefined
+        size: number | undefined = undefined,
+        sort: string[] | undefined = undefined,
     ) {
         return await prisma.stock.findMany({
             where: {
                 productId,
                 shopId
             },
-            ...(size !== undefined &&
+            ...(sort != undefined && {
+                orderBy: {
+                    [sort[0]]: sort[1]
+                }
+            }),
+            ...(size != undefined &&
             {
                 take: size
             }),
-            ...(page !== undefined && size !== undefined &&
+            ...(page != undefined && size != undefined &&
             {
                 skip: (page - 1) * size,
             }),

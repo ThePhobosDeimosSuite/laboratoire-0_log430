@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import Manager from '../controller/manager.js'
 import StoreEmployee from '../controller/store-employee.js'
+import { ParsedRequest, parseQueryParam } from '../utils/api-utils.js'
 const router = express.Router()
 
 /**
@@ -46,16 +47,26 @@ router.get('/store/:id/sales-report', async (req: Request, res: Response) => {
  *         description: Page size
  *         type: integer
  *         required: false
+ *       - name: sort
+ *         in: query
+ *         description: Sort
+ *         required: false
+ *         example: amount,asc
  *     responses:
  *       200:
  *         description: Stocks
+ *       400:
+ *         description: Error with query params (page, size and sort)
  */
-router.get('/store/:id/stock', async (req: Request, res: Response) => {
+router.get('/store/:id/stock', parseQueryParam, async (req: ParsedRequest, res: Response, next) => {
     const { id } = req.params
-    const { page, size } = req.query
-    const stocks = await StoreEmployee.getStocks(Number(id), 
-        page != undefined ? Number(page) : undefined,
-        size != undefined ? Number(size) : undefined)
+    const { page, size, sort } = req.parsedQuery
+    const stocks = await StoreEmployee.getStocks(
+        Number(id), 
+        undefined,
+        page,
+        size,
+        sort)
 
     res.json(stocks).send()
 })
@@ -81,16 +92,24 @@ router.get('/store/:id/stock', async (req: Request, res: Response) => {
  *         description: Page size
  *         type: integer
  *         required: false
+ *       - name: sort
+ *         in: query
+ *         description: Sort
+ *         required: false
+ *         example: id,asc
  *     responses:
  *       200:
  *         description: Sales
+ *       400:
+ *         description: Error with query params (page, size and sort)
  */
-router.get('/store/:id/sales', async (req: Request, res: Response) => {
+router.get('/store/:id/sales', parseQueryParam, async (req: ParsedRequest, res: Response) => {
     const { id } = req.params
-    const { page, size } = req.query
+    const { page, size, sort } = req.parsedQuery
     const sales = await StoreEmployee.searchSales(undefined, Number(id),
-        page != undefined ? Number(page) : undefined,
-        size != undefined ? Number(size) : undefined)
+        page,
+        size,
+        sort)
     res.json(sales).send()
 })
 
@@ -120,17 +139,25 @@ router.get('/store/:id/sales', async (req: Request, res: Response) => {
  *         description: Page size
  *         type: integer
  *         required: false
+ *       - name: sort
+ *         in: query
+ *         description: Sort
+ *         required: false
+ *         example: id,asc
  *     responses:
  *       200:
  *         description: Sales
+ *       400:
+ *         description: Error with query params (page, size and sort)
  */
 
-router.get('/store/:id/sales/:salesId', async (req: Request, res: Response) => {
+router.get('/store/:id/sales/:salesId', parseQueryParam, async (req: ParsedRequest, res: Response) => {
     const { id, salesId } = req.params
-    const { page, size } = req.query
+    const { page, size, sort } = req.parsedQuery
     const sales = await StoreEmployee.searchSales(Number(salesId), Number(id),
-        page != undefined ? Number(page) : undefined,
-        size != undefined ? Number(size) : undefined)
+        page,
+        size,
+        sort)
 
     res.json(sales).send()
 })
@@ -244,20 +271,29 @@ router.get('/dashboard', async (req: Request, res: Response) => {
  *         description: Page size
  *         type: integer
  *         required: false
+ *       - name: sort
+ *         in: query
+ *         description: Sort
+ *         required: false
+ *         example: name,asc
  *     responses:
  *       200:
  *         description: Product 
+ *       400:
+ *         description: Error in body
  */
-router.get('/product', async (req: Request, res: Response) => {
-    const { name, id, category, size, page } = req.query
+router.get('/product', parseQueryParam, async (req: ParsedRequest, res: Response) => {
+    const { page, size, sort } = req.parsedQuery
+    const { name, id, category } = req.query
 
     const product = await StoreEmployee.searchProduct(
         id != undefined ? Number(id) : undefined,
         name != undefined ? String(name) : undefined,
         category != undefined ? String(category) : undefined, 
         undefined,
-        page != undefined ? Number(page) : undefined,
-        size != undefined ? Number(size) : undefined
+        page,
+        size,
+        sort
     )
 
     res.json(product).send()
