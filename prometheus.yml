@@ -4,4 +4,4 @@ global:
 scrape_configs:
   - job_name: 'node'
     static_configs:
-      - targets: ['shop:3000', 'localhost:3000', 'localhost:9090'] # FIX THIS
+      - targets: ['shop1:3000', 'shop2:3000', 'shop3:3000']

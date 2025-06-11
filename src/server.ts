@@ -5,11 +5,10 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
 import cors from 'cors'
 import winston from 'winston';
-import promBundle from 'express-prom-bundle'
 import promClient from 'prom-client'
 
 const app = express()
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 // Prometheus
 const register = new promClient.Registry();
@@ -26,7 +25,7 @@ const responseTimeHistogram = new promClient.Histogram({
   name: 'http_response_time_seconds',
   help: 'HTTP response time in seconds',
   labelNames: ['method', 'route', 'status'],
-  buckets: [0.1, 0.5, 1, 2, 5], // Response time buckets
+  buckets: [0.1, 0.5, 1, 2, 5]
 });
 register.registerMetric(responseTimeHistogram);
 

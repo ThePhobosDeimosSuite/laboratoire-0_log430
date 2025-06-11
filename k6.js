@@ -1,6 +1,8 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
+const url = "http://localhost:80"
+
 export const options = {
   vus: 100,
   duration: '30s',
@@ -8,22 +10,22 @@ export const options = {
 };
 
 export default function() {
-    let responses = http.batch([`http://localhost:3000/api/store/1/stock`,
-      `http://localhost:3000/api/store/2/stock`,
-      `http://localhost:3000/api/store/3/stock`,
-      `http://localhost:3000/api/store/4/stock`,
-      `http://localhost:3000/api/store/5/stock`,
+    let responses = http.batch([`${url}/api/store/1/stock`,
+      `${url}/api/store/2/stock`,
+      `${url}/api/store/3/stock`,
+      `${url}/api/store/4/stock`,
+      `${url}/api/store/5/stock`,
     ]);
     
     responses.forEach(res => {
       check(res, { "status is 200": (res) => res.status === 200 });
     })
 
-    responses = http.batch([`http://localhost:3000/api/store/1/sales-report`,
-      `http://localhost:3000/api/store/2/sales-report`,
-      `http://localhost:3000/api/store/3/sales-report`,
-      `http://localhost:3000/api/store/4/sales-report`,
-      `http://localhost:3000/api/store/5/sales-report`
+    responses = http.batch([`${url}/api/store/1/sales-report`,
+      `${url}/api/store/2/sales-report`,
+      `${url}/api/store/3/sales-report`,
+      `${url}/api/store/4/sales-report`,
+      `${url}/api/store/5/sales-report`
     ])
 
     responses.forEach(res => {
@@ -31,7 +33,7 @@ export default function() {
     })
 
   for (let i = 0; i < 10; i++) {
-    const response = http.put(`http://localhost:3000/api/product/1`, JSON.stringify({
+    const response = http.put(`${url}/api/product/1`, JSON.stringify({
       name: `product:${i}`,
       category: `category:${i}`,
       price: i
