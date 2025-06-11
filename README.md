@@ -14,11 +14,14 @@ A **node.js** and **Express.js** app that manages 5 small shops, a supply center
     - **API**: Run `npm run api`
 
 #### Running using docker compose
-This will automatically create the database and run the api:
+This will automatically create the database, launch prometheus/grafana and run the api:
 - Run `docker compose up`
 
 #### Swagger
 - Swagger url is : `/api-docs`
+
+#### Grafana
+- 
 
 #### Postman
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
@@ -26,6 +29,8 @@ This will automatically create the database and run the api:
 
 #### Testing the project
 - Run `npm test`
+
+#### Stress testing with K6
 
 ## File structure
 This project is split into three folders:

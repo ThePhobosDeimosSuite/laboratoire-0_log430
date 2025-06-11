@@ -4,6 +4,7 @@ import StoreEmployee from '../controller/store-employee.js'
 import { ParsedRequest, parseQueryParam } from '../utils/api-utils.js'
 const router = express.Router()
 
+
 /**
  * @swagger
  * /api/store/{id}/sales-report:
