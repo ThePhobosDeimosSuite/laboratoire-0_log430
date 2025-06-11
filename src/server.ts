@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
 import cors from 'cors'
 import winston from 'winston';
+import promBundle from 'express-prom-bundle'
 import promClient from 'prom-client'
 
 const app = express()
@@ -21,9 +22,19 @@ const counter = new promClient.Counter({
 });
 register.registerMetric(counter);
 
+const responseTimeHistogram = new promClient.Histogram({
+  name: 'http_response_time_seconds',
+  help: 'HTTP response time in seconds',
+  labelNames: ['method', 'route', 'status'],
+  buckets: [0.1, 0.5, 1, 2, 5], // Response time buckets
+});
+register.registerMetric(responseTimeHistogram);
+
 app.use((req, res, next) => {
+  const end = responseTimeHistogram.startTimer()
   res.on('finish', () => {
     counter.labels(req.method, req.path, res.statusCode.toString()).inc();
+    end({ method: req.method, route: req.route ? req.route.path : req.path, status: res.statusCode });
   });
   next();
 });
@@ -33,11 +44,13 @@ app.get('/metrics', async (req, res) => {
   res.end(await register.metrics());
 });
 
+// const metricsMiddleware = promBundle({includeMethod: true, includePath: true, includeStatusCode: true})
+// app.use(metricsMiddleware);
+
 // Logger
 const logger = winston.createLogger({
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'combined.log' })
+    new winston.transports.Console()
   ]
 });
 
