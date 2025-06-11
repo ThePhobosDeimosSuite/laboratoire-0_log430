@@ -5,46 +5,15 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
 import cors from 'cors'
 import winston from 'winston';
-import promClient from 'prom-client'
+
+import {ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
-// Prometheus
-const register = new promClient.Registry();
-promClient.collectDefaultMetrics({ register });
+app.use(new ExpressPrometheusMiddleware().handler)
 
-const counter = new promClient.Counter({
-  name: 'http_requests_total',
-  help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status'],
-});
-register.registerMetric(counter);
-
-const responseTimeHistogram = new promClient.Histogram({
-  name: 'http_response_time_seconds',
-  help: 'HTTP response time in seconds',
-  labelNames: ['method', 'route', 'status'],
-  buckets: [0.1, 0.5, 1, 2, 5]
-});
-register.registerMetric(responseTimeHistogram);
-
-app.use((req, res, next) => {
-  const end = responseTimeHistogram.startTimer()
-  res.on('finish', () => {
-    counter.labels(req.method, req.path, res.statusCode.toString()).inc();
-    end({ method: req.method, route: req.route ? req.route.path : req.path, status: res.statusCode });
-  });
-  next();
-});
-
-app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', register.contentType);
-  res.end(await register.metrics());
-});
-
-// const metricsMiddleware = promBundle({includeMethod: true, includePath: true, includeStatusCode: true})
-// app.use(metricsMiddleware);
 
 // Logger
 const logger = winston.createLogger({

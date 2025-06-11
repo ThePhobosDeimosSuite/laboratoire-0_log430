@@ -21,9 +21,9 @@ const router = express.Router()
  *         description: Sales report
  */
 router.get('/store/:id/sales-report', async (req: Request, res: Response) => {
+    // TODO CACHE
     const { id } = req.params
     const salesReport = await Manager.getSalesReport(Number(id))
-
     res.json(salesReport).send()
 })
 
@@ -60,6 +60,7 @@ router.get('/store/:id/sales-report', async (req: Request, res: Response) => {
  *         description: Error with query params (page, size and sort)
  */
 router.get('/store/:id/stock', parseQueryParam, async (req: ParsedRequest, res: Response, next) => {
+    // TODO CACHE
     const { id } = req.params
     const { page, size, sort } = req.parsedQuery
     const stocks = await StoreEmployee.getStocks(
@@ -105,6 +106,7 @@ router.get('/store/:id/stock', parseQueryParam, async (req: ParsedRequest, res: 
  *         description: Error with query params (page, size and sort)
  */
 router.get('/store/:id/sales', parseQueryParam, async (req: ParsedRequest, res: Response) => {
+    // TODO CACHE
     const { id } = req.params
     const { page, size, sort } = req.parsedQuery
     const sales = await StoreEmployee.searchSales(undefined, Number(id),
@@ -206,6 +208,7 @@ router.get('/store/:id/sales/:salesId', parseQueryParam, async (req: ParsedReque
  * 
  */
 router.post('/store/:id/sales', async (req: Request, res: Response) => {
+    // TODO CACHE REMOVE CACHE
     const { id } = req.params
     const { productSales } = req.body
 
@@ -235,6 +238,7 @@ function checkProductSalesType(productSales: any): boolean {
  *         description: Dashboard
  */
 router.get('/dashboard', async (req: Request, res: Response) => {
+    // TODO CACHE
     const dashboard = await Manager.getDashboardView()
 
     res.json(dashboard).send()
