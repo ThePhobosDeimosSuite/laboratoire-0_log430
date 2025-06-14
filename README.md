@@ -14,17 +14,16 @@ A **node.js** and **Express.js** app that manages 5 small shops, a supply center
     - **API**: Run `npm run api`
 
 #### Running using docker compose
-This will automatically create the database, Redis cache, launch prometheus/grafana and run the api:
+This will automatically create the database, Redis, NGINX, prometheus/grafana and run 3 instances of the api:
 - Run `docker compose up`
 - Grafana URL is : `http://localhost:3001`
+- API URL is : `http://localhost:80`
 
 #### Swagger
 - Swagger url is : `/api-docs`
 
-
 #### Postman
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
-
 
 #### Testing the project
 - Run `npm test`

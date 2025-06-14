@@ -79,7 +79,7 @@ app.use(cors())
 app.use("/api", v1Route)
 
 app.listen(PORT, ()=> {
-    console.log("Server is running on port " + PORT)
+    logger.info("Server is running on port " + PORT)
 })
 
 export default app

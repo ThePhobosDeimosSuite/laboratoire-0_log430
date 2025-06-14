@@ -13,13 +13,24 @@ package "View" {
     component "main-menu-views" as mainMenuView
 }
 
+package API {
+    component "Express.js" as express
+}
+
 package "Prisma" {
     component schema.prisma
 }
 
 database "Server (PostgreSQL)" as Server
+database "Cache (Redis)" as Cache
 
 schema.prisma ..> Server
+
+express ..> storeEmployee
+express ..> supplyCenterEmployee
+express ..> manager
+
+express ..> Cache
 
 supplyCenterEmployeeView ..> supplyCenterEmployee
 managerView ..> manager

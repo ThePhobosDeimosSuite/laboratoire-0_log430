@@ -1,12 +1,42 @@
 @startuml deployement
 title Deployement Diagram
 node "Database container" {
-    database "Server (PostgreSQL)" as Server
+    database "PostgreSQL" as DB
+    database "Redis" as Cache
 }
 
 node "App container"  {
-    artifact "Node.js CLI" as Client
+    artifact Shop1
+    artifact Shop2
+    artifact Shop3
+    artifact "Prisma" as Prisma
 }
 
-    [Client] --> "Prisma over TCP" [Server]
+node "Monitoring container" {
+    artifact Prometheus
+    artifact Grafana
+}
+
+node "Load balancer container" {
+    artifact NGINX
+}
+    [NGINX] --> [Shop1]
+    [NGINX] --> [Shop2]
+    [NGINX] --> [Shop3]
+
+    [Shop1] --> [Prometheus]
+    [Shop2] --> [Prometheus]
+    [Shop3] --> [Prometheus]
+
+    [Shop1] --> [Prisma]
+    [Shop2] --> [Prisma]
+    [Shop3] --> [Prisma]
+
+    [Shop1] --> [Cache]
+    [Shop2] --> [Cache]
+    [Shop3] --> [Cache]
+
+
+    [Prometheus] --> [Grafana]
+    [Prisma] --> [DB]
 @enduml

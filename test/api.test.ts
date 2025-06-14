@@ -104,6 +104,5 @@ describe('Sales', () => {
         const response = await request(app).get('/api/dashboard')
         expect(response.status).toBe(200)
         expect(response.body.allSalesPerStore['Store 5']).not.toBe("0 $")
-
     })
 })

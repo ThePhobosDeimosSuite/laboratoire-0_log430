@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import Manager from '../controller/manager.js'
 import StoreEmployee from '../controller/store-employee.js'
 import { ParsedRequest, parseQueryParam } from '../utils/api-utils.js'
-import redisMiddleware from '../utils/redis-middleware.js'
+import { cacheSales, cacheStocks } from '../utils/redis-middleware.js'
 const router = express.Router()
 
 
@@ -21,7 +21,7 @@ const router = express.Router()
  *       200:
  *         description: Sales report
  */
-router.get('/store/:id/sales-report', redisMiddleware, async (req: Request, res: Response) => {
+router.get('/store/:id/sales-report', cacheSales, async (req: Request, res: Response) => {
     const { id } = req.params
     const salesReport = await Manager.getSalesReport(Number(id))
     res.json(salesReport).send()
@@ -59,7 +59,7 @@ router.get('/store/:id/sales-report', redisMiddleware, async (req: Request, res:
  *       400:
  *         description: Error with query params (page, size and sort)
  */
-router.get('/store/:id/stock', parseQueryParam, redisMiddleware, async (req: ParsedRequest, res: Response, next) => {
+router.get('/store/:id/stock', parseQueryParam, cacheStocks, async (req: ParsedRequest, res: Response, next) => {
     const { id } = req.params
     const { page, size, sort } = req.parsedQuery
     const stocks = await StoreEmployee.getStocks(
@@ -104,7 +104,7 @@ router.get('/store/:id/stock', parseQueryParam, redisMiddleware, async (req: Par
  *       400:
  *         description: Error with query params (page, size and sort)
  */
-router.get('/store/:id/sales', parseQueryParam, redisMiddleware, async (req: ParsedRequest, res: Response) => {
+router.get('/store/:id/sales', parseQueryParam, cacheSales, async (req: ParsedRequest, res: Response) => {
     const { id } = req.params
     const { page, size, sort } = req.parsedQuery
     const sales = await StoreEmployee.searchSales(undefined, Number(id),
@@ -152,7 +152,7 @@ router.get('/store/:id/sales', parseQueryParam, redisMiddleware, async (req: Par
  *         description: Error with query params (page, size and sort)
  */
 
-router.get('/store/:id/sales/:salesId', parseQueryParam, async (req: ParsedRequest, res: Response) => {
+router.get('/store/:id/sales/:salesId', parseQueryParam, cacheSales, async (req: ParsedRequest, res: Response) => {
     const { id, salesId } = req.params
     const { page, size, sort } = req.parsedQuery
     const sales = await StoreEmployee.searchSales(Number(salesId), Number(id),
@@ -205,7 +205,7 @@ router.get('/store/:id/sales/:salesId', parseQueryParam, async (req: ParsedReque
  *         description: Error in body
  * 
  */
-router.post('/store/:id/sales', redisMiddleware, async (req: Request, res: Response) => {
+router.post('/store/:id/sales', cacheSales, async (req: Request, res: Response) => {
     const { id } = req.params
     const { productSales } = req.body
 

@@ -11,18 +11,31 @@ const logger = winston.createLogger({
 let redisClient = undefined
 
 export async function initializeRedisConnection(redisURL: string) {
-    redisClient = createClient({url: redisURL}).on("error", (e) => {
-        logger.error("Can't connect to Redis")
+    redisClient = createClient({url: redisURL, }).on("error", (e) => {
+        logger.error("Can't connect to Redis ")
         logger.error(e)
+        redisClient.destroy()
+        redisClient = undefined
     })
-
     await redisClient.connect()
-    logger.info("Redis connected!")
+    if(redisClient != undefined) {
+        logger.info("Redis connected!")
+    }
 }
 
-// Cache sales and stocks
-export default async (req: Request, res: Response, next: NextFunction) => {
-    // TODO update diagrams
+export async function cacheSales(req: Request, res: Response, next: NextFunction) {
+    await handleCacheRequest("sales", req, res, next)
+}
+
+export async function cacheStocks(req: Request, res: Response, next: NextFunction) {
+    await handleCacheRequest("stocks", req, res, next)
+}
+
+async function handleCacheRequest(objectType:string ,req: Request, res: Response, next: NextFunction) {
+    if(redisClient == undefined) {
+        next()
+        return
+    }
 
     // Clear cache when post request
     if(req.method == "POST") {
@@ -30,7 +43,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
         for await (const keys of redisClient.scanIterator({
             TYPE: "string",
-            MATCH: `*${id}*`,
+            MATCH: `${objectType}*${id}*`,
             COUNT: 500
         })) {
             for(const key of keys) {
@@ -42,10 +55,16 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         return
     }
 
-    const cachedData = await redisClient.get(req.url)
+    getCacheData(`${objectType}:${req.url}`, res, next)
+}
+
+
+async function getCacheData (url: string, res: Response, next: NextFunction) {
+
+    const cachedData = await redisClient.get(url)
 
     if(cachedData) {
-        logger.info(`Data taken from cache : ${req.url}`)
+        logger.info(`Data taken from cache : ${url}`)
         res.send(JSON.parse(cachedData))
         return
     } else {
@@ -54,8 +73,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         res.send = (data): Response<any, Record<string, any>> => {
             res.send = oldSend
             if (res.statusCode.toString().startsWith("2")) {
-                logger.info(`New data saved to cache : ${req.url}`)
-                redisClient.set(req.url, data, 
+                logger.info(`New data saved to cache : ${url}`)
+                redisClient.set(url, data, 
                     {
                         EX:21600 // Save cache for 6h
                     })
