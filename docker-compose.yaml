@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile 
     environment:
       DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
+      REDIS_URL: redis://redis:6379
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
     expose:
@@ -19,6 +20,20 @@ services:
       dockerfile: Dockerfile 
     environment:
       DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+    command: sh -c "npx prisma db push && npm run api"
+    expose:
+      - "3000"
+  shop3:
+    depends_on:
+      - db
+    build:
+      context: ./
+      dockerfile: Dockerfile 
+    environment:
+      DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
+      REDIS_URL: redis://redis:6379
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
     expose:
@@ -44,6 +59,7 @@ services:
     depends_on:
       - shop1
       - shop2
+      - shop3
 
   redis:
     image: redis:alpine

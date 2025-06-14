@@ -5,8 +5,8 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
 import cors from 'cors'
 import winston from 'winston';
-
-import {ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+import { initializeRedisConnection } from './utils/redis-middleware.js'
 
 
 const app = express()
@@ -66,12 +66,13 @@ v1Route.use((req, res, next) => {
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(swaggerSpec));
 
-// app.use(basicAuth({
-//     users: {
-//         "admin": "123"
-//     }
-// }))
+app.use(basicAuth({
+    users: {
+        "admin": "123"
+    }
+}))
 
+await initializeRedisConnection(process.env.REDIS_URL)
 
 app.use(express.json())
 app.use(cors())

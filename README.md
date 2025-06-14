@@ -14,14 +14,13 @@ A **node.js** and **Express.js** app that manages 5 small shops, a supply center
     - **API**: Run `npm run api`
 
 #### Running using docker compose
-This will automatically create the database, launch prometheus/grafana and run the api:
+This will automatically create the database, Redis cache, launch prometheus/grafana and run the api:
 - Run `docker compose up`
+- Grafana URL is : `http://localhost:3001`
 
 #### Swagger
 - Swagger url is : `/api-docs`
 
-#### Grafana
-- 
 
 #### Postman
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
@@ -31,6 +30,9 @@ This will automatically create the database, launch prometheus/grafana and run t
 - Run `npm test`
 
 #### Stress testing with K6
+
+- Install K6
+- Run `k6 run k6.js`
 
 ## File structure
 This project is split into three folders:
@@ -52,4 +54,4 @@ This repo has a pipeline with 4 differents steps:
 1. Check syntaxe with ESLint
 2. Create PostgreSQL database and run unit tests
 3. Create Docker image
-4. Push Docker image to DockerHub under the repository *pebrassard/lab3*
+4. Push Docker image to DockerHub under the repository *pebrassard/lab4*

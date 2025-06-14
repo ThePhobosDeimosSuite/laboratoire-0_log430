@@ -1,7 +1,6 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
-const url = "http://localhost:80"
 
 export const options = {
   vus: 100,
@@ -10,6 +9,9 @@ export const options = {
 };
 
 export default function() {
+  const credentials = `admin:123`;
+  const url = `http://${credentials}@localhost:80`
+
     let responses = http.batch([`${url}/api/store/1/stock`,
       `${url}/api/store/2/stock`,
       `${url}/api/store/3/stock`,
