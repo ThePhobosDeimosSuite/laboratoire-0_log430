@@ -1,5 +1,4 @@
-
-import Manager from '../../controller/manager.js'
+import SalesService from "../../controller/sales-service.js";
 import appConst from "../../utils/app-const.js"
 import { colorizeJSON } from "../../utils/output-utils.js"
 import mainBusinessView from "./main-business-view.js"
@@ -16,7 +15,7 @@ export default async () => {
             mainBusinessView()
         } else {
             const selectedStoreId = appConst.storeShopId[response.selectedIndex]
-            const salesReport = await Manager.getSalesReport(selectedStoreId)
+            const salesReport = await SalesService.getSalesReport(selectedStoreId)
 
             terminal.clear()
 

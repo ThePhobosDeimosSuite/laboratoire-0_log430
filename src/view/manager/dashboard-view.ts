@@ -1,5 +1,4 @@
-import Manager from '../../controller/manager.js'
-import appConst from "../../utils/app-const.js"
+import SalesService from "../../controller/sales-service.js";
 import { colorizeJSON } from "../../utils/output-utils.js"
 import mainBusinessView from "./main-business-view.js"
 import terminalKit from "terminal-kit";
@@ -9,7 +8,7 @@ const { terminal } = terminalKit
 export default async () => {
     terminal.clear()
 
-    const dashboardView = await Manager.getDashboardView()
+    const dashboardView = await SalesService.getDashboardView()
 
     terminal.cyan("TOTAL SALES PER STORE: ")
     colorizeJSON(dashboardView.allSalesPerStore)

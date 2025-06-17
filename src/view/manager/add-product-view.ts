@@ -1,8 +1,8 @@
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
-import Manager from '../../controller/manager.js'
 import { askNumber, askString} from '../../utils/input-utils.js'
 import mainBusinessView from './main-business-view.js'
+import ProductService from "../../controller/product-service.js";
 
 export default async() => {
     terminal.clear()
@@ -10,7 +10,7 @@ export default async() => {
     const price = await askNumber("\nEnter product price: ")
     const category = await askString("\nEnter category: ")
     
-    Manager.addProduct(name, price, category)
+    ProductService.addProduct(name, price, category)
 
     mainBusinessView()
 }

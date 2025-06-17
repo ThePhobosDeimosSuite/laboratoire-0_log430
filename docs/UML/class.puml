@@ -1,63 +1,106 @@
 @startuml class
 title Class Diagram
-class StoreEmployee {
-    + searchForProduct(id:Number, name:String, category:String): Product
-    + addSales(sales: Sales): Void
-    + cancelSales(id: Number): Void    
-    + getStocks(): Void
-    + orderStocks(productId: Number, amount: Number): Void
+
+
+' class StoreEmployee {
+'     + searchForProduct(id:Number, name:String, category:String): Product
+'     + addSales(sales: Sales): Void
+'     + cancelSales(id: Number): Void    
+'     + getStocks(): Void
+'     + orderStocks(productId: Number, amount: Number): Void
+' }
+
+' class SupplyCenterEmployee {
+'     + deliverStocks(productId: Number, storeId: Number): Void
+' }
+
+' class Manager {
+'     + addProduct(name: String, category: String, price:Number): Void
+'     + updateProduct(id:Number, name: String, category: String, price:Number): Void
+'     + getSalesReport(storeId:Number): String
+'     + getDashboardView(): String
+' }
+
+
+
+package ProductManagement {
+    class ProductService {
+        + addProduct(name: String, category: String, price:Number): Void
+        + updateProduct(id:Number, name: String, category: String, price:Number): Void
+        + searchProduct(id:Number, name: String, category: String): Product
+    }
+
+    class Product {
+        id: Number
+        name: String
+        category: String
+        price: Number
+    }
 }
 
-class SupplyCenterEmployee {
-    + deliverStocks(productId: Number, storeId: Number): Void
+ProductService ..> Product
+
+package StocksManagement {
+    class StocksService {
+        + addStocks(productId: Number, amount: Number, storeId: Number): Void
+        + getStocks(productId: Number, storeId: Number): Stock
+        + decrementStocks(productId: Number, amount: Number, storeId: Number): Void
+        + addOrder(productId: Number, amount: Number, storeId: Number)
+        + getOrder(): Order
+        + removeOrder(productId: Number, storeId: Number): Void
+    }
+    class Order {
+        amount: Number
+        storeId: Number
+    }
+
+    class Stock {
+        amount: Number
+        storeId: Number
+    }
 }
 
-class Manager {
-    + addProduct(name: String, category: String, price:Number): Void
-    + updateProduct(id:Number, name: String, category: String, price:Number): Void
-    + getSalesReport(storeId:Number): String
-    + getDashboardView(): String
+StocksService ..> Stock
+StocksService ..> Order
+
+
+package SalesManagement {
+    class SalesService {
+        + getSalesReport(storeId: Number): String
+        + createSales(productSales: ProductSales, storeId: Number): Void
+        + searchSales(id: String, storeId: Number): Sales
+        + cancelSales(id: String, storeId: Number) : Void
+    }
+    class ProductSales {
+        amount: Number
+    }
+
+    class Sales {
+        date: DateTime
+        isCancelled: Boolean
+        storeId: Number
+        + getPriceTotal(): Number
+    }
 }
 
-class Product {
-    id: Number
-    name: String
-    category: String
-    price: Number
-}
+v1Route ..> ProductService
+v1Route ..> StocksService
+v1Route ..> SalesService
 
-class Sales {
-    date: DateTime
-    isCancelled: Boolean
-    storeId: Number
-    + getPriceTotal(): Number
-}
+SalesService ..> ProductSales
+SalesService ..> Sales
 
-class Stock {
-    amount: Number
-    storeId: Number
-}
+' StoreEmployee ..> Sales
 
-class Order {
-    amount: Number
-    storeId: Number
-}
+' StoreEmployee ..> Product
 
-class ProductSales {
-    amount: Number
-}
+' StoreEmployee ..> Stock
 
-StoreEmployee ..> Sales
+' StoreEmployee ..> Order
 
-StoreEmployee ..> Product
+' SupplyCenterEmployee --|> StoreEmployee
 
-StoreEmployee ..> Stock
-
-StoreEmployee ..> Order
-
-SupplyCenterEmployee --|> StoreEmployee
-
-Manager --|> SupplyCenterEmployee
+' Manager --|> SupplyCenterEmployee
 
 Sales "1" *-- "*" ProductSales
 
@@ -66,4 +109,64 @@ ProductSales "*" o-- "1" Product
 Stock "*" o-- "1" Product
 
 Order "*" o-- "1" Product
+
+
+class MainBusinessView
+class AddProductView
+class DashboardView
+class SalesReportView
+class UpdateProductView
+
+MainBusinessView ..> AddProductView
+MainBusinessView ..> DashboardView
+MainBusinessView ..> SalesReportView
+MainBusinessView ..> UpdateProductView
+
+AddProductView ..> ProductService
+' DashboardView ..> Manager
+SalesReportView ..> SalesService
+UpdateProductView ..> ProductService
+
+class StoreView
+class CancelSalesView
+class CreateSalesView
+class GetStocksView
+class OrderMoreStocksView
+class SearchProductView
+class searchSalesView
+
+StoreView ..> CancelSalesView
+StoreView ..> CreateSalesView
+StoreView ..> GetStocksView
+StoreView ..> OrderMoreStocksView
+StoreView ..> SearchProductView
+StoreView ..> searchSalesView
+
+
+CancelSalesView ..> SalesService
+CreateSalesView ..> SalesService
+GetStocksView ..> StocksService
+OrderMoreStocksView ..> StocksService
+SearchProductView ..> ProductService
+searchSalesView ..> SalesService
+
+class SupplyCenterView
+class DeliverStockView
+class CreateStockView
+
+SupplyCenterView ..> DeliverStockView
+SupplyCenterView ..> CreateStockView
+
+DeliverStockView ..> StocksService
+CreateStockView ..> StocksService
+
+class MenuView
+
+MenuView ..> SupplyCenterView
+MenuView ..> StoreView
+MenuView ..> MainBusinessView
+
+class v1Route {
+    + getRouter(): Router
+}
 @enduml

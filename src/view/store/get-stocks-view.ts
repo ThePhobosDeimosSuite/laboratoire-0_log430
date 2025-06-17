@@ -1,4 +1,4 @@
-import StoreEmployee from "../../controller/store-employee.js"
+import StocksService from "../../controller/stocks-service.js";
 import appConst from "../../utils/app-const.js";
 import { colorizeJSON } from "../../utils/output-utils.js"
 import supplyCenterView from "../supply-center/supply-center-view.js";
@@ -9,7 +9,7 @@ const { terminal } = terminalKit
 
 export default async (shopId: number) => {
     terminal.clear()
-    const stocks = await StoreEmployee.getStocks(shopId)
+    const stocks = await StocksService.getStocks(shopId)
     const res = stocks.map(s => ({
         amount: s.amount,
         name: s.product.name,

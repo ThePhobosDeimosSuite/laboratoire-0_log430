@@ -1,11 +1,11 @@
-import SupplyCenterEmployee from "../../controller/supply-center-employee.js"
+import StocksService from "../../controller/stocks-service.js";
 import appConst from "../../utils/app-const.js"
 import supplyCenterView from "./supply-center-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
 
 export default async () => {
-    const orders = await SupplyCenterEmployee.getOrder() 
+    const orders = await StocksService.getOrder() 
     terminal.clear()
     terminal.yellow("List of current orders (press enter to accept, escape to cancel): ")
 
@@ -24,12 +24,12 @@ export default async () => {
             } else {
                 const selectedOrder = orders[response.selectedIndex]
 
-                await SupplyCenterEmployee.removeOrder(selectedOrder.productId, selectedOrder.shopId) // Delete order
-                await SupplyCenterEmployee.decrementStocks(
+                await StocksService.removeOrder(selectedOrder.productId, selectedOrder.shopId) // Delete order
+                await StocksService.decrementStocks(
                     selectedOrder.productId,
                     selectedOrder.amount,
                     appConst.supplyCenterShopId) // Decrement stock for supply center
-                await SupplyCenterEmployee.addStocks(
+                await StocksService.addStocks(
                     selectedOrder.productId,
                     selectedOrder.amount,
                     selectedOrder.shopId) //Increase stock for store

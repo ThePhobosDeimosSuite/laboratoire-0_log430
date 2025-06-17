@@ -1,4 +1,5 @@
-import SupplyCenterEmployee from "../../controller/supply-center-employee.js"
+import ProductService from "../../controller/product-service.js";
+import StocksService from "../../controller/stocks-service.js";
 import appConst from "../../utils/app-const.js"
 import { askNumber } from "../../utils/input-utils.js"
 import supplyCenterView from "./supply-center-view.js"
@@ -8,7 +9,7 @@ const { terminal } = terminalKit
 
 export default async () => {
     terminal.clear()
-    const products = await SupplyCenterEmployee.searchProduct(undefined, undefined, undefined, appConst.supplyCenterShopId)
+    const products = await ProductService.searchProduct(undefined, undefined, undefined, appConst.supplyCenterShopId)
     const menu = products.map(p => `${p.name} (Stock: ${p.stock[0]?.amount ?? 0})`)
 
     terminal.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
@@ -18,7 +19,7 @@ export default async () => {
             const productId = products[response.selectedIndex].id
             const amount = await askNumber("\nAmount: ")
         
-            await SupplyCenterEmployee.addStocks(productId, amount, appConst.supplyCenterShopId)
+            await StocksService.addStocks(productId, amount, appConst.supplyCenterShopId)
         
             supplyCenterView()
         }

@@ -1,5 +1,6 @@
+import ProductService from "../../controller/product-service.js";
+import SalesService from "../../controller/sales-service.js";
 import { askInput, askNumber } from "../../utils/input-utils.js"
-import StoreEmployee from "../../controller/store-employee.js"
 import businessView from "./store-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
@@ -11,7 +12,7 @@ export default async (shopId: number) => {
     async function createProductSales() {
         terminal.clear()
 
-        const products = await StoreEmployee.searchProduct(undefined, undefined, undefined, shopId)
+        const products = await ProductService.searchProduct(undefined, undefined, undefined, shopId)
         const menu = products.map(p => `${p.name} (Stock: ${p.stock[0]?.amount ?? 0})`)
         
         terminal.singleColumnMenu(menu, { cancelable: true }, async (error, response) => {
@@ -47,7 +48,7 @@ export default async (shopId: number) => {
     }
 
     async function pushSales() {
-        StoreEmployee.createSales(productSales, shopId)
+        SalesService.createSales(productSales, shopId)
         businessView(shopId)
     }
 
