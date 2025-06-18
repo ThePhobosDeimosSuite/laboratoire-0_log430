@@ -1,4 +1,4 @@
-import appConst from "../../utils/app-const.js"
+import appConst from "../../shared-utils/app-const.js"
 import menuView from "../menu-view.js"
 import getStocksView from "../store/get-stocks-view.js"
 import createStockView from "./create-stock-view.js"

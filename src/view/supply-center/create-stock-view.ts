@@ -1,7 +1,7 @@
 import ProductService from "../../controller/product-service.js";
 import StocksService from "../../controller/stocks-service.js";
-import appConst from "../../utils/app-const.js"
-import { askNumber } from "../../utils/input-utils.js"
+import appConst from "../../shared-utils/app-const.js"
+import { askNumber } from "../../shared-utils/input-utils.js"
 import supplyCenterView from "./supply-center-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit

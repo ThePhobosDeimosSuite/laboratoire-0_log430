@@ -1,0 +1,24 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: product-service
+    url: http://product-service:3001
+    routes:
+      - name: product-route
+        paths:
+          - /product
+
+  - name: sales-service
+    url: http://sales-service:3002
+    routes:
+      - name: sales-route
+        paths:
+          - /store
+
+  - name: stocks-service
+    url: http://stocks-service:3003
+    routes:
+      - name: stocks-route
+        paths:
+          - /stocks

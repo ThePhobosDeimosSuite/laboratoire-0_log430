@@ -1,6 +1,6 @@
 import SalesService from "../../controller/sales-service.js";
-import { askNumber } from "../../utils/input-utils.js"
-import { colorizeJSON } from "../../utils/output-utils.js"
+import { askNumber } from "../../shared-utils/input-utils.js"
+import { colorizeJSON } from "../../shared-utils/output-utils.js"
 import businessView from "./store-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit

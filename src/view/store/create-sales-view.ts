@@ -1,6 +1,6 @@
 import ProductService from "../../controller/product-service.js";
 import SalesService from "../../controller/sales-service.js";
-import { askInput, askNumber } from "../../utils/input-utils.js"
+import { askInput, askNumber } from "../../shared-utils/input-utils.js"
 import businessView from "./store-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit

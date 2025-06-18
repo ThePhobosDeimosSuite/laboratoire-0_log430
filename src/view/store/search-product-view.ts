@@ -1,8 +1,8 @@
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
 import businessView from './store-view.js'
-import { askString} from '../../utils/input-utils.js'
-import { colorizeJSON } from '../../utils/output-utils.js'
+import { askString} from '../../shared-utils/input-utils.js'
+import { colorizeJSON } from '../../shared-utils/output-utils.js'
 import ProductService from "../../controller/product-service.js";
 
 

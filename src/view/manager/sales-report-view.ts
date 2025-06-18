@@ -1,6 +1,6 @@
 import SalesService from "../../controller/sales-service.js";
-import appConst from "../../utils/app-const.js"
-import { colorizeJSON } from "../../utils/output-utils.js"
+import appConst from "../../shared-utils/app-const.js"
+import { colorizeJSON } from "../../shared-utils/output-utils.js"
 import mainBusinessView from "./main-business-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit

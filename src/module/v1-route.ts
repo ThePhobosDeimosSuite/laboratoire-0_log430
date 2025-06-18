@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
-import { ParsedRequest, parseQueryParam } from '../utils/api-utils.js'
-import { cacheSales, cacheStocks } from '../utils/redis-middleware.js'
+import { ParsedRequest, parseQueryParam } from '../shared-utils/index.js'
+import { cacheSales, cacheStocks } from '../shared-utils/redis-middleware.js'
 import SalesService from '../controller/sales-service.js'
 import StocksService from '../controller/stocks-service.js'
 import ProductService from '../controller/product-service.js'

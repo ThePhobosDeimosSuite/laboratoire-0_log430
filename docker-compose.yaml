@@ -1,79 +1,108 @@
 services:
-  shop1:
+  product-service:
     depends_on:
-      - db
+      - product-db
     build:
-      context: ./
+      context: ./src/module/product
       dockerfile: Dockerfile 
     environment:
-      DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
-      REDIS_URL: redis://redis:6379
-      PORT: 3000
+      DATABASE_URL: postgresql://postgres:123@product_db:5432/product
+      PORT: 3001
     command: sh -c "npx prisma db push && npm run api"
     expose:
-      - "3000"
-  shop2:
+      - "3001"
+  sales-service:
     depends_on:
-      - db
+      - sales-db
     build:
-      context: ./
+      context: ./src/module/sales
       dockerfile: Dockerfile 
     environment:
-      DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
-      REDIS_URL: redis://redis:6379
-      PORT: 3000
+      DATABASE_URL: postgresql://postgres:123@sales_db:5432/sales
+      PORT: 3002
     command: sh -c "npx prisma db push && npm run api"
     expose:
-      - "3000"
-  shop3:
+      - "3002"
+  stocks-service:
     depends_on:
-      - db
+      - stocks-db
     build:
-      context: ./
+      context: ./src/module/stocks
       dockerfile: Dockerfile 
     environment:
-      DATABASE_URL: postgresql://postgres:123@postgres_db:5432/shop
-      REDIS_URL: redis://redis:6379
-      PORT: 3000
+      DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
+      PORT: 3003
     command: sh -c "npx prisma db push && npm run api"
     expose:
-      - "3000"
-  db:
+      - "3003"
+  product-db:
     image: postgres
-    hostname: postgres_db
-    container_name: postgres_db
+    container_name: product-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: shop
+      POSTGRES_DB: product
+    expose:
+      - "5432:5432"
+  sales-db:
+    image: postgres
+    container_name: sales_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: sales
+    ports:
+      - "5432:5432"
+  stocks-db:
+    image: postgres
+    container_name: stocks_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: stocks
     ports:
       - "5432:5432"
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
+  kong:
+    image: kong:3.5
+    container_name: kong
     ports:
-      - "80:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - "8000:8000"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
     depends_on:
-      - shop1
-      - shop2
-      - shop3
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
+      - stocks-service
+      - product-service
+      - sales-service
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./kong.yml:/etc/kong/kong.yml:ro
+
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - shop1
+  #     - shop2
+  #     - shop3
+
+  # redis:
+  #   image: redis:alpine
+  #   ports:
+  #     - "6379:6379"
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
     
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3001:3000"
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3001:3000"

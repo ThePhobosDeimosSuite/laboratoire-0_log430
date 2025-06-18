@@ -1,6 +1,6 @@
-import { askNumber } from "../../utils/input-utils.js"
+import { askNumber } from "../../shared-utils/input-utils.js"
 import storeView from "./store-view.js"
-import appConst from "../../utils/app-const.js"
+import appConst from "../../shared-utils/app-const.js"
 import terminalKit from "terminal-kit";
 import ProductService from "../../controller/product-service.js";
 import StocksService from "../../controller/stocks-service.js";

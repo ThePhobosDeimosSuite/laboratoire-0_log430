@@ -6,7 +6,7 @@ import swaggerJSDoc from 'swagger-jsdoc'
 import cors from 'cors'
 import winston from 'winston';
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
-import { initializeRedisConnection } from './utils/redis-middleware.js'
+import { initializeRedisConnection } from './shared-utils/redis-middleware.js'
 
 
 const app = express()

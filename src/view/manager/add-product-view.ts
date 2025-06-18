@@ -1,6 +1,6 @@
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
-import { askNumber, askString} from '../../utils/input-utils.js'
+import { askNumber, askString} from '../../shared-utils/input-utils.js'
 import mainBusinessView from './main-business-view.js'
 import ProductService from "../../controller/product-service.js";
 

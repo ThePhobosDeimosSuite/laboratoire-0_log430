@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import StocksService from "./stocks-service.js"
-import appConst from "../utils/app-const.js"
+import appConst from "../shared-utils/app-const.js"
 import ProductService from "./product-service.js"
 const prisma = new PrismaClient()
 

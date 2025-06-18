@@ -1,5 +1,5 @@
 import StocksService from "../../controller/stocks-service.js";
-import appConst from "../../utils/app-const.js"
+import appConst from "../../shared-utils/app-const.js"
 import supplyCenterView from "./supply-center-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit

@@ -1,5 +1,5 @@
 import SalesService from "../../controller/sales-service.js";
-import { askNumber } from "../../utils/input-utils.js"
+import { askNumber } from "../../shared-utils/input-utils.js"
 import businessView from "./store-view.js"
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
