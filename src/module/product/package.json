@@ -18,7 +18,6 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "shared-utils": "file:../../shared-utils",
     "@prisma/client": "^6.8.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",

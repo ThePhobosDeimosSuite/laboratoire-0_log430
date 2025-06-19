@@ -7,18 +7,22 @@ services:
     routes:
       - name: product-route
         paths:
-          - /product
+          - /api/product
+        strip_path: false
 
   - name: sales-service
     url: http://sales-service:3002
     routes:
       - name: sales-route
         paths:
-          - /store
+          - ~/api/store/[0-9]+/sales.*$
+        strip_path: false
 
   - name: stocks-service
     url: http://stocks-service:3003
     routes:
       - name: stocks-route
         paths:
-          - /stocks
+          - ~/api/store/[0-9]+/stock.*$
+          - ~/api/store/[0-9]+/order.*$
+        strip_path: false

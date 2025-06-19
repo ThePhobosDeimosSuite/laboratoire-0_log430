@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import winston from 'winston';
-import { ParsedRequest, parseQueryParam } from 'utils'
+import { ParsedRequest, parseQueryParam } from './api-utils.js'
 import StocksService from './stocks-service.js';
 
 const app = express()
@@ -15,9 +15,11 @@ const logger = winston.createLogger({
 });
 
 app.use((req, res, next) => {
-    logger.info(req.url)
-    next()
+  logger.info(req.url)
+  next()
 })
+
+app.use(express.json())
 
 
 /**
@@ -54,22 +56,88 @@ app.use((req, res, next) => {
  */
 router.get('/store/:id/stock', parseQueryParam, async (req: ParsedRequest, res: Response, next) => {
   // cacheStocks
-    const { id } = req.params
-    const { page, size, sort } = req.parsedQuery
-    const stocks = await StocksService.getStocks(
-        Number(id), 
-        undefined,
-        page,
-        size,
-        sort)
+  const { id } = req.params
+  const { page, size, sort } = req.parsedQuery
+  const stocks = await StocksService.getStocks(
+    Number(id),
+    undefined,
+    page,
+    size,
+    sort)
 
-    res.json(stocks).send()
+  res.json(stocks).send()
+})
+
+
+/**
+ * @swagger
+ * /api/store/{id}/order:
+ *   get:
+ *     description: Get orders for shop
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         description: Store ID
+ *         type: integer
+ *         required: true
+ *       - name: page
+ *         in: query
+ *         description: Page number
+ *         type: integer
+ *         required: false
+ *       - name: size
+ *         in: query
+ *         description: Page size
+ *         type: integer
+ *         required: false
+ *       - name: sort
+ *         in: query
+ *         description: Sort
+ *         required: false
+ *         example: amount,asc
+ *     responses:
+ *       200:
+ *         description: Orders
+ *       400:
+ *         description: Error with query params (page, size and sort)
+ */
+router.get('/store/:id/order', async (req: ParsedRequest, res: Response, next) => {
+  const { id } = req.params
+  const orders = await StocksService.getOrder(
+    Number(id))
+
+  res.json(orders).send()
+})
+
+router.post('/store/:id/stock', async (req: ParsedRequest, res: Response, next) => {
+  const { id } = req.params
+  const { productId, amount } = req.body
+  await StocksService.addStocks(
+    productId,
+    amount,
+    Number(id),
+  )
+
+  res.status(204).send()
+})
+
+router.post('/store/:id/order', async (req: ParsedRequest, res: Response, next) => {
+  const { id } = req.params
+  const { productId, amount } = req.body
+  await StocksService.addOrder(
+    productId,
+    amount,
+    Number(id),
+  )
+
+  res.status(204).send()
 })
 
 
 
-app.use('/', router)
 
-app.listen(PORT, ()=> {
-    logger.info("Server is running on port " + PORT)
+app.use("/api", router)
+
+app.listen(PORT, () => {
+  logger.info("Server is running on port " + PORT)
 })

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import winston from 'winston';
-import { ParsedRequest, parseQueryParam } from 'utils'
+import { ParsedRequest, parseQueryParam } from './api-utils.js'
 import SalesService from './sales-service.js';
 
 const app = express()
@@ -19,29 +19,30 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use(express.json())
 
 
-/**
- * @swagger
- * /api/store/{id}/sales-report:
- *   get:
- *     description: Get shop sales report
- *     parameters: 
- *       - name: id
- *         in: path
- *         description: Store ID
- *         type: integer
- *         required: true
- *     responses:
- *       200:
- *         description: Sales report
- */
-router.get('/store/:id/sales-report', async (req: Request, res: Response) => {
-    // cacheSales
-    const { id } = req.params
-    const salesReport = await SalesService.getSalesReport(Number(id))
-    res.json(salesReport).send()
-})
+// /**
+//  * @swagger
+//  * /api/store/{id}/sales-report:
+//  *   get:
+//  *     description: Get shop sales report
+//  *     parameters: 
+//  *       - name: id
+//  *         in: path
+//  *         description: Store ID
+//  *         type: integer
+//  *         required: true
+//  *     responses:
+//  *       200:
+//  *         description: Sales report
+//  */
+// router.get('/store/:id/sales-report', async (req: Request, res: Response) => {
+//     // cacheSales
+//     const { id } = req.params
+//     const salesReport = await SalesService.getSalesReport(Number(id))
+//     res.json(salesReport).send()
+// })
 
 
 function checkProductSalesType(productSales: any): boolean {
@@ -139,7 +140,7 @@ router.post('/store/:id/sales', async (req: Request, res: Response) => {
  *       400:
  *         description: Error with query params (page, size and sort)
  */
-router.get('/store/:id/sales', parseQueryParam, async (req: ParsedRequest, res: Response) => {à
+router.get('/store/:id/sales', parseQueryParam, async (req: ParsedRequest, res: Response) => {
     // cacheSales
     const { id } = req.params
     const { page, size, sort } = req.parsedQuery
@@ -200,23 +201,23 @@ router.get('/store/:id/sales/:salesId', parseQueryParam, async (req: ParsedReque
     res.json(sales).send()
 })
 
-/**
- * @swagger
- * /api/dashboard:
- *   get:
- *     description: Get dashboard view
- *     responses:
- *       200:
- *         description: Dashboard
- */
-router.get('/dashboard', async (req: Request, res: Response) => {
-    const dashboard = await SalesService.getDashboardView()
+// /**
+//  * @swagger
+//  * /api/dashboard:
+//  *   get:
+//  *     description: Get dashboard view
+//  *     responses:
+//  *       200:
+//  *         description: Dashboard
+//  */
+// router.get('/dashboard', async (req: Request, res: Response) => {
+//     const dashboard = await SalesService.getDashboardView()
 
-    res.json(dashboard).send()
-})
+//     res.json(dashboard).send()
+// })
 
 
-app.use('/', router)
+app.use("/api", router)
 
 app.listen(PORT, ()=> {
     logger.info("Server is running on port " + PORT)

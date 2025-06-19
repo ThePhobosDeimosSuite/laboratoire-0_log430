@@ -37,13 +37,13 @@ services:
       - "3003"
   product-db:
     image: postgres
-    container_name: product-db
+    container_name: product_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: product
     expose:
-      - "5432:5432"
+      - "5432"
   sales-db:
     image: postgres
     container_name: sales_db
@@ -51,8 +51,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: sales
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
   stocks-db:
     image: postgres
     container_name: stocks_db
@@ -60,8 +60,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: stocks
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
 
   kong:
     image: kong:3.5

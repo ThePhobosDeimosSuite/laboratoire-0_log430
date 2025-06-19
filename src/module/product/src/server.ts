@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import winston from 'winston';
 import ProductService from './product-service.js'
-import { ParsedRequest, parseQueryParam } from 'shared-utils'
+import { ParsedRequest, parseQueryParam } from './api-utils.js' // TODO share this across different module
 
 const app = express()
 const router = express.Router()
@@ -18,6 +18,8 @@ app.use((req, res, next) => {
     logger.info(req.url)
     next()
 })
+
+app.use(express.json())
 
 /**
  * @swagger
@@ -50,7 +52,7 @@ app.use((req, res, next) => {
  *       400:
  *         description: Error in body
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post('/product', async (req: Request, res: Response) => {
     const { name, price, category } = req.body
 
     if(typeof name != "string" || typeof price != "number" || typeof category != "string") {
@@ -99,7 +101,7 @@ router.post('/', async (req: Request, res: Response) => {
  *       400:
  *         description: Error in body
  */
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/product/:id', async (req: Request, res: Response) => {
     const { id } = req.params
     const { name, price, category } = req.body
 
@@ -171,7 +173,7 @@ router.get('/product', parseQueryParam, async (req: ParsedRequest, res: Response
     res.json(product).send()
 })
 
-app.use('/product', router)
+app.use("/api", router)
 
 app.listen(PORT, ()=> {
     logger.info("Server is running on port " + PORT)

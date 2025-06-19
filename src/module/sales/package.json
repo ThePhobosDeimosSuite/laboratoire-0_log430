@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "api": "node server.js",
+    "api": "node dist/server.js",
     "dev": "nodemon --watch **/*.ts --exec 'tsx server.ts'"
   },
   "devDependencies": {

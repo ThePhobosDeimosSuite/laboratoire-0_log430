@@ -77,8 +77,11 @@ export default class StocksService {
         })
     }
 
-    static async getOrder() {
+    static async getOrder(shopId: number) {
         return await prisma.order.findMany({
+            where:{
+                shopId
+            }
             // include: {
             //     product: true
             // }
