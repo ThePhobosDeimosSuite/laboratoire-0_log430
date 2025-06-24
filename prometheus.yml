@@ -2,6 +2,10 @@ global:
   scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'node'
+  - job_name: kong
     static_configs:
-      - targets: ['shop1:3000', 'shop2:3000', 'shop3:3000']
+      - targets: ['kong:8001']
+
+  - job_name: microservice
+    static_configs:
+      - targets: ['product-service:3000', 'sales-service:3000', 'stocks-service:3000']

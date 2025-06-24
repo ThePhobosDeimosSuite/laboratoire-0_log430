@@ -2,10 +2,14 @@ import express, { Request, Response } from 'express'
 import winston from 'winston';
 import { ParsedRequest, parseQueryParam } from './api-utils.js'
 import StocksService from './stocks-service.js';
+import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 
 const app = express()
 const router = express.Router()
 const PORT = process.env.PORT || 3000
+
+app.use(new ExpressPrometheusMiddleware().handler)
+
 
 // Logger
 const logger = winston.createLogger({

@@ -2,10 +2,14 @@ import express, { Request, Response } from 'express'
 import winston from 'winston';
 import ProductService from './product-service.js'
 import { ParsedRequest, parseQueryParam } from './api-utils.js' // TODO share this across different module
+import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+
 
 const app = express()
 const router = express.Router()
 const PORT = process.env.PORT || 3000
+
+app.use(new ExpressPrometheusMiddleware().handler)
 
 // Logger
 const logger = winston.createLogger({
@@ -179,3 +183,4 @@ app.listen(PORT, ()=> {
     logger.info("Server is running on port " + PORT)
 })
 
+export default app

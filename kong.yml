@@ -3,7 +3,7 @@ _transform: true
 
 services:
   - name: product-service
-    url: http://product-service:3001
+    host: product-service
     routes:
       - name: product-route
         paths:
@@ -11,7 +11,7 @@ services:
         strip_path: false
 
   - name: sales-service
-    url: http://sales-service:3002
+    url: http://sales-service:3000
     routes:
       - name: sales-route
         paths:
@@ -19,10 +19,29 @@ services:
         strip_path: false
 
   - name: stocks-service
-    url: http://stocks-service:3003
+    url: http://stocks-service:3000
     routes:
       - name: stocks-route
         paths:
           - ~/api/store/[0-9]+/stock.*$
           - ~/api/store/[0-9]+/order.*$
         strip_path: false
+
+upstreams:
+  - name: product-service
+    algorithm: round-robin
+    targets:
+      - target: product-service:3000
+        weight: 100
+      - target: product-service2:3000
+        weight: 100
+
+plugins:
+  - name: prometheus          
+    enabled: true
+    protocols: [http, https]
+    config:
+      latency_metrics:     true   # latency
+      status_code_metrics: true   # traffic & errors
+      bandwidth_metrics:   true   #  saturation
+      upstream_health_metrics: true  # keeps upstream health gauges
