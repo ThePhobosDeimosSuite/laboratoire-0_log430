@@ -26,7 +26,6 @@ describe('Product', () => {
 
     it('Should return Salade when searching by name', async () => {
         const response = await request(productServer).get('/api/product?name=Salade')
-        console.log(response)
         expect(response.statusCode).toBe(200)
         expect(response.body.length).toBeGreaterThan(0)
         expect(response.body[0].name).toBe("Salade")

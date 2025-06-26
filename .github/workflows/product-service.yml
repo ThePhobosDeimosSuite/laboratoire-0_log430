@@ -60,4 +60,5 @@ jobs:
         with:
           push: true
           file: src/module/product/Dockerfile
+          
           tags: pebrassard/lab5_product:latest
