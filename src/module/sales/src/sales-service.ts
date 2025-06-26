@@ -1,6 +1,13 @@
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
-const prisma = new PrismaClient()
 
+const dbURL = process.env.DATABASE_URL || "postgresql://postgres:123@localhost:5434/sales"
+const prisma = new PrismaClient({
+ datasources: {
+    db: {
+      url: dbURL
+    },
+  },
+})
 
 export default class SalesService {
 

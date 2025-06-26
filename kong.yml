@@ -40,8 +40,18 @@ plugins:
   - name: prometheus          
     enabled: true
     protocols: [http, https]
+  - name: basic-auth
+  - name: cors
     config:
-      latency_metrics:     true   # latency
-      status_code_metrics: true   # traffic & errors
-      bandwidth_metrics:   true   #  saturation
-      upstream_health_metrics: true  # keeps upstream health gauges
+      origins: 
+        - "*"
+      methods:
+       - GET
+       - POST
+       - PUT
+  
+consumers:
+  - username: my-user
+    basicauth_credentials:
+      - username: admin
+        password: "123"

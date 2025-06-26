@@ -54,8 +54,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: product
-    expose:
-      - "5432"
+    ports:
+      - "5433:5432"
   sales-db:
     image: postgres
     container_name: sales_db
@@ -63,8 +63,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: sales
-    expose:
-      - "5432"
+    ports:
+      - "5434:5432"
   stocks-db:
     image: postgres
     container_name: stocks_db
@@ -72,8 +72,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: stocks
-    expose:
-      - "5432"
+    ports:
+      - "5435:5432"
 
   kong:
     image: kong:3.5
@@ -91,23 +91,6 @@ services:
       - sales-service
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
-
-  # nginx:
-  #   image: nginx:latest
-  #   container_name: nginx
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-  #   depends_on:
-  #     - shop1
-  #     - shop2
-  #     - shop3
-
-  # redis:
-  #   image: redis:alpine
-  #   ports:
-  #     - "6379:6379"
 
   prometheus:
     image: prom/prometheus

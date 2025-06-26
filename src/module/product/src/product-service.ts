@@ -1,5 +1,15 @@
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
-const prisma = new PrismaClient()
+
+
+const dbURL = process.env.DATABASE_URL || "postgresql://postgres:123@localhost:5433/product"
+const prisma = new PrismaClient({
+ datasources: {
+    db: {
+      url: dbURL
+    },
+  },
+})
+
 
 export default class ProductService {
     static async addProduct(name: string, price: number, category: string) {

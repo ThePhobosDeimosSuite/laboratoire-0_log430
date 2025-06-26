@@ -11,4 +11,7 @@
   // "include": [
   //   "src/module/product/**/*"
   // ]
+  "exclude": [
+    "test/*"
+  ]
 }
