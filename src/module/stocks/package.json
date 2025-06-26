@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "tsconfig": "^7.0.0",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "shared-utils":"file:../../shared-utils"
   }
 }

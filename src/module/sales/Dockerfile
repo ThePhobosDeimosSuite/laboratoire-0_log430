@@ -1,9 +1,16 @@
 FROM node:lts-alpine
-WORKDIR /usr/src/app
-COPY ["package*.json", "./"]
+
+WORKDIR /app
+# I'm sure there's a better way than copying everything...
+COPY . . 
+
 RUN npm install
 RUN npm prune
-COPY . .
+
+WORKDIR /app/src/shared-utils
+RUN npm run build
+
+WORKDIR /app/src/module/sales
 RUN npx prisma generate
 RUN npm run build
 CMD ["npm", "run", "api"]

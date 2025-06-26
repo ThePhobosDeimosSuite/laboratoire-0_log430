@@ -1,12 +1,10 @@
 {
   "name": "lab5",
   "type": "module",
+  "workspaces": ["src/module/*", "src/shared-utils"],
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "build": "tsc",
-    "start": "node dist/app.js",
-    "api": "node dist/server.js",
-    "dev": "nodemon --watch src/**/*.ts --exec 'tsx src/server.ts'"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

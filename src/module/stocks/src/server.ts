@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import winston from 'winston';
-import { ParsedRequest, parseQueryParam } from './api-utils.js'
+import { ParsedRequest, parseQueryParam } from 'shared-utils'
 import StocksService from './stocks-service.js';
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 
@@ -9,19 +9,6 @@ const router = express.Router()
 const PORT = process.env.PORT || 3000
 
 app.use(new ExpressPrometheusMiddleware().handler)
-
-
-// Logger
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console()
-  ]
-});
-
-app.use((req, res, next) => {
-  logger.info(req.url)
-  next()
-})
 
 app.use(express.json())
 
@@ -142,6 +129,4 @@ router.post('/store/:id/order', async (req: ParsedRequest, res: Response, next) 
 
 app.use("/api", router)
 
-app.listen(PORT, () => {
-  logger.info("Server is running on port " + PORT)
-})
+export default app

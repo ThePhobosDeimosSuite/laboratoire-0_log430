@@ -6,8 +6,12 @@
 **/compose*
 **/Dockerfile*
 **/node_modules
+node_modules
 **/dist
 **/generated
-**/jest.config.js
+**/jest.config.*
+**/jest.setup.*
+**/nginx
+**/docs
 **/.env
 README.md

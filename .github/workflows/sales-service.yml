@@ -1,0 +1,62 @@
+name: CI - User Service
+
+on:
+  push:
+    paths:
+      - 'src/module/sales/**'
+      - 'src/shared-utils/**'
+
+jobs:
+  Pipeline:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: sales
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env: 
+      DATABASE_URL: postgresql://postgres:123@localhost:5432/sales
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build project 
+        working-directory: ./
+        run: npm ci
+
+      - name: Setup prisma
+        working-directory: ./src/module/sales
+        run: npx prisma generate
+        run: npx prisma db push
+
+      - name: Run eslint 
+        working-directory: ./
+        run: npx eslint
+
+      - name: Run test 
+        working-directory: ./
+        run: npm test
+      - 
+        name: Log in to Docker Hub
+        working-directory: ./src/module/sales
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - 
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: pebrassard/lab5_sales:latest

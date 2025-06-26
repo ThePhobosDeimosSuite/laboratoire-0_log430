@@ -3,8 +3,8 @@ services:
     depends_on:
       - product-db
     build:
-      context: ./src/module/product
-      dockerfile: Dockerfile 
+      context: .
+      dockerfile: src/module/product/Dockerfile 
     environment:
       DATABASE_URL: postgresql://postgres:123@product_db:5432/product
       PORT: 3000
@@ -15,8 +15,8 @@ services:
     depends_on:
       - product-db
     build:
-      context: ./src/module/product
-      dockerfile: Dockerfile 
+      context: .
+      dockerfile: src/module/product/Dockerfile 
     environment:
       DATABASE_URL: postgresql://postgres:123@product_db:5432/product
       PORT: 3000
@@ -27,8 +27,8 @@ services:
     depends_on:
       - sales-db
     build:
-      context: ./src/module/sales
-      dockerfile: Dockerfile 
+      context: .
+      dockerfile: src/module/sales/Dockerfile 
     environment:
       DATABASE_URL: postgresql://postgres:123@sales_db:5432/sales
       PORT: 3000
@@ -39,8 +39,8 @@ services:
     depends_on:
       - stocks-db
     build:
-      context: ./src/module/stocks
-      dockerfile: Dockerfile 
+      context: .
+      dockerfile: src/module/stocks/Dockerfile  
     environment:
       DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
       PORT: 3000
@@ -86,9 +86,10 @@ services:
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
     depends_on:
-      - stocks-service
+      # - stocks-service
       - product-service
-      - sales-service
+      # - product-service2
+      # - sales-service
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 
