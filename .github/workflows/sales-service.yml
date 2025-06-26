@@ -1,10 +1,6 @@
-name: CI - User Service
+name: CI - Sales Service
 
-on:
-  push:
-    paths:
-      - 'src/module/sales/**'
-      - 'src/shared-utils/**'
+on: push
 
 jobs:
   Pipeline:
