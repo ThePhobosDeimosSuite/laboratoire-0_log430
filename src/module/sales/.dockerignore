@@ -1,0 +1,17 @@
+**/.dockerignore
+**/.gitignore
+**/.github
+**/.vscode
+**/docker-compose*
+**/compose*
+**/Dockerfile*
+**/node_modules
+node_modules
+**/dist
+**/generated
+**/jest.config.*
+**/jest.setup.*
+**/nginx
+**/docs
+**/.env
+README.md
