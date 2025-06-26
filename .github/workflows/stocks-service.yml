@@ -31,6 +31,10 @@ jobs:
         working-directory: ./
         run: npm ci
 
+      - name: Build shared-utils
+        working-directory: ./src/shared-utils
+        run: npm run build
+
       - name: Setup prisma
         working-directory: ./src/module/stocks
         run: | 
