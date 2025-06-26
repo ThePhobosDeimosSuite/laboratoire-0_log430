@@ -37,8 +37,9 @@ jobs:
 
       - name: Setup prisma
         working-directory: ./src/module/stocks
-        run: npx prisma generate
-        run: npx prisma db push
+        run: | 
+          npx prisma generate
+          npx prisma db push
 
       - name: Run eslint 
         working-directory: ./
