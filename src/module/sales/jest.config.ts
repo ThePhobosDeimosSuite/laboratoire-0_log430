@@ -1,6 +1,7 @@
 import type { JestConfigWithTsJest } from "ts-jest";
 
 const config: JestConfigWithTsJest = {
+  displayName: 'sales',
   rootDir: '.',
   setupFiles: ['<rootDir>/jest.setup.js'],
   transform: {

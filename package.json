@@ -3,6 +3,8 @@
   "type": "module",
   "workspaces": ["src/module/*", "src/shared-utils"],
   "scripts": {
+    "test:product": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects product",
+    "test:sales": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects sales",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "tsc"
   },

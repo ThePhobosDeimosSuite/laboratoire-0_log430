@@ -47,7 +47,7 @@ jobs:
 
       - name: Run test 
         working-directory: ./
-        run: npm test
+        run: npm run test:sales
       - 
         name: Log in to Docker Hub
         uses: docker/login-action@v3
