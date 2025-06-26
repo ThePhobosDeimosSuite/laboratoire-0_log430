@@ -11,6 +11,8 @@ node_modules
 **/generated
 **/jest.config.*
 **/jest.setup.*
+**/jest.setup.js
+**/jest.config.ts
 **/nginx
 **/docs
 **/.env
