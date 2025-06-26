@@ -35,13 +35,11 @@ jobs:
         working-directory: ./src/shared-utils
         run: npm run build
 
-      - name: Generate Prisma
-        working-directory: ./src/module/stocks
-        run: npx prisma generate
-
-      - name: Push prisma
-        working-directory: ./src/module/stocks
-        run: npx prisma db push
+      - name: Setup prisma
+        working-directory: ./src/module/product
+        run: | 
+          npx prisma generate
+          npx prisma db push
 
       - name: Run eslint 
         working-directory: ./
@@ -62,4 +60,5 @@ jobs:
         with:
           push: true
           file: src/module/product/Dockerfile
+          
           tags: pebrassard/lab5_product:latest

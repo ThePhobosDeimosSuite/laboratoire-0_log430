@@ -35,13 +35,11 @@ jobs:
         working-directory: ./src/shared-utils
         run: npm run build
 
-      - name: Generate Prisma
+      - name: Setup prisma
         working-directory: ./src/module/sales
-        run: npx prisma generate
-
-      - name: Push prisma
-        working-directory: ./src/module/sales
-        run: npx prisma db push
+        run: | 
+          npx prisma generate
+          npx prisma db push
 
       - name: Run eslint 
         working-directory: ./
