@@ -56,4 +56,5 @@ jobs:
         with:
           file: src/module/stocks/Dockerfile
           push: true
+          context: .
           tags: pebrassard/lab5_stocks:latest

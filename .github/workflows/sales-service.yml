@@ -60,4 +60,5 @@ jobs:
         with:
           file: src/module/sales/Dockerfile
           push: true
+          context: .
           tags: pebrassard/lab5_sales:latest
