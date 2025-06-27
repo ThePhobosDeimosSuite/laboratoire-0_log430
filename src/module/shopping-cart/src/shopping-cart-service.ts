@@ -16,7 +16,7 @@ export default class ShoppingCartService {
   private consumer: Consumer
   constructor() {
     this.producer = kafka.producer()
-    this.consumer = kafka.consumer({groupId: 'service'})
+    this.consumer = kafka.consumer({groupId: 'checkoutSale'})
   }
 
   async initializeKafka() {
@@ -29,7 +29,6 @@ export default class ShoppingCartService {
     await this.consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         const data = JSON.parse(message.value.toString())
-
         await this.clearCart(data.shopId, data.clientId)
       }
     })
@@ -49,20 +48,32 @@ export default class ShoppingCartService {
   async getCart(shopId: number, clientId: number) {
     const cart = await prisma.sales.findUnique({
       where: {
-        shopId_clientId:{
+        shopId_clientId: {
           shopId,
           clientId
-        }
+        },
       },
+      include: {
+        productSales: true
+      }
     })
 
     return cart
   }
 
   async clearCart(shopId: number, clientId: number) {
-    console.log("ClearCart")
-    console.log(`storeId: ${shopId} clientId :${clientId}`)
-    const deletedSale = await prisma.sales.delete({
+    const deletedSale = await prisma.sales.findUnique({
+      where: {
+        shopId_clientId: {
+          shopId,
+          clientId
+        },
+      },
+      include: {
+        productSales: true
+      }
+    })
+    await prisma.sales.delete({
       where: {
         shopId_clientId:{
           shopId,
@@ -73,7 +84,6 @@ export default class ShoppingCartService {
         productSales: true
       }
     })
-
     // Delete stock 
     for (const productSale of deletedSale.productSales) {
       await this.producer.send({

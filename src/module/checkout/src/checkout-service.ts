@@ -14,7 +14,7 @@ export default class CheckoutService {
     }
 
     async checkoutSale(shopId: number, clientId: number) {
-        this.producer.send({
+        await this.producer.send({
             topic: kafkaConst.checkoutSale,
             messages: [
                 {

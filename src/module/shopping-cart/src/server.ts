@@ -7,6 +7,7 @@ const app = express()
 const router = express.Router()
 
 app.use(new ExpressPrometheusMiddleware().handler)
+
 const shoppingCartService = new ShoppingCartService()
 shoppingCartService.initializeKafka()
 

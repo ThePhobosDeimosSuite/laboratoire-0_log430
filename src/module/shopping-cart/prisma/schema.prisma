@@ -18,7 +18,7 @@ model ProductSales {
   id        Int       @id @default(autoincrement())
   productId Int
   amount    Int
-  sales     Sales     @relation(fields: [salesId], references: [id])
+  sales     Sales     @relation(fields: [salesId], references: [id], onDelete: Cascade)
   salesId   Int
 }
 
@@ -26,7 +26,6 @@ model Sales {
   id              Int             @unique @default(autoincrement())
   productSales    ProductSales[]
   date            DateTime        @default(now())
-  isCancelled     Boolean         @default(false)
   shopId          Int
   clientId        Int
 
