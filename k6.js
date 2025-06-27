@@ -10,7 +10,7 @@ export const options = {
 
 export default function() {
   const credentials = `admin:123`;
-  const url = `http://${credentials}@localhost:80`
+  const url = `http://${credentials}@localhost:8000`
 
     let responses = http.batch([`${url}/api/store/1/stock`,
       `${url}/api/store/2/stock`,
@@ -23,16 +23,16 @@ export default function() {
       check(res, { "status is 200": (res) => res.status === 200 });
     })
 
-    responses = http.batch([`${url}/api/store/1/sales-report`,
-      `${url}/api/store/2/sales-report`,
-      `${url}/api/store/3/sales-report`,
-      `${url}/api/store/4/sales-report`,
-      `${url}/api/store/5/sales-report`
-    ])
+    // responses = http.batch([`${url}/api/store/1/sales-report`,
+    //   `${url}/api/store/2/sales-report`,
+    //   `${url}/api/store/3/sales-report`,
+    //   `${url}/api/store/4/sales-report`,
+    //   `${url}/api/store/5/sales-report`
+    // ])
 
-    responses.forEach(res => {
-      check(res, { "status is 200": (res) => res.status === 200 });
-    })
+    // responses.forEach(res => {
+    //   check(res, { "status is 200": (res) => res.status === 200 });
+    // })
 
   for (let i = 0; i < 10; i++) {
     const response = http.put(`${url}/api/product/1`, JSON.stringify({

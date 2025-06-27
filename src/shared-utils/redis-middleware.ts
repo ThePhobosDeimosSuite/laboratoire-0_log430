@@ -2,6 +2,8 @@ import { Request, Response, NextFunction, Send } from 'express'
 import winston from 'winston';
 import { createClient } from 'redis';
 
+// NOT USED
+
 // Logger
 const logger = winston.createLogger({
   transports: [

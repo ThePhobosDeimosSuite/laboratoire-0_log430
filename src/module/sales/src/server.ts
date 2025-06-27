@@ -5,7 +5,9 @@ import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheu
 
 const app = express()
 const router = express.Router()
-const PORT = process.env.PORT || 3000
+const salesService = new SalesService()
+
+await salesService.initializeKafka()
 
 app.use(new ExpressPrometheusMiddleware().handler)
 
@@ -92,7 +94,46 @@ router.post('/store/:id/sales', async (req: Request, res: Response) => {
     if(productSales == undefined || !checkProductSalesType(productSales)) {
         res.status(400).send()
     } else {
-        await SalesService.createSales(productSales, Number(id))
+        await salesService.createSales(productSales, Number(id))
+        
+        res.status(204).send()
+    }
+})
+
+/**
+ * @swagger
+ * /api/store/{id}/sales:
+ *   delete:
+ *     description: Cancel sales for shop
+ *     parameters: 
+ *       - name: id
+ *         in: path
+ *         description: Store ID
+ *         type: integer
+ *         required: true
+ *     responses:
+ *       204:
+ *         description: Sales removed
+ * 
+ */
+router.delete('/store/:id/sales/:salesId', async (req: Request, res: Response) => {
+    const { id, salesId } = req.params
+
+    await salesService.cancelSales(Number(salesId), Number(id))
+
+    res.status(204).send()
+})
+
+
+router.post('/store/:id/sales', async (req: Request, res: Response) => {
+    // cacheSales
+    const { id } = req.params
+    const { productSales } = req.body
+
+    if(productSales == undefined || !checkProductSalesType(productSales)) {
+        res.status(400).send()
+    } else {
+        await salesService.createSales(productSales, Number(id))
         
         res.status(204).send()
     }
@@ -134,7 +175,7 @@ router.get('/store/:id/sales', parseQueryParam, async (req: ParsedRequest, res: 
     // cacheSales
     const { id } = req.params
     const { page, size, sort } = req.parsedQuery
-    const sales = await SalesService.searchSales(undefined, Number(id),
+    const sales = await salesService.searchSales(undefined, Number(id),
         page,
         size,
         sort)
@@ -183,7 +224,7 @@ router.get('/store/:id/sales/:salesId', parseQueryParam, async (req: ParsedReque
     // cacheSales
     const { id, salesId } = req.params
     const { page, size, sort } = req.parsedQuery
-    const sales = await SalesService.searchSales(Number(salesId), Number(id),
+    const sales = await salesService.searchSales(Number(salesId), Number(id),
         page,
         size,
         sort)

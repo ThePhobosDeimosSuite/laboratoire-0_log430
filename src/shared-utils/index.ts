@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 
+export { kafka } from './kafka.js'
+export { kafkaConst } from './kafka.js'
+
 interface ParsedQuery {
   size: number | undefined;
   page: number | undefined;

@@ -1,4 +1,6 @@
+import { Producer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
+import { kafka, kafkaConst } from 'shared-utils'
 
 const dbURL = process.env.DATABASE_URL || "postgresql://postgres:123@localhost:5434/sales"
 const prisma = new PrismaClient({
@@ -10,12 +12,26 @@ const prisma = new PrismaClient({
 })
 
 export default class SalesService {
+    private producer: Producer
+    constructor() {
+        this.producer = kafka.producer()
+    }
 
-    static async createSales(productSales: { productId: number, amount: number }[], shopId: number) {
-        // Reduce the stock after a sale
+    async initializeKafka() {
+        await this.producer.connect()
+    }
+
+    async createSales(productSales: { productId: number, amount: number }[], shopId: number) {
+        // Reduce the stock after a sale, sending to stocks service using kafka
         for (const product of productSales) {
-            // TODO how???
-            // await StocksService.decrementStocks(product.productId, product.amount, shopId)
+            await this.producer.send({
+                topic: kafkaConst.decreaseStocks,
+                messages: [
+                    {
+                        value: JSON.stringify({productId: product.productId, amount: product.amount, shopId}),
+                    }
+                ]
+           })
         }
 
         await prisma.sales.create({
@@ -28,7 +44,7 @@ export default class SalesService {
         })
     }
 
-    static async searchSales(id: number | undefined, shopId: number,
+    async searchSales(id: number | undefined, shopId: number,
         page: number | undefined = undefined,
         size: number | undefined = undefined,
         sort: string[] | undefined = undefined
@@ -70,7 +86,7 @@ export default class SalesService {
         return sales
     }
 
-    static async cancelSales(id: number, shopId: number) {
+    async cancelSales(id: number, shopId: number) {
         const sales = await prisma.sales.update({
             where: {
                 id,
@@ -85,8 +101,15 @@ export default class SalesService {
         })
 
         // // Re-add stock
-        // for (const productSale of sales.productSales) {
-        //     await StocksService.addStocks(productSale.productId, productSale.amount, shopId)
-        // }
+        for (const productSale of sales.productSales) {
+            await this.producer.send({
+                topic: kafkaConst.increaseStocks,
+                messages: [
+                    {
+                        value: JSON.stringify({productId: productSale.productId, amount: productSale.amount, shopId}),
+                    }
+                ]
+           })
+        }
     }
 }

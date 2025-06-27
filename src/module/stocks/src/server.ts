@@ -1,12 +1,13 @@
-import express, { Request, Response } from 'express'
-import winston from 'winston';
+import express, { Response } from 'express'
 import { ParsedRequest, parseQueryParam } from 'shared-utils'
 import StocksService from './stocks-service.js';
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 
 const app = express()
 const router = express.Router()
-const PORT = process.env.PORT || 3000
+
+const stocksService = new StocksService()
+await stocksService.initializeKafka()
 
 app.use(new ExpressPrometheusMiddleware().handler)
 
@@ -49,7 +50,7 @@ router.get('/store/:id/stock', parseQueryParam, async (req: ParsedRequest, res: 
   // cacheStocks
   const { id } = req.params
   const { page, size, sort } = req.parsedQuery
-  const stocks = await StocksService.getStocks(
+  const stocks = await stocksService.getStocks(
     Number(id),
     undefined,
     page,
@@ -94,7 +95,7 @@ router.get('/store/:id/stock', parseQueryParam, async (req: ParsedRequest, res: 
  */
 router.get('/store/:id/order', async (req: ParsedRequest, res: Response, next) => {
   const { id } = req.params
-  const orders = await StocksService.getOrder(
+  const orders = await stocksService.getOrder(
     Number(id))
 
   res.json(orders).send()
@@ -103,7 +104,7 @@ router.get('/store/:id/order', async (req: ParsedRequest, res: Response, next) =
 router.post('/store/:id/stock', async (req: ParsedRequest, res: Response, next) => {
   const { id } = req.params
   const { productId, amount } = req.body
-  await StocksService.addStocks(
+  await stocksService.addStocks(
     productId,
     amount,
     Number(id),
@@ -115,7 +116,7 @@ router.post('/store/:id/stock', async (req: ParsedRequest, res: Response, next) 
 router.post('/store/:id/order', async (req: ParsedRequest, res: Response, next) => {
   const { id } = req.params
   const { productId, amount } = req.body
-  await StocksService.addOrder(
+  await stocksService.addOrder(
     productId,
     amount,
     Number(id),

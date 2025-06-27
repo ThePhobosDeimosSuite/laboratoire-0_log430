@@ -1,7 +1,10 @@
 {
   "name": "lab5",
   "type": "module",
-  "workspaces": ["src/module/*", "src/shared-utils"],
+  "workspaces": [
+    "src/module/*",
+    "src/shared-utils"
+  ],
   "scripts": {
     "test:product": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects product",
     "test:sales": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects sales",
@@ -36,6 +39,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-basic-auth": "^1.2.1",
+    "kafkajs": "^2.2.4",
     "prom-client": "^15.1.3",
     "redis": "^5.5.6",
     "swagger-jsdoc": "^6.2.8",
