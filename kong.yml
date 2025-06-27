@@ -27,6 +27,14 @@ services:
           - ~/api/store/[0-9]+/order.*$
         strip_path: false
 
+  - name: account-service
+    url: http://account-service:3000
+    routes:
+      - name: account-route
+        paths:
+          - /api/account
+        strip_path: false
+
 upstreams:
   - name: product-service
     algorithm: round-robin

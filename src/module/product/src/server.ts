@@ -7,9 +7,7 @@ import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheu
 const app = express()
 const router = express.Router()
 
-
 app.use(new ExpressPrometheusMiddleware().handler)
-
 
 app.use(express.json())
 

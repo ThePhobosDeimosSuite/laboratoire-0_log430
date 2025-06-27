@@ -1,5 +1,5 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 20s
 
 scrape_configs:
   - job_name: kong
@@ -8,4 +8,8 @@ scrape_configs:
 
   - job_name: microservice
     static_configs:
-      - targets: ['product-service:3000', 'sales-service:3000', 'stocks-service:3000']
+      - targets: 
+        - 'product-service:3000' 
+        - 'sales-service:3000' 
+        - 'stocks-service:3000'
+        - 'account-service:3000'

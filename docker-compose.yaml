@@ -49,6 +49,18 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     expose:
       - "3000"
+  account-service:
+    depends_on:
+      - account-db
+    build:
+      context: .
+      dockerfile: src/module/account/Dockerfile  
+    environment:
+      DATABASE_URL: postgresql://postgres:123@account_db:5432/account
+      PORT: 3000
+    command: sh -c "npx prisma db push && npm run api"
+    expose:
+      - "3000"
   product-db:
     image: postgres
     container_name: product_db
@@ -76,6 +88,15 @@ services:
       POSTGRES_DB: stocks
     ports:
       - "5435:5432"
+  account-db:
+    image: postgres
+    container_name: account_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: account
+    ports:
+      - "5436:5432"
 
   kong:
     image: kong:3.5
