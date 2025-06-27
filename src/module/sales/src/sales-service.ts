@@ -1,8 +1,8 @@
 import { Producer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { kafka, kafkaConst } from 'shared-utils'
+import { kafka, kafkaConst, waitForKafka } from 'shared-utils'
 
-const dbURL = process.env.DATABASE_URL || "postgresql://postgres:123@localhost:5434/sales"
+const dbURL = process.env.DATABASE_URL
 const prisma = new PrismaClient({
  datasources: {
     db: {
@@ -18,6 +18,7 @@ export default class SalesService {
     }
 
     async initializeKafka() {
+        await waitForKafka()
         await this.producer.connect()
     }
 

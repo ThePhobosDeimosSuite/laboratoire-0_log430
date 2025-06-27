@@ -11,18 +11,18 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     expose:
       - "3000"
-  product-service2:
-    depends_on:
-      - product-db
-    build:
-      context: .
-      dockerfile: src/module/product/Dockerfile 
-    environment:
-      DATABASE_URL: postgresql://postgres:123@product_db:5432/product
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    expose:
-      - "3000"
+  # product-service2:
+  #   depends_on:
+  #     - product-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/product/Dockerfile 
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@product_db:5432/product
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   expose:
+  #     - "3000"
   sales-service:
     depends_on:
       - sales-db
@@ -61,6 +61,30 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     expose:
       - "3000"
+  shopping-cart-service:
+    depends_on:
+      - shopping-cart-db
+      - kafka
+    build:
+      context: .
+      dockerfile: src/module/shopping-cart/Dockerfile  
+    environment:
+      DATABASE_URL: postgresql://postgres:123@shopping_cart_db:5432/shopping_cart
+      PORT: 3000
+    command: sh -c "npx prisma db push && npm run api"
+    expose:
+      - "3000"
+  checkout-service:
+    depends_on:
+      - kafka
+    build:
+      context: .
+      dockerfile: src/module/checkout/Dockerfile  
+    environment:
+      PORT: 3000
+    command: sh -c "npm run api"
+    expose:
+      - "3000"
   product-db:
     image: postgres
     container_name: product_db
@@ -97,6 +121,15 @@ services:
       POSTGRES_DB: account
     ports:
       - "5436:5432"
+  shopping-cart-db:
+    image: postgres
+    container_name: shopping_cart_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: shopping_cart
+    ports:
+      - "5437:5432"
 
   kong:
     image: kong:3.5
@@ -111,32 +144,40 @@ services:
     depends_on:
       - stocks-service
       - product-service
-      - product-service2
+      # - product-service2
       - sales-service
+      - account-service
+      - shopping-cart-service
+      - checkout-service
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  # prometheus:
+  #   image: prom/prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
     
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3001:3000"
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3001:3000"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
+    logging:
+      driver: "none"
     expose:
       - "2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: "ERROR"
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
+    logging:
+      driver: "none"
     ports:
       - "9092:9092"
     depends_on:
@@ -146,3 +187,4 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG4J_ROOT_LOGLEVEL: "ERROR"

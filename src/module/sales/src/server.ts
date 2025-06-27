@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { ParsedRequest, parseQueryParam } from 'shared-utils'
+import { ParsedRequest, parseQueryParam, checkProductSalesType } from 'shared-utils'
 import SalesService from './sales-service.js';
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 
@@ -35,14 +35,6 @@ app.use(express.json())
 //     const salesReport = await SalesService.getSalesReport(Number(id))
 //     res.json(salesReport).send()
 // })
-
-
-function checkProductSalesType(productSales: any): boolean {
-    if(Array.isArray(productSales)) {
-        return productSales.every(p => p.amount != undefined && p.productId != undefined)
-    }
-    return false
-}
 
 /**
  * @swagger

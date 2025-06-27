@@ -1,5 +1,5 @@
 {
-  "name": "sales-api",
+  "name": "shopping-cart-api",
   "type": "module",
   "scripts": {
     "build": "tsc",

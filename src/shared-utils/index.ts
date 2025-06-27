@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-export { kafka } from './kafka.js'
-export { kafkaConst } from './kafka.js'
+export { kafkaConst, waitForKafka, kafka } from './kafka.js'
 
 interface ParsedQuery {
   size: number | undefined;
@@ -37,4 +36,11 @@ export function parseQueryParam(req: Request, res: Response, next: NextFunction)
         sort: parsedSort
     }
     next()
+}
+
+export function checkProductSalesType(productSales: any): boolean {
+    if(Array.isArray(productSales)) {
+        return productSales.every(p => p.amount != undefined && p.productId != undefined)
+    }
+    return false
 }

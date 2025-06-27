@@ -16,4 +16,7 @@ node_modules
 **/nginx
 **/docs
 **/.env
+**/kong.yml
+**/prometheus.yml
+**/eslint.*
 README.md

@@ -1,6 +1,6 @@
 import { Consumer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { kafka, kafkaConst } from 'shared-utils'
+import { kafka, kafkaConst, waitForKafka } from 'shared-utils'
 const prisma = new PrismaClient()
 
 
@@ -12,6 +12,7 @@ export default class StocksService {
     }
 
     async initializeKafka() {
+        await waitForKafka()
         await this.consumer.connect()
         await this.consumer.subscribe({ topic: kafkaConst.decreaseStocks, fromBeginning: false })
         await this.consumer.subscribe({ topic: kafkaConst.increaseStocks, fromBeginning: false })

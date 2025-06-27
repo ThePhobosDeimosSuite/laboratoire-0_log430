@@ -125,9 +125,6 @@ router.post('/store/:id/order', async (req: ParsedRequest, res: Response, next) 
   res.status(204).send()
 })
 
-
-
-
 app.use("/api", router)
 
 export default app
