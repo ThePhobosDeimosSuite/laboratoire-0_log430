@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express'
 import { ParsedRequest, parseQueryParam, checkProductSalesType } from 'shared-utils'
 import SalesService from './sales-service.js';
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+import swagger from './swagger.js'
+import SwaggerUiExpress from 'swagger-ui-express'
 
 const app = express()
 const router = express.Router()
@@ -12,6 +14,8 @@ await salesService.initializeKafka()
 app.use(new ExpressPrometheusMiddleware().handler)
 
 app.use(express.json())
+
+app.use('/api-docs', SwaggerUiExpress.serve, SwaggerUiExpress.setup(swagger))
 
 
 // /**

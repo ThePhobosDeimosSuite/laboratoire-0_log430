@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express'
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 import ShoppingCartService from './shopping-cart-service.js'
 import { checkProductSalesType } from 'shared-utils'
+import swagger from './swagger.js'
+import SwaggerUiExpress from 'swagger-ui-express'
 
 const app = express()
 const router = express.Router()
@@ -12,6 +14,8 @@ const shoppingCartService = new ShoppingCartService()
 shoppingCartService.initializeKafka()
 
 app.use(express.json())
+
+app.use('/api-docs', SwaggerUiExpress.serve, SwaggerUiExpress.setup(swagger))
 
 /**
  * @swagger
@@ -72,7 +76,8 @@ router.post('/store/:storeId/client/:clientId/cart', async (req: Request, res: R
     }
 })
 
- /* @swagger
+ /** 
+ * @swagger
  * /api/store/:storeId/client/:clientId/cart:
  *   get:
  *     description: Get shopping cart for shop and client

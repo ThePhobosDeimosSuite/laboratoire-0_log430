@@ -2,7 +2,8 @@ import express, { Request, Response } from 'express'
 import ProductService from './product-service.js'
 import { ParsedRequest, parseQueryParam } from 'shared-utils'
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
-
+import swagger from './swagger.js'
+import SwaggerUiExpress from 'swagger-ui-express'
 
 const app = express()
 const router = express.Router()
@@ -10,6 +11,8 @@ const router = express.Router()
 app.use(new ExpressPrometheusMiddleware().handler)
 
 app.use(express.json())
+
+app.use('/api-docs', SwaggerUiExpress.serve, SwaggerUiExpress.setup(swagger))
 
 /**
  * @swagger

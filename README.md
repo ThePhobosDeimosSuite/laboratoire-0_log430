@@ -1,17 +1,6 @@
 A **node.js** and **Express.js** app that manages 5 small shops, a supply center an a main store
 
 ## How to run
-#### Running the project
-- Clone repo
-- Make sure *node.js* is installed locally
-- Create a *Postgresql* database and add the url to `.env`
-    - OR run this command: `docker run -d --name postgres -e POSTGRES_PASSWORD=123 -p 5432:5432 postgres`
-- Run `npm install`
-- Run `npm run build`
-- Run `npx prisma generate`
-- Run `npx prisma migrate deploy`
-    - **CLI**: Run `npm run start`
-    - **API**: Run `npm run api`
 
 #### Running using docker compose
 This will automatically create the database, Redis, NGINX, prometheus/grafana and run 3 instances of the api:

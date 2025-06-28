@@ -9,8 +9,8 @@ services:
       DATABASE_URL: postgresql://postgres:123@product_db:5432/product
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
-    expose:
-      - "3000"
+    ports:
+      - "4000:3000"
   # product-service2:
   #   depends_on:
   #     - product-db
@@ -34,8 +34,8 @@ services:
       DATABASE_URL: postgresql://postgres:123@sales_db:5432/sales
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
-    expose:
-      - "3000"
+    ports:
+      - "4001:3000"
   stocks-service:
     depends_on:
       - stocks-db
@@ -47,8 +47,8 @@ services:
       DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
-    expose:
-      - "3000"
+    ports:
+      - "4002:3000"
   account-service:
     depends_on:
       - account-db
@@ -59,8 +59,8 @@ services:
       DATABASE_URL: postgresql://postgres:123@account_db:5432/account
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
-    expose:
-      - "3000"
+    ports:
+      - "4003:3000"
   shopping-cart-service:
     depends_on:
       - shopping-cart-db
@@ -72,8 +72,8 @@ services:
       DATABASE_URL: postgresql://postgres:123@shopping_cart_db:5432/shopping_cart
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
-    expose:
-      - "3000"
+    ports:
+      - "4004:3000"
   checkout-service:
     depends_on:
       - kafka
@@ -83,8 +83,8 @@ services:
     environment:
       PORT: 3000
     command: sh -c "npm run api"
-    expose:
-      - "3000"
+    ports:
+      - "4005:3000"
   product-db:
     image: postgres
     container_name: product_db
@@ -152,17 +152,17 @@ services:
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 
-  # prometheus:
-  #   image: prom/prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     
-  # grafana:
-  #   image: grafana/grafana
-  #   ports:
-  #     - "3001:3000"
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
