@@ -9,7 +9,13 @@ This will automatically create the database, Redis, NGINX, prometheus/grafana an
 - API URL is : `http://localhost:80`
 
 #### Swagger
-- Swagger url is : `/api-docs`
+Each service has a Swagger url:
+- Product-service: `localhost:4000/api-docs`
+- Sales-service: `localhost:4001/api-docs`
+- Stocks-service: `localhost:4002/api-docs`
+- Account-service: `localhost:4003/api-docs`
+- Shopping-cart-service: `localhost:4004/api-docs`
+- Checkout-service: `localhost:4005/api-docs`
 
 #### Postman
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
