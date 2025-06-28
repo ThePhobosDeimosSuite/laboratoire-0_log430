@@ -20,6 +20,7 @@
     "tsconfig": "^7.0.0",
     "winston": "^3.17.0",
     "swagger-jsdoc": "^6.2.8",
+    "shared-utils":"file:../../shared-utils",
     "swagger-ui-express": "^5.0.1"
   }
 }

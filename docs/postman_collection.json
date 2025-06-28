@@ -13,14 +13,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/store/1/sales-report",
+					"raw": "{{base_url}}/api/store/5/sales-report",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
 						"store",
-						"1",
+						"5",
 						"sales-report"
 					]
 				}
@@ -46,20 +46,166 @@
 			"response": []
 		},
 		{
-			"name": "Stock",
+			"name": "Get stock",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/store/1/stock",
+					"raw": "{{base_url}}/api/store/2/stock",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
 						"store",
-						"1",
+						"2",
 						"stock"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "amount,asc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/2/order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"order"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "amount,asc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add stock",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": 1,\r\n    \"amount\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/store/2/stock",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"stock"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "amount,asc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": 1,\r\n    \"amount\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/store/2/order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"order"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "amount,asc",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -80,14 +226,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/api/product/2",
+					"raw": "{{base_url}}/api/product/1",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
 						"product",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -100,7 +246,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"cribbage7\",\r\n    \"category\": \"jeu\",\r\n    \"price\": 10\r\n}",
+					"raw": "{\r\n    \"name\": \"cribbage\",\r\n    \"category\": \"jeu\",\r\n    \"price\": 10\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -126,7 +272,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/product?size=1&page=1",
+					"raw": "{{base_url}}/api/product?sort=price,asc",
 					"host": [
 						"{{base_url}}"
 					],
@@ -137,16 +283,22 @@
 					"query": [
 						{
 							"key": "name",
-							"value": "concombre",
+							"value": "comcombre",
 							"disabled": true
 						},
 						{
 							"key": "size",
-							"value": "1"
+							"value": "1",
+							"disabled": true
 						},
 						{
 							"key": "page",
-							"value": "1"
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "price,asc"
 						}
 					]
 				}
@@ -159,7 +311,44 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/store/1/sales",
+					"raw": "{{base_url}}/api/store/2/sales",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"sales"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "id,desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get sales ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/1/sales/1",
 					"host": [
 						"{{base_url}}"
 					],
@@ -167,7 +356,41 @@
 						"api",
 						"store",
 						"1",
-						"sales"
+						"sales",
+						"1"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel sale",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/2/sales/3",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"sales",
+						"3"
 					],
 					"query": [
 						{
@@ -207,7 +430,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"productSales\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"amount\": 4\r\n        },\r\n                {\r\n            \"productId\": 2,\r\n            \"amount\": 10\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"productSales\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"amount\": 2\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -215,15 +438,72 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/api/store/1/sales",
+					"raw": "{{base_url}}/api/store/2/sales",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
 						"store",
-						"1",
+						"2",
 						"sales"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"cribbage\",\r\n    \"password\": \"jeu\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/account",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all account",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/account",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"account"
 					]
 				}
 			},
@@ -241,6 +521,171 @@
 					],
 					"path": [
 						"api-docs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prometheus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/plugins",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"plugins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add shopping cart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productSales\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"amount\": 2\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/store/2/client/1/cart",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"client",
+						"1",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "id,desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cart",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productSales\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"amount\": 2\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/store/2/client/1/cart",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"client",
+						"1",
+						"cart"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "id,desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checkout cart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productSales\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"amount\": 2\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/store/2/client/1/cart/checkout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"2",
+						"client",
+						"1",
+						"cart",
+						"checkout"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "id,desc",
+							"disabled": true
+						}
 					]
 				}
 			},

@@ -12,6 +12,9 @@ const config: JestConfigWithTsJest = {
       },
     ],
   },
+  transformIgnorePatterns: [
+    '/node_modules/(?!shared-utils)',
+  ],
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",

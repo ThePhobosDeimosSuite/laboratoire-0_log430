@@ -1,21 +1,34 @@
-A **node.js** and **Express.js** app that manages 5 small shops, a supply center an a main store
+A **node.js** and **Express.js** microservice app that manages 5 small shops, a supply center, a main store and an online shop.
+
+The physical store is handled by these microservices:
+    
+- *Product-service*
+- *Sales-service*
+- *Stocks-service*
+
+And the online store by:
+
+ - *Account-service*
+ - *Shopping-cart-service*
+ - *Checkout-service*
+
+Everything is packed together using Kong as the API gateway
 
 ## How to run
 
 #### Running using docker compose
-This will automatically create the database, Redis, NGINX, prometheus/grafana and run 3 instances of the api:
-- Run `docker compose up`
+- Run `docker compose up` **TODO test on linux VM**
 - Grafana URL is : `http://localhost:3001`
-- API URL is : `http://localhost:80`
+- Kong URL is : `http://localhost:80`
 
 #### Swagger
 Each service has a Swagger url:
-- Product-service: `localhost:4000/api-docs`
-- Sales-service: `localhost:4001/api-docs`
-- Stocks-service: `localhost:4002/api-docs`
-- Account-service: `localhost:4003/api-docs`
-- Shopping-cart-service: `localhost:4004/api-docs`
-- Checkout-service: `localhost:4005/api-docs`
+- *Product-service*: `localhost:4000/api-docs`
+- *Sales-service*: `localhost:4001/api-docs`
+- *Stocks-service*: `localhost:4002/api-docs`
+- *Account-service*: `localhost:4003/api-docs`
+- *Shopping-cart-service*: `localhost:4004/api-docs`
+- *Checkout-service*: `localhost:4005/api-docs`
 
 #### Postman
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
