@@ -1,9 +1,9 @@
 @startuml add-product
 title Add Product
-actor Manager
+actor User
 
-Manager -> ManagerView : addProduct(name: String, category: String, price:Number)
-ManagerView -> ManagerController : addProduct(name: String, category: String, price:Number)
-ManagerController --> ManagerView  :Success
-ManagerView --> Manager : Success
+User -> Kong : addProduct(name: String, category: String, price:Number)
+Kong -> ProductService : addProduct(name: String, category: String, price:Number)
+ProductService --> Kong  :Success
+Kong --> User : Success
 @enduml

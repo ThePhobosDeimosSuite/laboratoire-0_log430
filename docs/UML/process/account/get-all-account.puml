@@ -1,0 +1,9 @@
+@startuml get-all-account
+title Get all account
+actor User
+
+User -> Kong : getAllAccount()
+Kong -> AccountService : getAllAccount()
+AccountService --> Kong  :Account[]
+Kong --> User : Account[]
+@enduml

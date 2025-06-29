@@ -1,0 +1,10 @@
+@startuml add-order
+title Add Order
+actor User
+
+User -> Kong : addOrder(productId: Number, amount: Number, storeId: Number)
+Kong -> StockService : addOrder(productId: Number, amount: Number, storeId: Number)
+StockService --> Kong : Success
+Kong --> User : Success
+
+@enduml

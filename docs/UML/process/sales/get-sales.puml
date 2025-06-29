@@ -1,0 +1,10 @@
+@startuml get-sales
+title Get Sales
+actor User
+
+User -> Kong : getSales(salesId: String, storeId: Number)
+Kong -> SalesService : getSales(salesId: String, storeId: Number)
+SalesService -> Kong : Sales[]
+Kong -> User : Sales[]
+
+@enduml

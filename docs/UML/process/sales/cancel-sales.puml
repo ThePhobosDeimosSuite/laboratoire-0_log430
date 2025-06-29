@@ -1,10 +1,11 @@
 @startuml cancel-sales
 title Cancel Sales
-actor StoreEmployee
+actor User
 
-StoreEmployee -> StoreEmployeeView : cancelSales(id:Number)
-StoreEmployeeView -> StoreEmployeeController : cancelSales(id:Number)
-StoreEmployeeController --> StoreEmployeeController : updateStocksCount()
-StoreEmployeeController --> StoreEmployeeView : Done
-StoreEmployeeView --> StoreEmployee : Done
+User -> Kong : cancelSales(salesId: String, storeId: Number)
+Kong -> SalesService : cancelSales(salesId: String, storeId: Number)
+SalesService --> StocksService : incrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> SalesService : Done
+SalesService --> Kong : Done
+Kong --> User : Done
 @enduml

@@ -1,376 +1,681 @@
 **Pierre-Émile Brassard**
 
-Repo : https://github.com/ThePhobosDeimosSuite/laboratoire-0_log430/tree/lab2
+Repo : https://github.com/ThePhobosDeimosSuite/laboratoire-0_log430
 
 ---
 
 Projet is available in production here : log430@10.194.32.176
 
-Run `docker compose run --rm shop` in projet folder which is located at `~/lab0`
-
-## A look back at lab0/lab1
-After reading the requirement for lab2, i don't think a REST API is a good idea. First thing I'll do is to port everything to an MVC architecture with *terminal-kit* and then work on implementing the features for lab2. At least i won't have to change anything regarding the controller and database.
+Run `docker compose up` in projet folder which is located at `~/lab0`
 
 # Introduction and Goals
 
 ## Requirements Overview
-A small business composed of 5 different shops, a supply center and a main shop needs an application to operate. As such, the app needs to keep track of sales and the inventory for each shop on top of a wide array of product. Employees will be able to create sales and a manager can access all of those sales in the shape of a sales report.
+A small business composed of 5 different shops, a supply center and a main shop needs an application to operate. As such, the app needs to keep track of sales and the inventory for each shop on top of a wide array of product. There's also an online shop where users can create an account and fill in their cart with items before checking out. 
 
 ## Quality Goals
- Data needs to be saved and shared amongst all the different users. An interface in also required to allow users to read and input data. The service has to be hosted on a VM.
+ Data needs to be saved and shared amongst all the different users. The service has to be hosted on a VM.
 
 ## Stakeholders
 | Name | Expectations |
 | ---- | ------------ |
-| Manger | Create sales report, view store performance on a dashboard, create and update product. |
+| Manger |  Create and update product. |
 | Supply center employee | Deliver new stock to a store, see current stocks. |
-|  Store employee | Search product, create sales, search sales, cancel sales, see stocks, order more stocks; |
+|  Store employee | Search product, create sales, search sales, cancel sales, see stocks, order more stocks. |
+| Online customer | Create an account, add items to cart, see items in cart, checkout. |
 
 # System Scope and Context
 
 ## Business Context
-The app has to execute 10 different use cases, each being initiated through the interface. Each use case can be found in a menu grouped by each type of stakeholder.  
+The app has to execute 16 different use cases, each being initiated by request made to the REST API.
 
 ## Technical Context
-The app will communicate with a *postgresql* database. Users will use the command line to read and input data to the system. 
+Users will communicate with the service with http request. Data will then be stored in a database for persistence.
 
 
 # Solution Strategy 
-Persistance will be managed by a single database shared between all shops, supply center and main shop. Interface will consist of a simple command line interface with each user having their own menu tailored to their needs.
+The service has been split into 6 different parts, each being implemented into a standalone microservice:
+- Product
+- Stocks
+- Sales
+- Account
+- Shopping Cart
+- Checkout
+
+These will have their own database and be able to communicate with each other when needed. (For instance: reducing stocks after a sale)
+An api gateway will analyse requests and forward it to the corresponding microservice.
 
 # UML
 ## Class Diagram
 @startuml class
 title Class Diagram
-class StoreEmployee {
-    + searchForProduct(id:Number, name:String, category:String): Product
-    + addSales(sales: Sales): Void
-    + cancelSales(id: Number): Void    
-    + getStocks(): Void
-    + orderStocks(productId: Number, amount: Number): Void
+
+
+package ProductMicroservice {
+    class ProductService {
+        + addProduct(name: String, category: String, price:Number): Void
+        + updateProduct(productId:Number, name: String, category: String, price:Number): Void
+        + searchProduct(productId:Number, name: String, category: String): Product
+    }
+
+    class Product {
+        id: Number
+        name: String
+        category: String
+        price: Number
+    }
 }
 
-class SupplyCenterEmployee {
-    + deliverStocks(productId: Number, storeId: Number): Void
+ProductService ..> Product
+
+package StocksMicroservice {
+    class StocksService {
+        + addStocks(productId: Number, amount: Number, storeId: Number): Void
+        + getStocks(productId: Number, storeId: Number): Stock
+        + decrementStocks(productId: Number, amount: Number, storeId: Number): Void
+        + addOrder(productId: Number, amount: Number, storeId: Number)
+        + getOrder(): Order
+    }
+    class Order {
+        amount: Number
+        storeId: Number
+    }
+
+    class Stock {
+        amount: Number
+        storeId: Number
+    }
 }
 
-class Manager {
-    + addProduct(name: String, category: String, price:Number): Void
-    + updateProduct(id:Number, name: String, category: String, price:Number): Void
-    + getSalesReport(storeId:Number): String
-    + getDashboardView(): String
+StocksService ..> Stock
+StocksService ..> Order
+
+
+package SalesMicroservice {
+    class SalesService {
+        + createSales(productSales: ProductSales, storeId: Number): Void
+        + getSales(salesId: String, storeId: Number): Sales
+        + cancelSales(salesId: String, storeId: Number) : Void
+    }
+    class ProductSales {
+        amount: Number
+    }
+
+    class Sales {
+        date: DateTime
+        isCancelled: Boolean
+        storeId: Number
+    }
 }
 
-class Product {
-    id: Number
-    name: String
-    category: String
-    price: Number
+SalesService ..> ProductSales
+SalesService ..> Sales
+
+package AccountMicroservice{
+    class AccountService {
+        + createAccount(name: String, password: String): Void
+        + getAllAccount(): Account[]
+    }
+
+    class Account {
+        name: String
+        password: String
+    }
 }
 
-class Sales {
-    date: DateTime
-    isCancelled: Boolean
-    storeId: Number
-    + getPriceTotal(): Number
+AccountService ..> Account
+
+package ShoppingCartMicroservice {
+    class ShoppingCartService{
+        + AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
+        + GetCart(storeId: Number, accountId: Number): Sales
+        + ClearCart(storeId: Number, accountId: Number): Void
+    }
+
+    class ProductSalesCart as "ProductSales" {
+        amount: Number
+    }
+
+    class SalesCart as "Sales" {
+        date: DateTime
+        storeId: Number
+    }
 }
 
-class Stock {
-    amount: Number
-    storeId: Number
+ShoppingCartService ..> ProductSalesCart
+ShoppingCartService ..> SalesCart
+ShoppingCartService ..> StocksService
+
+package CheckoutMicroservice {
+    class CheckoutService {
+        + checkoutSale(storeId: Number, accountId: Number): Void
+    }
 }
 
-class Order {
-    amount: Number
-    storeId: Number
-}
+CheckoutService ..> ShoppingCartService
 
-class ProductSales {
-    amount: Number
-}
-
-StoreEmployee ..> Sales
-
-StoreEmployee ..> Product
-
-StoreEmployee ..> Stock
-
-StoreEmployee ..> Order
-
-SupplyCenterEmployee --|> StoreEmployee
-
-Manager --|> SupplyCenterEmployee
 
 Sales "1" *-- "*" ProductSales
+
+SalesCart "1" *-- "*" ProductSalesCart
+
+ProductSalesCart "*" o-- "1" Product
+
+ProductSalesCart "0..1" o-- "1" Account
 
 ProductSales "*" o-- "1" Product
 
 Stock "*" o-- "1" Product
 
 Order "*" o-- "1" Product
+
 @enduml
+
 ## Deployement view
+
 @startuml deployement
 title Deployement Diagram
-node "Database container" {
-    database "Server (PostgreSQL)" as Server
+
+node "Monitoring container" {
+    artifact Prometheus
+    artifact Grafana
 }
 
-node "App container"  {
-    artifact "Node.js CLI" as Client
+node "Kong" {
+
 }
 
-    [Client] --> "Prisma over TCP" [Server]
+node "Kafka" {
+
+}
+
+node "Product Database" {
+    database "PostgreSQL" as ProductDB
+}
+
+node "Product Service"  {
+    artifact ProductServer
+    artifact ProductService
+    artifact "Prisma" as ProductPrisma
+}
+
+    [Kong] --> [ProductServer]
+    [ProductServer] --> [ProductService]
+    [ProductService] --> [Prometheus]
+    [ProductService] --> [ProductPrisma]
+    [ProductPrisma] --> [ProductDB]
+
+node "Sales Database" {
+    database "PostgreSQL" as SalesDB
+}
+
+node "Sales Service"  {
+    artifact SalesServer
+    artifact SalesService
+    artifact "Prisma" as SalesPrisma
+}
+
+    [Kong] --> [SalesServer]
+    [SalesServer] --> [SalesService]
+    [SalesService] --> [Prometheus]
+    [SalesService] --> [SalesPrisma]
+    [SalesPrisma] --> [SalesDB]
+
+node "Stocks Database" {
+    database "PostgreSQL" as StocksDB
+}
+
+node "Stocks Service"  {
+    artifact StocksServer
+    artifact StocksService
+    artifact "Prisma" as StocksPrisma
+}
+
+    [Kong] --> [StocksServer]
+    [StocksServer] --> [StocksService]
+    [StocksService] --> [Prometheus]
+    [StocksService] --> [StocksPrisma]
+    [StocksPrisma] --> [StocksDB]
+
+    [SalesService] --> [Kafka]
+    [Kafka] --> [StocksService]
+
+
+node "Account Database" {
+    database "PostgreSQL" as AccountDB
+}
+
+node "Account Service"  {
+    artifact AccountServer
+    artifact AccountService
+    artifact "Prisma" as AccountPrisma
+}
+
+    [Kong] --> [AccountServer]
+    [AccountServer] --> [AccountService]
+    [AccountService] --> [Prometheus]
+    [AccountService] --> [AccountPrisma]
+    [AccountPrisma] --> [AccountDB]
+
+node "ShoppingCart Database" {
+    database "PostgreSQL" as ShoppingCartDB
+}
+
+node "ShoppingCart Service"  {
+    artifact ShoppingCartServer
+    artifact ShoppingCartService
+    artifact "Prisma" as ShoppingCartPrisma
+}
+
+    [Kong] --> [ShoppingCartServer]
+    [ShoppingCartServer] --> [ShoppingCartService]
+    [ShoppingCartService] --> [Prometheus]
+    [ShoppingCartService] --> [ShoppingCartPrisma]
+    [ShoppingCartPrisma] --> [ShoppingCartDB]
+
+    [ShoppingCartService] --> [Kafka]
+
+
+node "Checkout Service"  {
+    artifact CheckoutServer
+    artifact CheckoutService
+}
+
+    [Kong] --> [CheckoutServer]
+    [CheckoutServer] --> [CheckoutService]
+    [CheckoutService] --> [Prometheus]
+
+    [ProductService] --> [Kafka]
+
+
+    [Prometheus] --> [Grafana]
 @enduml
 
 ---
 
 ## Component view
 @startuml component
-title Component Diagram
-package "Controller" {
-    component "manager.ts" as manager
-    component "store-employee.ts" as storeEmployee
-    component "supply-center-employee.ts" as supplyCenterEmployee
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+
+package "API Gateway" {
+  [Kong]
 }
 
-package "View" {
-    component "manager-views" as managerView
-    component "store-employee-views" as storeEmployeeView
-    component "supply-center-employee-views" as supplyCenterEmployeeView
-    component "main-menu-views" as mainMenuView
+package "Monitoring" {
+  [Prometheus]
+  [Grafana]
 }
 
-package "Prisma" {
-    component schema.prisma
+package "Shared Code" {
+  [shared-utils] as SharedUtils
 }
 
-database "Server (PostgreSQL)" as Server
+cloud "Kafka" {
+}
 
-schema.prisma ..> Server
+package "Microservices" {
+  component Product
+  component Sales
+  component Stocks
+  component Account
+  component ShoppingCart
+  component Checkout
+}
 
-supplyCenterEmployeeView ..> supplyCenterEmployee
-managerView ..> manager
-storeEmployeeView ..> storeEmployee
-storeEmployee ..> schema.prisma
-manager ..> schema.prisma
-supplyCenterEmployee ..> schema.prisma
-mainMenuView ..> storeEmployeeView
-mainMenuView ..> managerView
-mainMenuView ..> supplyCenterEmployeeView
+database "ProductDB" as dbProduct
+database "SalesDB" as dbSales
+database "StocksDB" as dbStocks
+database "AccountDB" as dbAccount
+database "CartDB" as dbCart
+database "CheckoutDB" as dbCheckout
+
+
+Kong --> Product
+Kong --> Sales
+Kong --> Stocks
+Kong --> Account
+Kong --> ShoppingCart
+Kong --> Checkout
+
+SharedUtils ..> Product
+SharedUtils ..> Sales
+SharedUtils ..> Stocks
+SharedUtils ..> Account
+SharedUtils ..> ShoppingCart
+SharedUtils ..> Checkout
+
+Product --> dbProduct
+Sales --> dbSales
+Stocks --> dbStocks
+Account --> dbAccount
+ShoppingCart --> dbCart
+Checkout --> dbCheckout
+
+Sales --> Kafka
+Stocks --> Kafka
+ShoppingCart --> Kafka
+Checkout --> Kafka
+
+Prometheus --> Product
+Prometheus --> Sales
+Prometheus --> Stocks
+Prometheus --> Account
+Prometheus --> ShoppingCart
+Prometheus --> Checkout
+
+Grafana --> Prometheus
 
 @enduml
+
 
 ---
 
 ## Use case 
 @startuml use_case
 title Use case
-actor StoreEmployee
-actor SupplyCenterEmployee
-actor Manager
+actor User
 
-usecase "Search Product" as UC1
-usecase "Register Sale" as UC2
-usecase "Cancel Sale" as UC3
-usecase "Get Stocks" as UC4
-usecase "Order more stocks" as UC5
 
-usecase "Deliver more stocks" as UC6
+usecase "Create Account" as UC1
+usecase "Get all Account" as UC2
 
-usecase "Generate sales report" as UC7
-usecase "View dashboard" as UC8
-usecase "Edit product" as UC9
-usecase "Create product" as UC10
+usecase "Checkout Sales" as UC3
 
-StoreEmployee --> UC1
-StoreEmployee --> UC2
-StoreEmployee --> UC3
-StoreEmployee --> UC4
-StoreEmployee --> UC5
-SupplyCenterEmployee --> UC6
-Manager --> UC7
-Manager --> UC8
-Manager --> UC9
-Manager --> UC10
+usecase "Add Product" as UC4
+usecase "Search Product" as UC5
+usecase "Update Product" as UC6
+
+usecase "Cancel Sales" as UC7
+usecase "Create Sales" as UC8
+usecase "Get Sales" as UC9
+
+usecase "Add item to cart" as UC10
+usecase "Clear cart" as UC11
+usecase "Get cart" as UC12
+
+usecase "Add order" as UC13
+usecase "Add stocks" as UC14
+usecase "Get order" as UC15
+usecase "Get stocks" as UC16
+
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+
+
 @enduml
 
 ---
+
+### Create account
+
+@startuml create-account
+title Create account
+actor User
+
+User -> Kong : createAccount(name: String, password: String)
+Kong -> AccountService : createAccount(name: String, password: String)
+AccountService --> Kong  :Success
+Kong --> User : Success
+@enduml
+
+### Get all account
+
+@startuml get-all-account
+title Get all account
+actor User
+
+User -> Kong : getAllAccount()
+Kong -> AccountService : getAllAccount()
+AccountService --> Kong  :Account[]
+Kong --> User : Account[]
+@enduml
+
+### Checkout sales
+
+@startuml checkout-sale
+title Checkout sale
+actor User
+
+User -> Kong :checkoutSale(storeId: Number, accountId: Number)
+Kong -> CheckoutService : checkoutSale(storeId: Number, accountId: Number)
+CheckoutService -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> CheckoutService  :Success
+CheckoutService --> Kong  :Success
+Kong --> User : Success
+@enduml
 
 ### Add product
+
 @startuml add-product
 title Add Product
-actor Manager
+actor User
 
-Manager -> ManagerView : addProduct(name: String, category: String, price:Number)
-ManagerView -> ManagerController : addProduct(name: String, category: String, price:Number)
-ManagerController --> ManagerView  :Success
-ManagerView --> Manager : Success
+User -> Kong : addProduct(name: String, category: String, price:Number)
+Kong -> ProductService : addProduct(name: String, category: String, price:Number)
+ProductService --> Kong  :Success
+Kong --> User : Success
 @enduml
 
----
+### Search product
 
-### Search for product
-@startuml search-for-product
-title Seach For Product
-actor StoreEmployee
+@startuml search-product
+title Seach Product
+actor User
 
-StoreEmployee -> StoreEmployeeView : searchForProduct(id:Number, name:String, category:String)
-StoreEmployeeView -> StoreEmployeeController : searchForProduct(id:Number, name:String, category:String)
-StoreEmployeeController --> StoreEmployeeView : Product
-StoreEmployeeView --> StoreEmployee : Product
+User -> Kong : searchForProduct(id:Number, name:String, category:String)
+Kong -> ProductService : searchForProduct(id:Number, name:String, category:String)
+ProductService --> Kong : Product
+Kong --> User : Product
 
 @enduml
 
----
+### Update product 
 
-### Update product
 @startuml update-product
 title Update Product
-actor Manager
+actor User
 
-Manager -> ManagerView : updateProduct(id:Number, name: String, category: String, price:Number)
-ManagerView -> ManagerController : updateProduct(id:Number, name: String, category: String, price:Number)
-ManagerController --> ManagerView  :Success
-ManagerView --> Manager : Success
+User -> Kong : updateProduct(id:Number, name: String, category: String, price:Number)
+Kong -> ProductService : updateProduct(id:Number, name: String, category: String, price:Number)
+ProductService --> Kong : Product
+Kong --> User : Product
 @enduml
-
----
-
-### Save sales
-@startuml save-sales
-title Save Sales
-actor StoreEmployee
-
-StoreEmployee -> StoreEmployeeView : addSales(sales:Sales)
-StoreEmployeeView -> StoreEmployeeController : addSales(sales:Sales)
-StoreEmployeeController --> StoreEmployeeController : updateStocksCount()
-StoreEmployeeController --> StoreEmployeeView : Done
-StoreEmployeeView --> StoreEmployee : Done
-@enduml
-
----
 
 ### Cancel sales
+
 @startuml cancel-sales
 title Cancel Sales
-actor StoreEmployee
+actor User
 
-StoreEmployee -> StoreEmployeeView : cancelSales(id:Number)
-StoreEmployeeView -> StoreEmployeeController : cancelSales(id:Number)
-StoreEmployeeController --> StoreEmployeeController : updateStocksCount()
-StoreEmployeeController --> StoreEmployeeView : Done
-StoreEmployeeView --> StoreEmployee : Done
+User -> Kong : cancelSales(salesId: String, storeId: Number)
+Kong -> SalesService : cancelSales(salesId: String, storeId: Number)
+SalesService --> StocksService : incrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> SalesService : Done
+SalesService --> Kong : Done
+Kong --> User : Done
 @enduml
 
----
+### Create sales
 
-### Order stocks
-@startuml order-stocks
-title Order Stocks
-actor StoreEmployee
+@startuml create-sales
+title Create Sales
+actor User
 
-StoreEmployee -> StoreEmployeeView : orderStocks(productId: Number, amount: Number)
-StoreEmployeeView -> StoreEmployeeController : orderStocks(productId: Number, amount: Number)
-StoreEmployeeController --> StoreEmployeeView : Done
-StoreEmployeeView --> StoreEmployee : Done
+User -> Kong : createSales(productSales: ProductSales, storeId: Number)
+Kong -> SalesService : createSales(productSales: ProductSales, storeId: Number)
+SalesService --> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> SalesService : Done
+SalesService --> Kong : Done
+Kong --> User : Done
 @enduml
 
----
+### Get sales
 
-### Deliver more stocks
-@startuml deliver-stocks
-title Deliver Stocks
-actor SupplyStoreEmployee
+@startuml get-sales
+title Get Sales
+actor User
 
-SupplyStoreEmployee -> SupplyStoreEmployeeView : deliverStocks(productId: Number, storeId: Number)
-SupplyStoreEmployeeView -> SupplyStoreEmployeeController : deliverStocks(productId: Number, storeId: Number)
-SupplyStoreEmployeeController --> SupplyStoreEmployeeView : Done
-SupplyStoreEmployeeView --> SupplyStoreEmployee : Done
+User -> Kong : getSales(salesId: String, storeId: Number)
+Kong -> SalesService : getSales(salesId: String, storeId: Number)
+SalesService -> Kong : Sales[]
+Kong -> User : Sales[]
+
 @enduml
 
----
+### Add items to cart
+
+@startuml add-item-to-cart
+title Add items to cart
+actor User
+
+User -> Kong : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
+Kong -> ShoppingCartService : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
+ShoppingCartService --> Kong : Done
+Kong --> User : Done
+@enduml
+
+### Clear cart
+
+@startuml clear-cart
+title Clear cart
+actor User
+
+User -> Kong : ClearCart(storeId: Number, accountId: Number)
+Kong -> ShoppingCartService : ClearCart(storeId: Number, accountId: Number)
+ShoppingCartService --> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> ShoppingCartService : Done
+ShoppingCartService --> Kong : Done
+Kong --> User : Done
+@enduml
+
+### Get cart 
+
+@startuml get-cart
+title Get cart
+actor User
+
+User -> Kong : GetCart(storeId: Number, accountId: Number): Sales
+Kong -> ShoppingCartService : GetCart(storeId: Number, accountId: Number): Sales
+ShoppingCartService --> Kong : Sales
+Kong --> User : Sales
+@enduml
+
+### Add order
+
+@startuml add-order
+title Add Order
+actor User
+
+User -> Kong : addOrder(productId: Number, amount: Number, storeId: Number)
+Kong -> StockService : addOrder(productId: Number, amount: Number, storeId: Number)
+StockService --> Kong : Success
+Kong --> User : Success
+
+@enduml
+
+### Add stocks 
+
+@startuml add-stocks
+title Add Stocks
+actor User
+
+User -> Kong : addStocks(productId: Number, amount: Number, storeId: Number)
+Kong -> StockService : addStocks(productId: Number, amount: Number, storeId: Number)
+StockService --> Kong : Success
+Kong --> User : Success
+
+@enduml
+
+### Get order
+
+@startuml get-order
+title Get Order
+actor User
+
+User -> Kong : getOrder(productId: Number, storeId: Number)
+Kong -> StockService : getOrder(productId: Number, storeId: Number)
+StockService --> Kong : Order
+Kong --> User : Order
+@enduml
 
 ### Get stocks
+
 @startuml get-stocks
 title Get Stocks
-actor StoreEmployee
+actor User
 
-StoreEmployee -> StoreEmployeeView : getStocks()
-StoreEmployeeView -> StoreEmployeeController : getStocks()
-StoreEmployeeController --> StoreEmployeeView : Stocks for all product
-StoreEmployeeView --> StoreEmployee : Stocks for all product
-@enduml
-
----
-
-### Get sales report
-@startuml get-sales-report
-title Get Sales Report
-actor Manager
-
-Manager -> ManagerView : getSalesReport(storeId:Number)
-ManagerView -> ManagerController : getSalesReport(storeId:Number)
-ManagerController --> ManagerView  : Sales, most sold product and remaining stocks per store
-ManagerView --> Manager : Sales, most sold product and remaining stocks per store
-@enduml
-
----
-
-### Get dashboard view
-@startuml get-dashboard-view
-title Get Dashboard View
-actor Manager
-
-Manager -> ManagerView : getDashboardView()
-ManagerView -> ManagerController : getDashboardView()
-ManagerController --> ManagerView  : Revenue, low stock and high stock alert per store
-ManagerView --> Manager : Revenue, low stock and high stock alert per store
+User -> Kong : getStocks(productId: Number, storeId: Number)
+Kong -> StockService : getStocks(productId: Number, storeId: Number)
+StockService --> Kong : Stocks
+Kong --> User : Stocks
 @enduml
 
 
 # Design Decisions 
-### MCV 
+### Kafka 
 #### Context
-This app needs a basic console interface allowing the user to send and retrieve data from a **postgreSQL** database.
+Each microservice has it's own database, which means we need a way to tell the *StocksService* when a sales has been completed. We thus need a library to allow microservices to speak to each other and stay up to date.
 
 #### Decision
-The **MVC** architecture is flexible yet simple, the code is easy to understand and everything can be put in place fairly quickly. There's still the ability to scale up the app in the future in case new features are needed. It's also a very easy architecture to test because the view doesn't really need testing, thus we can focus on testing the controller and model. The projet isn't going to grow very much in the future so we don't need an architecture that could support stuff like networking.
+An event based messaging system like *Kafka* would allow microservices to send messages between each other and stay in sync.
 
 #### Status
 Accepted
 
 #### Consequence
-The view will use **terminal-kit** to show and retrieve data from the user. Models will be automatically generated by Prisma and each of the 3 user types will have a dedicated controller to manage data between the view and the model. Everything will be organized into two folders:  
-- `/src/view`
-- `/src/controller`
+After a sale has been complete, the *SalesService* will send an event to the *StocksService* to decrease the stock of the sold items. Same thing is done with the *CheckoutService* advising the *StocksService* after an online sale. 
+
+When starting the project using *docker-compose*, there's no way of waiting until *Kafka* has initialized before sending request to it. Hence, the microservices start sending message while *Kafka* is still down and i wasn't able to find a good way to fix this.  
 
 ---
-### Inheritence
+### Shared utils
 #### Context
-There are 3 different types of users: 
-- an employee working at one of the store location 
-- an employee working at the supply center
--  a manager who oversees all activities.
-
-The manager has more power than the supply center employee and the supply center employee has more power than the store employee. A manager has to be able to retrieve stocks to generate a sales report, just like the store employee needs to retrieve stocks to order more stocks. 
+The project being split into 6 smaller ones, some piece of code can be used between two or more  microservices.
 
 #### Decision
-The manager will inherit from the supply center employee and the supply center employee will inherit from the store employee. This means the manager and supply store employee have the power to do everything as the regular store employees. 
-
+Using the *workspaces* feature in *npm*, it's possible to create a `/shared-utils` and import it has a package to each individual microservice. As such, code used to parse request body can be shared.
 
 #### Status
 Accepted
 
 #### Consequence
-Pictured in the **class diagram** is how each type of users will inherit form one another. This will be useful when implementing more complex features like the *sales report*. Each view will use a specific controller depending on which user is logged in. This will also allow for each users to be tested upon using Jest.
+This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` and to this day running *jest* on Linux still isn't working. 
 
 
 # Risks and Technical Debts
-### Type
-Some sections of code don't have types and use `any`, which can increase the chance of having data that's a different type which we intended.
-### View
-Some views are too big and chaotic. For instance `sales-report-view.ts` falls into callback hell where we wait for a user input to trigger a callback and keep on with the execution. The code if very convoluted because everything is in callbacks. The way user input is treated isn't very scallable which could cause issues in the future if we ever need a complex view asking for a lot of input from the user. 
+### Jest
+Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion.
+### Docker image
+Each microservice generates a huge docker image. I had a lot of issues trying to add the `/shared-utils` to each image so instead i'm copying the entire project to each image (minus what's defined in .dockerignore). This on top of `/node_modules` taking around 300MB means alot of storage and memory is taken by Docker.
+### Adding product description
+When looking up the stocks of a store you get the productId. Before changing everything to a microservice architecture it was pretty easy to incorporate the product information to the request as such :
+```json
+{
+    "productId": "1",
+    "product": {
+        "name": "Orange",
+        "price" : 5
+    }
+}
+```
+
+But now the *StocksService* doesn't have access to the product information so we get less info, which is the reason why the dashboard and sales-report are deprecated now. A way to fix this would be to have the api gateway query the *ProductService* and append the info.
 
 
 # Technology chosen
@@ -381,19 +686,25 @@ Some views are too big and chaotic. For instance `sales-report-view.ts` falls in
 ### Typescript
 I still think having types is handy sometimes, of instance it can be useful when dealing with data coming from the ORM.
 
-### Terminal-kit
-I've never used this library before, but from what I've seen on the readme page it seems to be a very versatile tool. Simple tasks like asking the user for input can also be done very easily.
-
 ### Prisma
 I've never worked with this library before, but there seems to be a huge amount of documentation online. I'm also somewhat unfamiliar with ORMs so i just asked *ChatGPT* for the best library for this particular project.
 
 ### Jest
 This is what I've always used. It was my first time setting up the environment for Jest and I had a hard time making it work with *ESM* and *Typescript*.
 
+### Kafka
+I've never implemented a system like *Kafka*, so i picked this one because it's well known and popular. 
+
+### Kong
+I used Apollo in another project which i quite liked, but this was the chance to try something new. I had a real hard time with the documentation for *Kong* so i ended up relying alot on *ChatGPT* which wasn't any better.
+
 
 ## File structure
-`/view` is split into the 3 different types of users found in the app (*store-employee, supply-center-employee, manager*). Each subfolder contains individual files for each interface. For instance there's a file which will print out the interface to search for a product. There's also a menu screen for each user giving access to the previously mentioned interfaces.
+- `/src/module` has all of the microservices, which the structure is defined below.
+- `/src/shared-utils` has common code shared between all the microservices.
 
-`/controller` is also split into the 3 different types of users. These controllers contain the methods used to send and retrieve data from the database. `manager.ts` inherits from `supply-center-employee.ts`  which inhertits from `store-employee.ts`.
 
-`/utils` has various methods used all around the app, like a custom method to output *json* or a custom method to ask the user to enter a *string*.
+#### Microservice
+- `/test` has the unit tests.
+- `/prisma` contains the database schema.  
+- `/src` has the source files for the microservice. 

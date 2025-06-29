@@ -1,9 +1,9 @@
-@startuml get-stocks
-title Get Stocks
-actor StoreEmployee
+@startuml get-order
+title Get Order
+actor User
 
-StoreEmployee -> StoreEmployeeView : getStocks()
-StoreEmployeeView -> StoreEmployeeController : getStocks()
-StoreEmployeeController --> StoreEmployeeView : Stocks for all product
-StoreEmployeeView --> StoreEmployee : Stocks for all product
+User -> Kong : getOrder(productId: Number, storeId: Number)
+Kong -> StockService : getOrder(productId: Number, storeId: Number)
+StockService --> Kong : Order
+Kong --> User : Order
 @enduml

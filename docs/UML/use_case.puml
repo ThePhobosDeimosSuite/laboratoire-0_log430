@@ -1,30 +1,47 @@
 @startuml use_case
 title Use case
-actor StoreEmployee
-actor SupplyCenterEmployee
-actor Manager
+actor User
 
-usecase "Search Product" as UC1
-usecase "Register Sale" as UC2
-usecase "Cancel Sale" as UC3
-usecase "Get Stocks" as UC4
-usecase "Order more stocks" as UC5
 
-usecase "Deliver more stocks" as UC6
+usecase "Create Account" as UC1
+usecase "Get all Account" as UC2
 
-usecase "Generate sales report" as UC7
-usecase "View dashboard" as UC8
-usecase "Edit product" as UC9
-usecase "Create product" as UC10
+usecase "Checkout Sales" as UC3
 
-StoreEmployee --> UC1
-StoreEmployee --> UC2
-StoreEmployee --> UC3
-StoreEmployee --> UC4
-StoreEmployee --> UC5
-SupplyCenterEmployee --> UC6
-Manager --> UC7
-Manager --> UC8
-Manager --> UC9
-Manager --> UC10
+usecase "Add Product" as UC4
+usecase "Search Product" as UC5
+usecase "Update Product" as UC6
+
+usecase "Cancel Sales" as UC7
+usecase "Create Sales" as UC8
+usecase "Get Sales" as UC9
+
+usecase "Add item to cart" as UC10
+usecase "Clear cart" as UC11
+usecase "Get cart" as UC12
+
+usecase "Add order" as UC13
+usecase "Add stocks" as UC14
+usecase "Get order" as UC15
+usecase "Get stocks" as UC16
+
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+
+
 @enduml

@@ -1,0 +1,10 @@
+@startuml add-stocks
+title Add Stocks
+actor User
+
+User -> Kong : addStocks(productId: Number, amount: Number, storeId: Number)
+Kong -> StockService : addStocks(productId: Number, amount: Number, storeId: Number)
+StockService --> Kong : Success
+Kong --> User : Success
+
+@enduml

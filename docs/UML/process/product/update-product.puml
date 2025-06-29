@@ -1,9 +1,9 @@
 @startuml update-product
 title Update Product
-actor Manager
+actor User
 
-Manager -> ManagerView : updateProduct(id:Number, name: String, category: String, price:Number)
-ManagerView -> ManagerController : updateProduct(id:Number, name: String, category: String, price:Number)
-ManagerController --> ManagerView  :Success
-ManagerView --> Manager : Success
+User -> Kong : updateProduct(id:Number, name: String, category: String, price:Number)
+Kong -> ProductService : updateProduct(id:Number, name: String, category: String, price:Number)
+ProductService --> Kong : Product
+Kong --> User : Product
 @enduml

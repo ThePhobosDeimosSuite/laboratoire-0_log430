@@ -1,10 +1,11 @@
-@startuml save-sales
-title Save Sales
-actor StoreEmployee
+@startuml create-sales
+title Create Sales
+actor User
 
-StoreEmployee -> StoreEmployeeView : addSales(sales:Sales)
-StoreEmployeeView -> StoreEmployeeController : addSales(sales:Sales)
-StoreEmployeeController --> StoreEmployeeController : updateStocksCount()
-StoreEmployeeController --> StoreEmployeeView : Done
-StoreEmployeeView --> StoreEmployee : Done
+User -> Kong : createSales(productSales: ProductSales, storeId: Number)
+Kong -> SalesService : createSales(productSales: ProductSales, storeId: Number)
+SalesService --> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> SalesService : Done
+SalesService --> Kong : Done
+Kong --> User : Done
 @enduml

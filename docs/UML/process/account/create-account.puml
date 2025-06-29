@@ -1,0 +1,9 @@
+@startuml create-account
+title Create account
+actor User
+
+User -> Kong : createAccount(name: String, password: String)
+Kong -> AccountService : createAccount(name: String, password: String)
+AccountService --> Kong  :Success
+Kong --> User : Success
+@enduml

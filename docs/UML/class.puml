@@ -79,7 +79,7 @@ AccountService ..> Account
 package ShoppingCartMicroservice {
     class ShoppingCartService{
         + AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
-        + GetCart(storeId: Number, accountId: Number): SalesCart
+        + GetCart(storeId: Number, accountId: Number): Sales
         + ClearCart(storeId: Number, accountId: Number): Void
     }
 
@@ -104,10 +104,6 @@ package CheckoutMicroservice {
 }
 
 CheckoutService ..> ShoppingCartService
-
-
-
-
 
 
 Sales "1" *-- "*" ProductSales
