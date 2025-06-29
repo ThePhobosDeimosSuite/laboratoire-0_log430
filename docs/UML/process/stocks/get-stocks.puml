@@ -1,0 +1,9 @@
+@startuml get-stocks
+title Get Stocks
+actor StoreEmployee
+
+StoreEmployee -> StoreEmployeeView : getStocks()
+StoreEmployeeView -> StoreEmployeeController : getStocks()
+StoreEmployeeController --> StoreEmployeeView : Stocks for all product
+StoreEmployeeView --> StoreEmployee : Stocks for all product
+@enduml

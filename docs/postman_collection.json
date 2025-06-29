@@ -732,7 +732,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "localhost:3000",
+			"value": "localhost:8000",
 			"type": "string"
 		}
 	]

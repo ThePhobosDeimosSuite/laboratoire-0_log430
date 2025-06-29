@@ -1,9 +1,0 @@
-@startuml get-dashboard-view
-title Get Dashboard View
-actor Manager
-
-Manager -> ManagerView : getDashboardView()
-ManagerView -> ManagerController : getDashboardView()
-ManagerController --> ManagerView  : Revenue, low stock and high stock alert per store
-ManagerView --> Manager : Revenue, low stock and high stock alert per store
-@enduml

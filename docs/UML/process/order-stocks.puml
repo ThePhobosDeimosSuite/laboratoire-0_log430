@@ -1,9 +1,0 @@
-@startuml order-stocks
-title Order Stocks
-actor StoreEmployee
-
-StoreEmployee -> StoreEmployeeView : orderStocks(productId: Number, amount: Number)
-StoreEmployeeView -> StoreEmployeeController : orderStocks(productId: Number, amount: Number)
-StoreEmployeeController --> StoreEmployeeView : Done
-StoreEmployeeView --> StoreEmployee : Done
-@enduml

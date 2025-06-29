@@ -121,20 +121,6 @@ router.delete('/store/:id/sales/:salesId', async (req: Request, res: Response) =
 })
 
 
-router.post('/store/:id/sales', async (req: Request, res: Response) => {
-    // cacheSales
-    const { id } = req.params
-    const { productSales } = req.body
-
-    if(productSales == undefined || !checkProductSalesType(productSales)) {
-        res.status(400).send()
-    } else {
-        await salesService.createSales(productSales, Number(id))
-        
-        res.status(204).send()
-    }
-})
-
 /**
  * @swagger
  * /api/store/{id}/sales:

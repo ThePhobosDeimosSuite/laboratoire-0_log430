@@ -1,45 +1,73 @@
 @startuml component
-title Component Diagram
-package "Controller" {
-    component "manager.ts" as manager
-    component "store-employee.ts" as storeEmployee
-    component "supply-center-employee.ts" as supplyCenterEmployee
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+
+package "API Gateway" {
+  [Kong]
 }
 
-package "View" {
-    component "manager-views" as managerView
-    component "store-employee-views" as storeEmployeeView
-    component "supply-center-employee-views" as supplyCenterEmployeeView
-    component "main-menu-views" as mainMenuView
+package "Monitoring" {
+  [Prometheus]
+  [Grafana]
 }
 
-package API {
-    component "Express.js" as express
+package "Shared Code" {
+  [shared-utils] as SharedUtils
 }
 
-package "Prisma" {
-    component schema.prisma
+cloud "Kafka" {
 }
 
-database "Server (PostgreSQL)" as Server
-database "Cache (Redis)" as Cache
+package "Microservices" {
+  component Product
+  component Sales
+  component Stocks
+  component Account
+  component ShoppingCart
+  component Checkout
+}
 
-schema.prisma ..> Server
+database "ProductDB" as dbProduct
+database "SalesDB" as dbSales
+database "StocksDB" as dbStocks
+database "AccountDB" as dbAccount
+database "CartDB" as dbCart
+database "CheckoutDB" as dbCheckout
 
-express ..> storeEmployee
-express ..> supplyCenterEmployee
-express ..> manager
 
-express ..> Cache
+Kong --> Product
+Kong --> Sales
+Kong --> Stocks
+Kong --> Account
+Kong --> ShoppingCart
+Kong --> Checkout
 
-supplyCenterEmployeeView ..> supplyCenterEmployee
-managerView ..> manager
-storeEmployeeView ..> storeEmployee
-storeEmployee ..> schema.prisma
-manager ..> schema.prisma
-supplyCenterEmployee ..> schema.prisma
-mainMenuView ..> storeEmployeeView
-mainMenuView ..> managerView
-mainMenuView ..> supplyCenterEmployeeView
+SharedUtils ..> Product
+SharedUtils ..> Sales
+SharedUtils ..> Stocks
+SharedUtils ..> Account
+SharedUtils ..> ShoppingCart
+SharedUtils ..> Checkout
+
+Product --> dbProduct
+Sales --> dbSales
+Stocks --> dbStocks
+Account --> dbAccount
+ShoppingCart --> dbCart
+Checkout --> dbCheckout
+
+Sales --> Kafka
+Stocks --> Kafka
+ShoppingCart --> Kafka
+Checkout --> Kafka
+
+Prometheus --> Product
+Prometheus --> Sales
+Prometheus --> Stocks
+Prometheus --> Account
+Prometheus --> ShoppingCart
+Prometheus --> Checkout
+
+Grafana --> Prometheus
 
 @enduml

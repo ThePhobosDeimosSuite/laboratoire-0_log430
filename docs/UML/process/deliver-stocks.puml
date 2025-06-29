@@ -1,9 +1,0 @@
-@startuml deliver-stocks
-title Deliver Stocks
-actor SupplyStoreEmployee
-
-SupplyStoreEmployee -> SupplyStoreEmployeeView : deliverStocks(productId: Number, storeId: Number)
-SupplyStoreEmployeeView -> SupplyStoreEmployeeController : deliverStocks(productId: Number, storeId: Number)
-SupplyStoreEmployeeController --> SupplyStoreEmployeeView : Done
-SupplyStoreEmployeeView --> SupplyStoreEmployee : Done
-@enduml

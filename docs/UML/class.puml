@@ -2,32 +2,11 @@
 title Class Diagram
 
 
-' class StoreEmployee {
-'     + searchForProduct(id:Number, name:String, category:String): Product
-'     + addSales(sales: Sales): Void
-'     + cancelSales(id: Number): Void    
-'     + getStocks(): Void
-'     + orderStocks(productId: Number, amount: Number): Void
-' }
-
-' class SupplyCenterEmployee {
-'     + deliverStocks(productId: Number, storeId: Number): Void
-' }
-
-' class Manager {
-'     + addProduct(name: String, category: String, price:Number): Void
-'     + updateProduct(id:Number, name: String, category: String, price:Number): Void
-'     + getSalesReport(storeId:Number): String
-'     + getDashboardView(): String
-' }
-
-
-
-package ProductManagement {
+package ProductMicroservice {
     class ProductService {
         + addProduct(name: String, category: String, price:Number): Void
-        + updateProduct(id:Number, name: String, category: String, price:Number): Void
-        + searchProduct(id:Number, name: String, category: String): Product
+        + updateProduct(productId:Number, name: String, category: String, price:Number): Void
+        + searchProduct(productId:Number, name: String, category: String): Product
     }
 
     class Product {
@@ -40,14 +19,13 @@ package ProductManagement {
 
 ProductService ..> Product
 
-package StocksManagement {
+package StocksMicroservice {
     class StocksService {
         + addStocks(productId: Number, amount: Number, storeId: Number): Void
         + getStocks(productId: Number, storeId: Number): Stock
         + decrementStocks(productId: Number, amount: Number, storeId: Number): Void
         + addOrder(productId: Number, amount: Number, storeId: Number)
         + getOrder(): Order
-        + removeOrder(productId: Number, storeId: Number): Void
     }
     class Order {
         amount: Number
@@ -64,12 +42,11 @@ StocksService ..> Stock
 StocksService ..> Order
 
 
-package SalesManagement {
+package SalesMicroservice {
     class SalesService {
-        + getSalesReport(storeId: Number): String
         + createSales(productSales: ProductSales, storeId: Number): Void
-        + searchSales(id: String, storeId: Number): Sales
-        + cancelSales(id: String, storeId: Number) : Void
+        + getSales(salesId: String, storeId: Number): Sales
+        + cancelSales(salesId: String, storeId: Number) : Void
     }
     class ProductSales {
         amount: Number
@@ -79,30 +56,67 @@ package SalesManagement {
         date: DateTime
         isCancelled: Boolean
         storeId: Number
-        + getPriceTotal(): Number
     }
 }
-
-v1Route ..> ProductService
-v1Route ..> StocksService
-v1Route ..> SalesService
 
 SalesService ..> ProductSales
 SalesService ..> Sales
 
-' StoreEmployee ..> Sales
+package AccountMicroservice{
+    class AccountService {
+        + createAccount(name: String, password: String): Void
+        + getAllAccount(): Account[]
+    }
 
-' StoreEmployee ..> Product
+    class Account {
+        name: String
+        password: String
+    }
+}
 
-' StoreEmployee ..> Stock
+AccountService ..> Account
 
-' StoreEmployee ..> Order
+package ShoppingCartMicroservice {
+    class ShoppingCartService{
+        + AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
+        + GetCart(storeId: Number, accountId: Number): SalesCart
+        + ClearCart(storeId: Number, accountId: Number): Void
+    }
 
-' SupplyCenterEmployee --|> StoreEmployee
+    class ProductSalesCart as "ProductSales" {
+        amount: Number
+    }
 
-' Manager --|> SupplyCenterEmployee
+    class SalesCart as "Sales" {
+        date: DateTime
+        storeId: Number
+    }
+}
+
+ShoppingCartService ..> ProductSalesCart
+ShoppingCartService ..> SalesCart
+ShoppingCartService ..> StocksService
+
+package CheckoutMicroservice {
+    class CheckoutService {
+        + checkoutSale(storeId: Number, accountId: Number): Void
+    }
+}
+
+CheckoutService ..> ShoppingCartService
+
+
+
+
+
 
 Sales "1" *-- "*" ProductSales
+
+SalesCart "1" *-- "*" ProductSalesCart
+
+ProductSalesCart "*" o-- "1" Product
+
+ProductSalesCart "0..1" o-- "1" Account
 
 ProductSales "*" o-- "1" Product
 
@@ -111,62 +125,6 @@ Stock "*" o-- "1" Product
 Order "*" o-- "1" Product
 
 
-class MainBusinessView
-class AddProductView
-class DashboardView
-class SalesReportView
-class UpdateProductView
-
-MainBusinessView ..> AddProductView
-MainBusinessView ..> DashboardView
-MainBusinessView ..> SalesReportView
-MainBusinessView ..> UpdateProductView
-
-AddProductView ..> ProductService
-' DashboardView ..> Manager
-SalesReportView ..> SalesService
-UpdateProductView ..> ProductService
-
-class StoreView
-class CancelSalesView
-class CreateSalesView
-class GetStocksView
-class OrderMoreStocksView
-class SearchProductView
-class searchSalesView
-
-StoreView ..> CancelSalesView
-StoreView ..> CreateSalesView
-StoreView ..> GetStocksView
-StoreView ..> OrderMoreStocksView
-StoreView ..> SearchProductView
-StoreView ..> searchSalesView
 
 
-CancelSalesView ..> SalesService
-CreateSalesView ..> SalesService
-GetStocksView ..> StocksService
-OrderMoreStocksView ..> StocksService
-SearchProductView ..> ProductService
-searchSalesView ..> SalesService
-
-class SupplyCenterView
-class DeliverStockView
-class CreateStockView
-
-SupplyCenterView ..> DeliverStockView
-SupplyCenterView ..> CreateStockView
-
-DeliverStockView ..> StocksService
-CreateStockView ..> StocksService
-
-class MenuView
-
-MenuView ..> SupplyCenterView
-MenuView ..> StoreView
-MenuView ..> MainBusinessView
-
-class v1Route {
-    + getRouter(): Router
-}
 @enduml

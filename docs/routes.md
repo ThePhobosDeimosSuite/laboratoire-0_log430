@@ -88,10 +88,12 @@ Get the admin dashboard view
 }
 ```
 
+# Stock service
+
 ## Get stock
 Get the stocks for a specific store
 
-- `GET /api/store/{:id}/stock`
+- `GET /api/store/{:storeId}/stock`
 - Query params: 
     - Pagination: **page, size, sort**
 
@@ -115,7 +117,7 @@ Get the stocks for a specific store
 ## Add stock
 Add stocks for a specific store
 
-- `POST /api/store/{:id}/stock`
+- `POST /api/store/{:storeId}/stock`
 
 #### Body
 ```json
@@ -128,7 +130,7 @@ Add stocks for a specific store
 ## Get order
 Get the order for a specific store
 
-- `GET /api/store/{:id}/order`
+- `GET /api/store/{:storeId}/order`
 - Query params: 
     - Pagination: **page, size, sort**
 
@@ -152,7 +154,7 @@ Get the order for a specific store
 ## Add order
 Add order for a specific store
 
-- `POST /api/store/{:id}/stock`
+- `POST /api/store/{:storeId}/stock`
 
 #### Body
 ```json
@@ -161,11 +163,11 @@ Add order for a specific store
     "amount": 5
 }
 ```
-
+# Product service
 ## Update product
 Update product
 
-- `PUT /api/product/{:id}`
+- `PUT /api/product/{:productId}`
 
 #### Body
 ```json
@@ -209,11 +211,12 @@ Search product
     }
 ]
 ```
-
+# Sales service
 ## Get sales
 Get sales for a specific store
 
-- `GET /api/store/{:id}/sales`
+- `GET /api/store/{:storeId}/sales`
+- `GET /api/store/{:storeId}/sales/{:salesId}`
 - Query params:
     - Pagination: **page, size, sort**
 
@@ -247,7 +250,7 @@ Get sales for a specific store
 ## Create sales 
 Create sales for a specific store
 
-- `POST /api/store/{:id}/sales`
+- `POST /api/store/{:storeId}/sales`
 
 #### Body 
 ```json
@@ -264,3 +267,79 @@ Create sales for a specific store
     ]
 }
 ```
+
+## Cancel sales 
+Cancel sales for a specific store
+
+- `DELETE /api/store/{:storeId}/sales/{:salesId}`
+
+# Account service
+
+## Create account 
+Create a new account
+
+- `POST /api/account`
+
+#### Body 
+```json
+{
+    "name": "John Doe",
+    "password": "123"
+}
+```
+
+## Get all account
+Get all account
+
+- `GET /api/account`
+
+#### Response 
+```json
+[
+    {
+        "name": "John Doe",
+        "password": "123"
+    }
+]
+```
+
+# Shopping cart service
+
+## Add shopping cart
+Create a shopping cart with items for a specific account 
+- `POST /api/store/{:storeId}/client/{:clientId}/cart`
+
+#### Body 
+
+```json
+{
+    "productSales": [
+        {
+            "productId": 1,
+            "amount": 2
+        }
+    ]
+}
+```
+
+## Get cart
+Get the current shopping cart of an account
+- `GET /api/store/{:storeId}/client/{:clientId}/cart`
+
+#### Response 
+
+```json
+{
+    "productSales": [
+        {
+            "productId": 1,
+            "amount": 2
+        }
+    ]
+}
+```
+
+# Checkout service
+Delete everyting in the cart and remove stock from stock service
+- `POST /api/store/{:storeId}/client/{:clientId}/cart/checkout`
+

@@ -17,7 +17,7 @@ Everything is packed together using Kong as the API gateway
 ## How to run
 
 #### Running using docker compose
-- Run `docker compose up` **TODO test on linux VM**
+- Run `docker compose up`
 - Grafana URL is : `http://localhost:3001`
 - Kong URL is : `http://localhost:80`
 
@@ -34,7 +34,11 @@ Each service has a Swagger url:
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
 
 #### Testing the project
-- Run `npm test`
+- Run `npm run test`
+
+    - Each service can be tested individually: `npm run test:product` or `npm run test:sales`
+
+**NOTE**: For unknown reason, testing this project with jest doesn't work on Linux
 
 #### Stress testing with K6
 
@@ -44,8 +48,8 @@ Each service has a Swagger url:
 ## File structure
 This project is split into three folders:
 
-1. `/src` has the source files of the project.
-2. `/test` has the test files.
+1. `/src/module` contains the microservices.
+2. `/src/shared-utils` has code that's shared between each microservice.
 3. `/docs` has the documentation.
 
 ## API routes
@@ -56,9 +60,9 @@ There's a basic authentication service protecting the api. Credentials are :
 Routes are available with example here: `/docs/routes.md`
 
 ## CI/CD
-This repo has a pipeline with 4 differents steps:
+Each microservice has its own pipeline with 4 differents steps:
 
 1. Check syntaxe with ESLint
 2. Create PostgreSQL database and run unit tests
 3. Create Docker image
-4. Push Docker image to DockerHub under the repository *pebrassard/lab4*
+4. Push Docker image to DockerHub under the repository *pebrassard/lab5_{service_name}*

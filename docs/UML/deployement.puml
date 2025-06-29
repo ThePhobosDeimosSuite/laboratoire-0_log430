@@ -1,42 +1,117 @@
 @startuml deployement
 title Deployement Diagram
-node "Database container" {
-    database "PostgreSQL" as DB
-    database "Redis" as Cache
-}
-
-node "App container"  {
-    artifact Shop1
-    artifact Shop2
-    artifact Shop3
-    artifact "Prisma" as Prisma
-}
 
 node "Monitoring container" {
     artifact Prometheus
     artifact Grafana
 }
 
-node "Load balancer container" {
-    artifact NGINX
+node "Kong" {
+
 }
-    [NGINX] --> [Shop1]
-    [NGINX] --> [Shop2]
-    [NGINX] --> [Shop3]
 
-    [Shop1] --> [Prometheus]
-    [Shop2] --> [Prometheus]
-    [Shop3] --> [Prometheus]
+node "Kafka" {
 
-    [Shop1] --> [Prisma]
-    [Shop2] --> [Prisma]
-    [Shop3] --> [Prisma]
+}
 
-    [Shop1] --> [Cache]
-    [Shop2] --> [Cache]
-    [Shop3] --> [Cache]
+node "Product Database" {
+    database "PostgreSQL" as ProductDB
+}
+
+node "Product Service"  {
+    artifact ProductServer
+    artifact ProductService
+    artifact "Prisma" as ProductPrisma
+}
+
+    [Kong] --> [ProductServer]
+    [ProductServer] --> [ProductService]
+    [ProductService] --> [Prometheus]
+    [ProductService] --> [ProductPrisma]
+    [ProductPrisma] --> [ProductDB]
+
+node "Sales Database" {
+    database "PostgreSQL" as SalesDB
+}
+
+node "Sales Service"  {
+    artifact SalesServer
+    artifact SalesService
+    artifact "Prisma" as SalesPrisma
+}
+
+    [Kong] --> [SalesServer]
+    [SalesServer] --> [SalesService]
+    [SalesService] --> [Prometheus]
+    [SalesService] --> [SalesPrisma]
+    [SalesPrisma] --> [SalesDB]
+
+node "Stocks Database" {
+    database "PostgreSQL" as StocksDB
+}
+
+node "Stocks Service"  {
+    artifact StocksServer
+    artifact StocksService
+    artifact "Prisma" as StocksPrisma
+}
+
+    [Kong] --> [StocksServer]
+    [StocksServer] --> [StocksService]
+    [StocksService] --> [Prometheus]
+    [StocksService] --> [StocksPrisma]
+    [StocksPrisma] --> [StocksDB]
+
+    [SalesService] --> [Kafka]
+    [Kafka] --> [StocksService]
+
+
+node "Account Database" {
+    database "PostgreSQL" as AccountDB
+}
+
+node "Account Service"  {
+    artifact AccountServer
+    artifact AccountService
+    artifact "Prisma" as AccountPrisma
+}
+
+    [Kong] --> [AccountServer]
+    [AccountServer] --> [AccountService]
+    [AccountService] --> [Prometheus]
+    [AccountService] --> [AccountPrisma]
+    [AccountPrisma] --> [AccountDB]
+
+node "ShoppingCart Database" {
+    database "PostgreSQL" as ShoppingCartDB
+}
+
+node "ShoppingCart Service"  {
+    artifact ShoppingCartServer
+    artifact ShoppingCartService
+    artifact "Prisma" as ShoppingCartPrisma
+}
+
+    [Kong] --> [ShoppingCartServer]
+    [ShoppingCartServer] --> [ShoppingCartService]
+    [ShoppingCartService] --> [Prometheus]
+    [ShoppingCartService] --> [ShoppingCartPrisma]
+    [ShoppingCartPrisma] --> [ShoppingCartDB]
+
+    [ShoppingCartService] --> [Kafka]
+
+
+node "Checkout Service"  {
+    artifact CheckoutServer
+    artifact CheckoutService
+}
+
+    [Kong] --> [CheckoutServer]
+    [CheckoutServer] --> [CheckoutService]
+    [CheckoutService] --> [Prometheus]
+
+    [ProductService] --> [Kafka]
 
 
     [Prometheus] --> [Grafana]
-    [Prisma] --> [DB]
 @enduml
