@@ -26,7 +26,7 @@ services:
   sales-service:
     depends_on:
       - sales-db
-      - kafka
+      # - kafka
     build:
       context: .
       dockerfile: src/module/sales/Dockerfile 
@@ -39,7 +39,7 @@ services:
   stocks-service:
     depends_on:
       - stocks-db
-      - kafka
+      # - kafka
     build:
       context: .
       dockerfile: src/module/stocks/Dockerfile  
@@ -49,22 +49,21 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     ports:
       - "4002:3000"
-  account-service:
-    depends_on:
-      - account-db
-    build:
-      context: .
-      dockerfile: src/module/account/Dockerfile  
-    environment:
-      DATABASE_URL: postgresql://postgres:123@account_db:5432/account
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    ports:
-      - "4003:3000"
+  # account-service:
+  #   depends_on:
+  #     - account-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/account/Dockerfile  
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@account_db:5432/account
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   ports:
+  #     - "4003:3000"
   shopping-cart-service:
     depends_on:
       - shopping-cart-db
-      - kafka
     build:
       context: .
       dockerfile: src/module/shopping-cart/Dockerfile  
@@ -74,13 +73,15 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     ports:
       - "4004:3000"
-  checkout-service:
-    depends_on:
-      - kafka
+  online-sales-orchestrator:
     build:
       context: .
-      dockerfile: src/module/checkout/Dockerfile  
+      dockerfile: src/module/online-sales-orchestrator/Dockerfile  
     environment:
+      SHOPPING_CART_SERVICE_URL: http://shopping-cart-service:3000
+      PRODUCT_SERVICE_URL: http://product-service:3000
+      STOCKS_SERVICE_URL: http://stocks-service:3000
+      SALES_SERVICE_URL: http://sales-service:3000
       PORT: 3000
     command: sh -c "npm run api"
     ports:
@@ -112,15 +113,15 @@ services:
       POSTGRES_DB: stocks
     ports:
       - "5435:5432"
-  account-db:
-    image: postgres
-    container_name: account_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: account
-    ports:
-      - "5436:5432"
+  # account-db:
+  #   image: postgres
+  #   container_name: account_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: account
+  #   ports:
+  #     - "5436:5432"
   shopping-cart-db:
     image: postgres
     container_name: shopping_cart_db
@@ -146,9 +147,9 @@ services:
       - product-service
       # - product-service2
       - sales-service
-      - account-service
+      # - account-service
       - shopping-cart-service
-      - checkout-service
+      - online-sales-orchestrator
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 
@@ -164,27 +165,27 @@ services:
     ports:
       - "3001:3000"
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    logging:
-      driver: "none"
-    expose:
-      - "2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: "ERROR"
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.5.0
+  #   logging:
+  #     driver: "none"
+  #   expose:
+  #     - "2181"
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: "ERROR"
 
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    logging:
-      driver: "none"
-    ports:
-      - "9092:9092"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_LOG4J_ROOT_LOGLEVEL: "ERROR"
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.5.0
+  #   logging:
+  #     driver: "none"
+  #   ports:
+  #     - "9092:9092"
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_LOG4J_ROOT_LOGLEVEL: "ERROR"

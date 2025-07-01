@@ -9,7 +9,7 @@ const app = express()
 const router = express.Router()
 
 const stocksService = new StocksService()
-await stocksService.initializeKafka()
+// await stocksService.initializeKafka()
 
 app.use(new ExpressPrometheusMiddleware().handler)
 
@@ -108,7 +108,7 @@ router.get('/store/:id/order', async (req: ParsedRequest, res: Response, next) =
 
 /**
  * @swagger
- * /api/store/{id}/stocks:
+ * /api/store/{id}/stock:
  *   post:
  *     description: Create new stocks for shop
  *     requestBody:
@@ -126,7 +126,13 @@ router.get('/store/:id/order', async (req: ParsedRequest, res: Response, next) =
  *                 description: Id of product
  *               amount:
  *                 type: number
- *                 description: Amount of product                 
+ *                 description: Amount of product   
+ *               decrement:
+ *                 type: boolean
+ *                 description: True to decrement stocks  
+ *               increment:
+ *                 type: boolean
+ *                 description: True to increment stocks              
  *     parameters: 
  *       - name: id
  *         in: path
@@ -140,24 +146,25 @@ router.get('/store/:id/order', async (req: ParsedRequest, res: Response, next) =
  *         description: Error in body
  * 
  */
-router.post('/store/:id/stock', async (req: ParsedRequest, res: Response, next) => {
-  const { id } = req.params
-  const { productId, amount } = req.body
-  await stocksService.addStocks(
-    productId,
-    amount,
-    Number(id),
-  )
-
+router.post('/store/:storeId/stock', async (req: ParsedRequest, res: Response, next) => {
+  const { storeId } = req.params
+  const { productId, amount, decrement, increment } = req.body
+  if (decrement) {
+    await stocksService.decrementStocks(productId, amount, Number(storeId))
+  } else if(increment) {
+    await stocksService.incrementStocks(productId, amount, Number(storeId))
+  } else {
+    await stocksService.addStocks(productId, amount, Number(storeId))
+  }
   res.status(204).send()
 })
 
 
 /**
  * @swagger
- * /api/store/{id}/stocks:
+ * /api/store/{id}/order:
  *   post:
- *     description: Create new stocks for shop
+ *     description: Create new order for shop
  *     requestBody:
  *       required: true
  *       content:
@@ -182,7 +189,7 @@ router.post('/store/:id/stock', async (req: ParsedRequest, res: Response, next) 
  *         required: true
  *     responses:
  *       204:
- *         description: Stocks added
+ *         description: Order added
  *       400:
  *         description: Error in body
  * 

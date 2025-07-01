@@ -10,6 +10,6 @@ RUN npm prune
 WORKDIR /app/src/shared-utils
 RUN npm run build
 
-WORKDIR /app/src/module/checkout
+WORKDIR /app/src/module/online-sales-orchestrator
 RUN npm run build
 CMD ["npm", "run", "api"]

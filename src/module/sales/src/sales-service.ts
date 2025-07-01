@@ -1,6 +1,6 @@
 import { Producer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { kafka, kafkaConst, waitForKafka } from 'shared-utils'
+import { kafka, kafkaConst, ProductSale, waitForKafka } from 'shared-utils'
 
 const dbURL = process.env.DATABASE_URL
 const prisma = new PrismaClient({
@@ -14,25 +14,27 @@ const prisma = new PrismaClient({
 export default class SalesService {
     private producer: Producer
     constructor() {
-        this.producer = kafka.producer()
+        // this.producer = kafka.producer()
     }
 
-    async initializeKafka() {
-        await waitForKafka()
-        await this.producer.connect()
-    }
+    // async initializeKafka() {
+    //     await waitForKafka()
+    //     await this.producer.connect()
+    // }
 
-    async createSales(productSales: { productId: number, amount: number }[], shopId: number) {
+    async createSales(productSales: ProductSale[], shopId: number) {
         // Reduce the stock after a sale, sending to stocks service using kafka
         for (const product of productSales) {
-            await this.producer.send({
-                topic: kafkaConst.decreaseStocks,
-                messages: [
-                    {
-                        value: JSON.stringify({productId: product.productId, amount: product.amount, shopId}),
-                    }
-                ]
-           })
+            if(this.producer) {
+                await this.producer.send({
+                    topic: kafkaConst.decreaseStocks,
+                    messages: [
+                        {
+                            value: JSON.stringify({productId: product.productId, amount: product.amount, shopId}),
+                        }
+                    ]
+                })
+            }
         }
 
         await prisma.sales.create({

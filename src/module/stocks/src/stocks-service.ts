@@ -8,30 +8,30 @@ const prisma = new PrismaClient()
 export default class StocksService {
     private consumer: Consumer
     constructor() {
-        this.consumer = kafka.consumer({groupId: 'service'})
+        // this.consumer = kafka.consumer({groupId: 'service'})
     }
 
-    async initializeKafka() {
-        await waitForKafka()
-        await this.consumer.connect()
-        await this.consumer.subscribe({ topic: kafkaConst.decreaseStocks, fromBeginning: false })
-        await this.consumer.subscribe({ topic: kafkaConst.increaseStocks, fromBeginning: false })
+    // async initializeKafka() {
+    //     await waitForKafka()
+    //     await this.consumer.connect()
+    //     await this.consumer.subscribe({ topic: kafkaConst.decreaseStocks, fromBeginning: false })
+    //     await this.consumer.subscribe({ topic: kafkaConst.increaseStocks, fromBeginning: false })
 
-        await this.consumer.run({
-            eachMessage: async ({ topic, partition, message }) => {
-                const data = JSON.parse(message.value.toString())
+    //     await this.consumer.run({
+    //         eachMessage: async ({ topic, partition, message }) => {
+    //             const data = JSON.parse(message.value.toString())
 
-                switch (topic) {
-                    case kafkaConst.decreaseStocks:
-                        await this.decrementStocks(data.productId, data.amount, data.shopId)
-                        break
-                    case kafkaConst.increaseStocks:
-                        await this.addStocks(data.productId, data.amount, data.shopId)
-                        break
-                }
-            }
-        })
-    }
+    //             switch (topic) {
+    //                 case kafkaConst.decreaseStocks:
+    //                     await this.decrementStocks(data.productId, data.amount, data.shopId)
+    //                     break
+    //                 case kafkaConst.increaseStocks:
+    //                     await this.addStocks(data.productId, data.amount, data.shopId)
+    //                     break
+    //             }
+    //         }
+    //     })
+    // }
 
 
     async addStocks(productId: number, amount: number, shopId: number) {
@@ -93,6 +93,20 @@ export default class StocksService {
             data: {
                 amount: {
                     decrement: amount
+                }
+            }
+        })
+    }
+
+    async incrementStocks(productId: number, amount: number, shopId: number) {
+        await prisma.stock.updateMany({
+            where: {
+                shopId,
+                productId
+            },
+            data: {
+                amount: {
+                    increment: amount
                 }
             }
         })

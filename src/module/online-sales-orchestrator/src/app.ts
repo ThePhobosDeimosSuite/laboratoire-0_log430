@@ -18,3 +18,7 @@ server.use((req, res, next) => {
 server.listen(PORT, ()=> {
     logger.info("Server is running on port " + PORT)
 })
+
+export {
+  logger
+}

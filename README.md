@@ -10,7 +10,7 @@ And the online store by:
 
  - *Account-service*
  - *Shopping-cart-service*
- - *Checkout-service*
+ - *Online-Sales-Orchestrator*
 
 Everything is packed together using Kong as the API gateway
 
@@ -28,7 +28,7 @@ Each service has a Swagger url:
 - *Stocks-service*: `localhost:4002/api-docs`
 - *Account-service*: `localhost:4003/api-docs`
 - *Shopping-cart-service*: `localhost:4004/api-docs`
-- *Checkout-service*: `localhost:4005/api-docs`
+- *Online-Sales-Orchestrator*: `localhost:4005/api-docs`
 
 #### Postman
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
@@ -65,4 +65,4 @@ Each microservice has its own pipeline with 4 differents steps:
 1. Check syntaxe with ESLint
 2. Create PostgreSQL database and run unit tests
 3. Create Docker image
-4. Push Docker image to DockerHub under the repository *pebrassard/lab5_{service_name}*
+4. Push Docker image to DockerHub under the repository *pebrassard/lab6_{service_name}*

@@ -38,9 +38,14 @@ export function parseQueryParam(req: Request, res: Response, next: NextFunction)
     next()
 }
 
-export function checkProductSalesType(productSales: any): boolean {
+export function isProductSalesType(productSales: any): boolean {
     if(Array.isArray(productSales)) {
         return productSales.every(p => p.amount != undefined && p.productId != undefined)
     }
     return false
+}
+
+export type ProductSale = {
+    amount: number
+    productId: number
 }

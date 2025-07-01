@@ -35,20 +35,12 @@ services:
           - /api/account
         strip_path: false
 
-  - name: shopping-cart-service
-    url: http://shopping-cart-service:3000
+  - name: online-sales-orchestrator
+    url: http://online-sales-orchestrator:3000
     routes:
-      - name: shopping-cart-route
+      - name: online-sales-orchestrator-route
         paths:
-          - ~/api/store/[0-9]+/client/[0-9]+/cart$
-        strip_path: false
-
-  - name: checkout-service
-    url: http://checkout-service:3000
-    routes:
-      - name: checkout-route
-        paths:
-          - ~/api/store/[0-9]+/client/[0-9]+/cart/checkout.*$
+          - ~/api/store/[0-9]+/client/[0-9]+/cart.*$
         strip_path: false
         
 upstreams:

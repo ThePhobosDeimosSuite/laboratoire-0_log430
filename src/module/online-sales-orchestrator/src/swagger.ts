@@ -4,7 +4,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Checkout API',
+      title: 'Online Sales Orchestrator',
       version: '1.0.0',
     },
     components: {

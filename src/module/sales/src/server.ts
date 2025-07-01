@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { ParsedRequest, parseQueryParam, checkProductSalesType } from 'shared-utils'
+import { ParsedRequest, parseQueryParam, isProductSalesType } from 'shared-utils'
 import SalesService from './sales-service.js';
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 import swagger from './swagger.js'
@@ -9,7 +9,7 @@ const app = express()
 const router = express.Router()
 const salesService = new SalesService()
 
-await salesService.initializeKafka()
+// await salesService.initializeKafka()
 
 app.use(new ExpressPrometheusMiddleware().handler)
 
@@ -87,7 +87,7 @@ router.post('/store/:id/sales', async (req: Request, res: Response) => {
     const { id } = req.params
     const { productSales } = req.body
 
-    if(productSales == undefined || !checkProductSalesType(productSales)) {
+    if(productSales == undefined || !isProductSalesType(productSales)) {
         res.status(400).send()
     } else {
         await salesService.createSales(productSales, Number(id))
