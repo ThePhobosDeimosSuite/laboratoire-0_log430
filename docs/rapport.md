@@ -655,12 +655,13 @@ Using the *workspaces* feature in *npm*, it's possible to create a `/shared-util
 Accepted
 
 #### Consequence
-This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` and to this day running *jest* on Linux still isn't working. 
+This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on lab6, test are now working.
+
 
 
 # Risks and Technical Debts
 ### Jest
-Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion.
+~~Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices~~. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion.
 ### Docker image
 Each microservice generates a huge docker image. I had a lot of issues trying to add the `/shared-utils` to each image so instead i'm copying the entire project to each image (minus what's defined in .dockerignore). This on top of `/node_modules` taking around 300MB means alot of storage and memory is taken by Docker.
 ### Adding product description
