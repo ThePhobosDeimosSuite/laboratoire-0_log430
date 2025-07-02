@@ -5,15 +5,22 @@ import swagger from './swagger.js'
 import SwaggerUiExpress from 'swagger-ui-express'
 import { isProductSalesType, ProductSale } from 'shared-utils'
 import SalesOrchestratorService from './sales-orchestrator-service.js'
-import { logger } from './app.js'
+// import { logger } from './app.js'
+import winston from 'winston';
 import APIError from './api-error.js'
 
+
+const logger = winston.createLogger({
+    transports: [
+        new winston.transports.Console()
+    ]
+});
 
 const app = express()
 const router = express.Router()
 
 // TODO move this to other file???
-const register = new prometheusClient.Registry() 
+const register = new prometheusClient.Registry()
 const sagaCounter = new prometheusClient.Counter({
     name: 'saga_counter',
     help: 'counts the number of initiated saga',
@@ -34,8 +41,8 @@ register.registerMetric(sagaCounter)
 app.use(new ExpressPrometheusMiddleware().handler)
 
 app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', register.contentType);
-  res.end(await register.metrics());
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
 });
 
 app.use(express.json())
@@ -59,12 +66,12 @@ enum State {
 // let state: State
 let timerEnd
 function updateState(newState: State) {
-    if(timerEnd) {
+    if (timerEnd) {
         timerEnd()
     }
     logger.info(newState.toString())
     // state = newState
-    timerEnd = sagaStateTimeHistogram.startTimer({state: newState})
+    timerEnd = sagaStateTimeHistogram.startTimer({ state: newState })
 }
 
 /**
@@ -120,15 +127,14 @@ router.post('/store/:storeId/client/:clientId/cart', async (req: Request, res: R
 
     let stockReduced = false
     const { storeId, clientId } = req.params
-    
+
     const productSales = isProductSalesType(req.body.productSales) && req.body.productSales as ProductSale[]
-    
     if (productSales) {
         try {
             // Check stocks
             await SalesOrchestratorService.checkProductSalesStocks(Number(storeId), productSales)
             updateState(State.StocksChecked)
-            
+
             // Remove stocks
             await SalesOrchestratorService.decreaseStocks(Number(storeId), productSales)
             updateState(State.StocksReduced)
@@ -144,9 +150,9 @@ router.post('/store/:storeId/client/:clientId/cart', async (req: Request, res: R
 
             res.send(`Total price of cart is : ${totalPrice}$`)
         } catch (e) {
-            if(e instanceof APIError) {
+            if (e instanceof APIError) {
                 const apiError = e as APIError
-                if(stockReduced) {
+                if (stockReduced) {
                     await SalesOrchestratorService.increaseStocks(Number(storeId), productSales)
                     updateState(State.StocksReverted)
                 }
@@ -156,30 +162,30 @@ router.post('/store/:storeId/client/:clientId/cart', async (req: Request, res: R
             }
         }
     } else {
-         res.status(400).send("Body is invalid")
+        res.status(400).send("Body is invalid")
     }
 })
 
- /**
- * @swagger
- * /api/store/:storeId/client/:clientId/cart/checkout:
- *   post:
- *     description: Confirm a sale and clear the shopping cart
- *     parameters: 
- *       - name: storeId
- *         in: path
- *         description: Store ID
- *         type: integer
- *         required: true
- *       - name: clientId
- *         in: path
- *         description: Client ID
- *         type: integer
- *         required: true
- *     responses:
- *       204:
- *         description: Success
- */
+/**
+* @swagger
+* /api/store/:storeId/client/:clientId/cart/checkout:
+*   post:
+*     description: Confirm a sale and clear the shopping cart
+*     parameters: 
+*       - name: storeId
+*         in: path
+*         description: Store ID
+*         type: integer
+*         required: true
+*       - name: clientId
+*         in: path
+*         description: Client ID
+*         type: integer
+*         required: true
+*     responses:
+*       204:
+*         description: Success
+*/
 router.post('/store/:storeId/client/:clientId/cart/checkout', async (req: Request, res: Response) => {
     const payment = Number(req.body.payment)
     const { storeId, clientId } = req.params
@@ -192,40 +198,38 @@ router.post('/store/:storeId/client/:clientId/cart/checkout', async (req: Reques
             const totalPrice = await SalesOrchestratorService.getProductSalesPrice(productSales)
             updateState(State.PriceFetched)
 
-            let response: string
             // Check payment
-            if(totalPrice <= payment) {
+            if (totalPrice <= payment) {
                 updateState(State.PaymentAccepted)
                 await SalesOrchestratorService.addSales(Number(storeId), productSales)
                 updateState(State.SalesAdded)
-                response = "Payment accepted"
 
                 // Remove cart
                 await SalesOrchestratorService.deleteShoppingCart(Number(storeId), Number(clientId))
                 updateState(State.ShoppingCartDeleted)
                 updateState(State.SagaEnded)
-                
+
+                res.send("Payment accepted")
+
             } else {
                 updateState(State.PaymentRefused)
                 await SalesOrchestratorService.increaseStocks(Number(storeId), productSales)
                 updateState(State.StocksReverted)
-                response = "Payment denied"
+
+                res.status(400).send("Payment denied")
             }
 
-            res.send(response)
-
         } catch (e) {
-            if(e instanceof APIError) {
+            if (e instanceof APIError) {
                 const apiError = e as APIError
                 res.status(apiError.code).send(apiError.message)
                 logger.error(apiError.message)
                 updateState(State.SagaEnded)
             }
         }
-        } else {
-            res.status(400).send("Payment is invalid")
-        }
-        
+    } else {
+        res.status(400).send("Payment is invalid")
+    }
 })
 
 

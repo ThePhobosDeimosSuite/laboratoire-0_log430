@@ -6,7 +6,10 @@
     "outDir": "dist",   
     "rootDir":"src",   
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "shared-utils": ["../../shared-utils/"]
+    }
   },
   "exclude": [
     "test/*",

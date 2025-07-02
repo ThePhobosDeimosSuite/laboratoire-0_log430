@@ -5,22 +5,5 @@
     "build": "tsc",
     "api": "node dist/app.js",
     "dev": "nodemon --watch **/*.ts --exec 'tsx server.ts'"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.2",
-    "@types/node": "^24.0.1",
-    "prisma": "^6.8.2",
-    "tsx": "^4.19.4",
-    "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "@matteodisabatino/express-prometheus-middleware": "^6.1.0",
-    "@prisma/client": "^6.8.2",
-    "express": "^5.1.0",
-    "tsconfig": "^7.0.0",
-    "winston": "^3.17.0",
-    "shared-utils":"file:../../shared-utils",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
   }
 }

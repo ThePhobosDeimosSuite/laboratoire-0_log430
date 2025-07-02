@@ -1,4 +1,4 @@
-import { ProductSale } from "shared-utils/index.js"
+import { ProductSale } from "shared-utils"
 import APIError from "./api-error.js"
 
 const shoppingCartServiceUrl = process.env.SHOPPING_CART_SERVICE_URL
@@ -17,9 +17,9 @@ export default class SalesOrchestratorService {
             for(const productSale of productSales) {
                 const stockServiceProductSale = body.find(p => p.productId == productSale.productId)
                 if(!stockServiceProductSale) {
-                    throw new Error(`ProductId:${productSale.productId} has no stocks in store ${storeId}`)
+                    throw new APIError(`ProductId:${productSale.productId} has no stocks in store ${storeId}`, 400)
                 } else if (stockServiceProductSale.amount < productSale.amount) {
-                    throw new Error(`ProductId:${productSale.productId} has ${stockServiceProductSale.amount} stocks`)
+                    throw new APIError(`ProductId:${productSale.productId} has ${stockServiceProductSale.amount} stocks`, 400)
                 }
             }
         } else {
@@ -93,7 +93,7 @@ export default class SalesOrchestratorService {
 
     static async getShoppingCart(storeId: number, clientId: number) {
         const url = `${shoppingCartServiceUrl}/api/store/${storeId}/client/${clientId}/cart`
-
+        console.log(url)
         const response = await fetch(url)
         if(response.ok) {
             const body = await response.json()
