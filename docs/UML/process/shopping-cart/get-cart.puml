@@ -1,9 +1,9 @@
-@startuml get-cart
-title Get cart
-actor User
+' @startuml get-cart
+' title Get cart
+' actor User
 
-User -> Kong : GetCart(storeId: Number, accountId: Number): Sales
-Kong -> ShoppingCartService : GetCart(storeId: Number, accountId: Number): Sales
-ShoppingCartService --> Kong : Sales
-Kong --> User : Sales
-@enduml
+' User -> Kong : GetCart(storeId: Number, accountId: Number): Sales
+' Kong -> ShoppingCartService : GetCart(storeId: Number, accountId: Number): Sales
+' ShoppingCartService --> Kong : Sales
+' Kong --> User : Sales
+' @enduml

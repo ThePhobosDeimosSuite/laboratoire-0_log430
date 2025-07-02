@@ -1,0 +1,22 @@
+@startuml saga
+[*] --> StocksChecked
+StocksChecked --> [*] : Not enough stocks
+StocksChecked --> StocksReduced : Enough stocks
+StocksReduced --> ShoppingCartCreated
+ShoppingCartCreated --> StocksReverted : Shopping cart already exist
+StocksReverted --> [*]
+ShoppingCartCreated --> ShoppingCartFetch
+ShoppingCartFetch --> PriceFetched
+
+PriceFetched --> PaymentAccepted : Payment is higher than fetched price
+PaymentAccepted --> SalesAdded
+SalesAdded --> ShoppingCartDeleted
+
+
+PriceFetched --> PaymentRefused : Payment is lower than fetched price
+PaymentRefused --> StocksReverted
+
+ShoppingCartDeleted --> SagaEnded
+
+SagaEnded --> [*]
+@enduml

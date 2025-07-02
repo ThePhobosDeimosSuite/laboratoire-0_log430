@@ -14,6 +14,23 @@ And the online store by:
 
 Everything is packed together using Kong as the API gateway
 
+#### Online Sales Orchestrator
+When adding one or multiple products to a shopping cart, the request will be forwarded to the online sales orchestrator which will :
+- Check remaining stocks
+    - If not enough stocks, cancel transaction 
+- Reserve stocks
+- Create a shopping cart entry
+    - If shopping cart already exists, cancel transation and unlock reserve stocks
+- Send the total due amount to the user
+
+When a user tries to checkout their shopping cart, the online sales orchestrator will:
+- Get total cart price
+- Check if payment is enough
+    - Create new sales if payment is accepted
+    - Release reserve stocks if payment is denied
+- Delete items from shopping cart
+
+
 ## How to run
 
 #### Running using docker compose

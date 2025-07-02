@@ -13,5 +13,5 @@ scrape_configs:
         - 'sales-service:3000' 
         - 'stocks-service:3000'
         - 'account-service:3000'
-        - 'checkout-service:3000'
+        - 'online-sales-orchestrator:3000'
         - 'shopping-cart-service:3000'

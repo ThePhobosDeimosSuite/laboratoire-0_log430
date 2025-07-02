@@ -70,8 +70,12 @@ router.post('/store/:storeId/client/:clientId/cart', async (req: Request, res: R
     if (productSales == undefined || !isProductSalesType(productSales)) {
         res.status(400).send()
     } else {
-        await shoppingCartService.addItemsToCart(productSales, Number(storeId), Number(clientId))
-        res.status(204).send()
+        try {
+            await shoppingCartService.addItemsToCart(productSales, Number(storeId), Number(clientId))
+            res.status(204).send()
+        } catch (e) {
+            res.status(409).send()
+        }
     }
 })
 

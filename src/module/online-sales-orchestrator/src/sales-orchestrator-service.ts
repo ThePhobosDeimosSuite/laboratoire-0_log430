@@ -1,4 +1,5 @@
 import { ProductSale } from "shared-utils/index.js"
+import APIError from "./api-error.js"
 
 const shoppingCartServiceUrl = process.env.SHOPPING_CART_SERVICE_URL
 const productServiceUrl = process.env.PRODUCT_SERVICE_URL
@@ -18,11 +19,11 @@ export default class SalesOrchestratorService {
                 if(!stockServiceProductSale) {
                     throw new Error(`ProductId:${productSale.productId} has no stocks in store ${storeId}`)
                 } else if (stockServiceProductSale.amount < productSale.amount) {
-                    throw new Error(`ProductId:${productSale.productId} has only ${stockServiceProductSale.amount} stocks`)
+                    throw new Error(`ProductId:${productSale.productId} has ${stockServiceProductSale.amount} stocks`)
                 }
             }
         } else {
-            throw new Error(`Error sending request to StocksService`)
+            throw new APIError(`Error sending request to StocksService`, 500)
         }
     }
 
@@ -44,7 +45,7 @@ export default class SalesOrchestratorService {
             })
 
             if(!response.ok) {
-                throw new Error(`Error while reducing stocks for product ${productSale.productId} in StocksService`)
+                throw new APIError(`Error while reducing stocks for product ${productSale.productId} in StocksService`, 500)
             }
         }
     }
@@ -67,7 +68,7 @@ export default class SalesOrchestratorService {
             })
 
             if(!response.ok) {
-                throw new Error(`Error while reducing stocks for product ${productSale.productId} in StocksService`)
+                throw new APIError(`Error while reducing stocks for product ${productSale.productId} in StocksService`, 500)
             }
         }
     }
@@ -83,8 +84,10 @@ export default class SalesOrchestratorService {
             body: JSON.stringify({productSales})
         })
 
-        if(!response.ok) {
-            throw new Error(`Error while sending shopping cart to ShoppingCartService`)
+        if(response.status == 409) {
+            throw new APIError(`A shopping cart already exist for user ${clientId} in store ${storeId}`, 409)
+        } else if (!response.ok) {
+            throw new APIError(`Error while sending shopping cart to ShoppingCartService`, 500)
         }
     }
 
@@ -96,9 +99,9 @@ export default class SalesOrchestratorService {
             const body = await response.json()
             return (body.productSales.map(p => ({productId: p.productId, amount: p.amount}))) as ProductSale[]
         } else if (response.status == 404) {   
-            throw new Error(`Shopping cart doesn't exist for client ${clientId} in store ${storeId}`)
+            throw new APIError(`Shopping cart doesn't exist for client ${clientId} in store ${storeId}`, 404)
         } else {
-            throw new Error(`Error while fetching cart from ShoppingCartService`)
+            throw new APIError(`Error while fetching cart from ShoppingCartService`, 500)
         }
     }
 
@@ -110,7 +113,7 @@ export default class SalesOrchestratorService {
         }) 
 
         if(!response.ok) {
-            throw new Error(`Error while deleting shopping cart for user ${clientId} in store ${storeId}`)
+            throw new APIError(`Error while deleting shopping cart for user ${clientId} in store ${storeId}`, 500)
         }
 
     }
@@ -126,7 +129,7 @@ export default class SalesOrchestratorService {
                 const product = body[0]
                 totalAmount += product.price * productSale.amount
             } else {
-                throw new Error(`Error while fetching product ${productSale.productId} from ProductService`)
+                throw new APIError(`Error while fetching product ${productSale.productId} from ProductService`, 500)
             }
         }
         return totalAmount
@@ -144,7 +147,7 @@ export default class SalesOrchestratorService {
         })
 
         if(!response.ok) {
-            throw new Error(`Error while adding sale to SalesService in store ${storeId}`)
+            throw new APIError(`Error while adding sale to SalesService in store ${storeId}`, 500)
         }
     }
 }

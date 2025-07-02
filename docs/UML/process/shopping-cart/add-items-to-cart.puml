@@ -1,9 +1,9 @@
-@startuml add-item-to-cart
-title Add items to cart
-actor User
+' @startuml add-item-to-cart
+' title Add items to cart
+' actor User
 
-User -> Kong : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
-Kong -> ShoppingCartService : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
-ShoppingCartService --> Kong : Done
-Kong --> User : Done
-@enduml
+' User -> Kong : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
+' Kong -> ShoppingCartService : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
+' ShoppingCartService --> Kong : Done
+' Kong --> User : Done
+' @enduml

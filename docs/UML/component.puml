@@ -15,8 +15,6 @@ package "Shared Code" {
   [shared-utils] as SharedUtils
 }
 
-cloud "Kafka" {
-}
 
 package "Microservices" {
   component Product
@@ -24,7 +22,7 @@ package "Microservices" {
   component Stocks
   component Account
   component ShoppingCart
-  component Checkout
+  component OnlineSalesOrchestrator
 }
 
 database "ProductDB" as dbProduct
@@ -32,34 +30,32 @@ database "SalesDB" as dbSales
 database "StocksDB" as dbStocks
 database "AccountDB" as dbAccount
 database "CartDB" as dbCart
-database "CheckoutDB" as dbCheckout
 
 
 Kong --> Product
 Kong --> Sales
 Kong --> Stocks
 Kong --> Account
-Kong --> ShoppingCart
-Kong --> Checkout
+Kong --> OnlineSalesOrchestrator
 
 SharedUtils ..> Product
 SharedUtils ..> Sales
 SharedUtils ..> Stocks
 SharedUtils ..> Account
 SharedUtils ..> ShoppingCart
-SharedUtils ..> Checkout
+SharedUtils ..> OnlineSalesOrchestrator
 
 Product --> dbProduct
 Sales --> dbSales
 Stocks --> dbStocks
 Account --> dbAccount
 ShoppingCart --> dbCart
-Checkout --> dbCheckout
 
-Sales --> Kafka
-Stocks --> Kafka
-ShoppingCart --> Kafka
-Checkout --> Kafka
+
+OnlineSalesOrchestrator --> Product
+OnlineSalesOrchestrator --> Sales
+OnlineSalesOrchestrator --> Stocks
+OnlineSalesOrchestrator --> ShoppingCart
 
 Prometheus --> Product
 Prometheus --> Sales

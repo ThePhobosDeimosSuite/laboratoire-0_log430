@@ -10,9 +10,6 @@ node "Kong" {
 
 }
 
-node "Kafka" {
-
-}
 
 node "Product Database" {
     database "PostgreSQL" as ProductDB
@@ -62,8 +59,6 @@ node "Stocks Service"  {
     [StocksService] --> [StocksPrisma]
     [StocksPrisma] --> [StocksDB]
 
-    [SalesService] --> [Kafka]
-    [Kafka] --> [StocksService]
 
 
 node "Account Database" {
@@ -92,25 +87,26 @@ node "ShoppingCart Service"  {
     artifact "Prisma" as ShoppingCartPrisma
 }
 
-    [Kong] --> [ShoppingCartServer]
     [ShoppingCartServer] --> [ShoppingCartService]
     [ShoppingCartService] --> [Prometheus]
     [ShoppingCartService] --> [ShoppingCartPrisma]
     [ShoppingCartPrisma] --> [ShoppingCartDB]
 
-    [ShoppingCartService] --> [Kafka]
 
-
-node "Checkout Service"  {
-    artifact CheckoutServer
-    artifact CheckoutService
+node "Online Sales Orchestrator"  {
+    artifact SalesOrchestator
+    artifact SalesOrchestatorService
 }
 
-    [Kong] --> [CheckoutServer]
-    [CheckoutServer] --> [CheckoutService]
-    [CheckoutService] --> [Prometheus]
+    [Kong] --> [SalesOrchestator]
+    [SalesOrchestator] --> [SalesOrchestatorService]
+    [SalesOrchestatorService] --> [Prometheus]
 
-    [ProductService] --> [Kafka]
+    [SalesOrchestatorService] --> [ShoppingCartServer]
+    [SalesOrchestatorService] --> [ProductServer]
+    [SalesOrchestatorService] --> [SalesServer]
+    [SalesOrchestatorService] --> [StocksServer]
+
 
 
     [Prometheus] --> [Grafana]

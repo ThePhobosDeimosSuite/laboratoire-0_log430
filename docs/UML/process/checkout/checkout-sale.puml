@@ -1,11 +1,11 @@
-@startuml checkout-sale
-title Checkout sale
-actor User
+' @startuml checkout-sale
+' title Checkout sale
+' actor User
 
-User -> Kong :checkoutSale(storeId: Number, accountId: Number)
-Kong -> CheckoutService : checkoutSale(storeId: Number, accountId: Number)
-CheckoutService -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
-StocksService --> CheckoutService  :Success
-CheckoutService --> Kong  :Success
-Kong --> User : Success
-@enduml
+' User -> Kong :checkoutSale(storeId: Number, accountId: Number)
+' Kong -> OnlineSalesOrchestator : checkoutSale(storeId: Number, accountId: Number)
+' OnlineSalesOrchestator -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+' StocksService --> CheckoutService  :Success
+' CheckoutService --> Kong  :Success
+' Kong --> User : Success
+' @enduml
