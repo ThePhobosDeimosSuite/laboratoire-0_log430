@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",   
+    "rootDir":"src",   
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "shared-utils": ["../../shared-utils/"]
+    }
+  },
+  "exclude": [
+    "test/*",
+    "**/jest.*"
+  ]
+}

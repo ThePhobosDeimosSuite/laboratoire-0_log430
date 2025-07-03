@@ -5,16 +5,18 @@ export const kafka = new Kafka({
     brokers: ['kafka:9092']
 })
 
-export const kafkaConst = {
-    increaseStocks:"increaseStocks",
-    decreaseStocks:"decreaseStocks",
-    checkoutSale:"checkoutSale"
+export enum packageState {
+  LabelCreated = "LabelCreated",
+  PackageSent = "PackageSent",
+  OutForDelivery = "OutForDelivery",
+  Delivered = "Delivered",
 }
+
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export async function waitForKafka() {
-      await delay(10000)
+      await delay(5000)
 }

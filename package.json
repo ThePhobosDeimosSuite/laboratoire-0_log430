@@ -33,7 +33,6 @@
   "dependencies": {
     "@matteodisabatino/express-prometheus-middleware": "^6.1.0",
     "@prisma/client": "^6.8.2",
-    "cors": "^2.8.5",
     "express": "^5.1.0",
     "kafkajs": "^2.2.4",
     "prisma": "^6.8.2",

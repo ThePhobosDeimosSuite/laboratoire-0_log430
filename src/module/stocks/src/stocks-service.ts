@@ -1,9 +1,7 @@
 import { Consumer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { kafka, kafkaConst, waitForKafka } from 'shared-utils'
+
 const prisma = new PrismaClient()
-
-
 
 export default class StocksService {
     private consumer: Consumer

@@ -1,0 +1,9 @@
+{
+  "name": "email-api",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "api": "node dist/app.js",
+    "dev": "nodemon --watch **/*.ts --exec 'tsx server.ts'"
+  }
+}

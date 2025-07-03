@@ -42,6 +42,22 @@ services:
         paths:
           - ~/api/store/[0-9]+/client/[0-9]+/cart.*$
         strip_path: false
+
+  - name: package-service
+    url: http://package-service:3000
+    routes:
+      - name: package-service-route
+        paths:
+          - ~/api/package/[0-9]+.*$
+        strip_path: false
+
+  - name: event-store-service
+    url: http://event-store-service:3000
+    routes:
+      - name: event-store-route
+        paths:
+          - ~/api/package/state/[0-9]+.*$
+        strip_path: false
         
 upstreams:
   - name: product-service

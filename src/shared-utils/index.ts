@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import winston from 'winston';
-export { kafkaConst, waitForKafka, kafka } from './kafka.js'
+export { packageState, waitForKafka, kafka } from './kafka.js'
 
 interface ParsedQuery {
   size: number | undefined;

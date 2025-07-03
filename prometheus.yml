@@ -15,3 +15,6 @@ scrape_configs:
         - 'account-service:3000'
         - 'online-sales-orchestrator:3000'
         - 'shopping-cart-service:3000'
+        - 'package-service:3000'
+        - 'email-service:3000'
+        - 'event-store-service:3000'

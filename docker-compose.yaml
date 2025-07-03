@@ -1,16 +1,16 @@
 services:
-  product-service:
-    depends_on:
-      - product-db
-    build:
-      context: .
-      dockerfile: src/module/product/Dockerfile 
-    environment:
-      DATABASE_URL: postgresql://postgres:123@product_db:5432/product
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    ports:
-      - "4000:3000"
+  # product-service:
+  #   depends_on:
+  #     - product-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/product/Dockerfile 
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@product_db:5432/product
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   ports:
+  #     - "4000:3000"
   # product-service2:
   #   depends_on:
   #     - product-db
@@ -23,114 +23,152 @@ services:
   #   command: sh -c "npx prisma db push && npm run api"
   #   expose:
   #     - "3000"
-  sales-service:
-    depends_on:
-      - sales-db
-      # - kafka
+  # sales-service:
+  #   depends_on:
+  #     - sales-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/sales/Dockerfile 
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@sales_db:5432/sales
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   ports:
+  #     - "4001:3000"
+  # stocks-service:
+  #   depends_on:
+  #     - stocks-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/stocks/Dockerfile  
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   ports:
+  #     - "4002:3000"
+  # account-service:
+  #   depends_on:
+  #     - account-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/account/Dockerfile  
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@account_db:5432/account
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   ports:
+  #     - "4003:3000"
+  # shopping-cart-service:
+  #   depends_on:
+  #     - shopping-cart-db
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/shopping-cart/Dockerfile  
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:123@shopping_cart_db:5432/shopping_cart
+  #     PORT: 3000
+  #   command: sh -c "npx prisma db push && npm run api"
+  #   ports:
+  #     - "4004:3000"
+  # online-sales-orchestrator:
+  #   build:
+  #     context: .
+  #     dockerfile: src/module/online-sales-orchestrator/Dockerfile  
+  #   environment:
+  #     SHOPPING_CART_SERVICE_URL: http://shopping-cart-service:3000
+  #     PRODUCT_SERVICE_URL: http://product-service:3000
+  #     STOCKS_SERVICE_URL: http://stocks-service:3000
+  #     SALES_SERVICE_URL: http://sales-service:3000
+  #     PORT: 3000
+  #   command: sh -c "npm run api"
+  #   ports:
+  #     - "4005:3000"
+
+  package-service:
     build:
       context: .
-      dockerfile: src/module/sales/Dockerfile 
+      dockerfile: src/module/package/Dockerfile  
     environment:
-      DATABASE_URL: postgresql://postgres:123@sales_db:5432/sales
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    ports:
-      - "4001:3000"
-  stocks-service:
-    depends_on:
-      - stocks-db
-      # - kafka
-    build:
-      context: .
-      dockerfile: src/module/stocks/Dockerfile  
-    environment:
-      DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    ports:
-      - "4002:3000"
-  account-service:
-    depends_on:
-      - account-db
-    build:
-      context: .
-      dockerfile: src/module/account/Dockerfile  
-    environment:
-      DATABASE_URL: postgresql://postgres:123@account_db:5432/account
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    ports:
-      - "4003:3000"
-  shopping-cart-service:
-    depends_on:
-      - shopping-cart-db
-    build:
-      context: .
-      dockerfile: src/module/shopping-cart/Dockerfile  
-    environment:
-      DATABASE_URL: postgresql://postgres:123@shopping_cart_db:5432/shopping_cart
-      PORT: 3000
-    command: sh -c "npx prisma db push && npm run api"
-    ports:
-      - "4004:3000"
-  online-sales-orchestrator:
-    build:
-      context: .
-      dockerfile: src/module/online-sales-orchestrator/Dockerfile  
-    environment:
-      SHOPPING_CART_SERVICE_URL: http://shopping-cart-service:3000
-      PRODUCT_SERVICE_URL: http://product-service:3000
-      STOCKS_SERVICE_URL: http://stocks-service:3000
-      SALES_SERVICE_URL: http://sales-service:3000
       PORT: 3000
     command: sh -c "npm run api"
     ports:
-      - "4005:3000"
-  product-db:
+      - "4006:3000"
+  email-service:
+    build:
+      context: .
+      dockerfile: src/module/email/Dockerfile  
+    environment:
+      PORT: 3000
+    command: sh -c "npm run api"
+    ports:
+      - "4007:3000"
+  event-store-service:
+    depends_on:
+      - event-store-db
+    build:
+      context: .
+      dockerfile: src/module/event-store/Dockerfile  
+    environment:
+      DATABASE_URL: postgresql://postgres:123@event-store-db:5432/event_store
+      PORT: 3000
+    command: sh -c "npm run api"
+    ports:
+      - "4008:3000"
+  # product-db:
+  #   image: postgres
+  #   container_name: product_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: product
+  #   ports:
+  #     - "5433:5432"
+  # sales-db:
+  #   image: postgres
+  #   container_name: sales_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: sales
+  #   ports:
+  #     - "5434:5432"
+  # stocks-db:
+  #   image: postgres
+  #   container_name: stocks_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: stocks
+  #   ports:
+  #     - "5435:5432"
+  # account-db:
+  #   image: postgres
+  #   container_name: account_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: account
+  #   ports:
+  #     - "5436:5432"
+  # shopping-cart-db:
+  #   image: postgres
+  #   container_name: shopping_cart_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: shopping_cart
+  #   ports:
+  #     - "5437:5432"
+  event-store-db:
     image: postgres
-    container_name: product_db
+    container_name: event_store_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: product
+      POSTGRES_DB: event_store
     ports:
-      - "5433:5432"
-  sales-db:
-    image: postgres
-    container_name: sales_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: sales
-    ports:
-      - "5434:5432"
-  stocks-db:
-    image: postgres
-    container_name: stocks_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: stocks
-    ports:
-      - "5435:5432"
-  account-db:
-    image: postgres
-    container_name: account_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: account
-    ports:
-      - "5436:5432"
-  shopping-cart-db:
-    image: postgres
-    container_name: shopping_cart_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: shopping_cart
-    ports:
-      - "5437:5432"
+      - "5438:5432"
 
   kong:
     image: kong:3.5
@@ -143,49 +181,50 @@ services:
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
     depends_on:
-      - stocks-service
-      - product-service
+      # - stocks-service
+      # - product-service
       # - product-service2
-      - sales-service
-      - account-service
-      - shopping-cart-service
-      - online-sales-orchestrator
+      # - sales-service
+      # - account-service
+      # - shopping-cart-service
+      # - online-sales-orchestrator
+      - package-service
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3001:3000"
-
-  # zookeeper:
-  #   image: confluentinc/cp-zookeeper:7.5.0
-  #   logging:
-  #     driver: "none"
-  #   expose:
-  #     - "2181"
-  #   environment:
-  #     ZOOKEEPER_CLIENT_PORT: 2181
-  #     ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: "ERROR"
-
-  # kafka:
-  #   image: confluentinc/cp-kafka:7.5.0
-  #   logging:
-  #     driver: "none"
+  # prometheus:
+  #   image: prom/prometheus
   #   ports:
-  #     - "9092:9092"
-  #   depends_on:
-  #     - zookeeper
-  #   environment:
-  #     KAFKA_BROKER_ID: 1
-  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #     KAFKA_LOG4J_ROOT_LOGLEVEL: "ERROR"
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3001:3000"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    logging:
+      driver: "none"
+    expose:
+      - "2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: "ERROR"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    logging:
+      driver: "none"
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG4J_ROOT_LOGLEVEL: "ERROR"
