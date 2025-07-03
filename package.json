@@ -8,7 +8,7 @@
   "scripts": {
     "test:product": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects product",
     "test:sales": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects sales",
-    "test:onlineSalesOrchestrator": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects online-sales-orchestrator --silent=false --verbose",
+    "test:onlineSalesOrchestrator": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects online-sales-orchestrator",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "tsc"
   },

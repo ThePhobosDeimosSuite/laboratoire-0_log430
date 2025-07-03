@@ -4,7 +4,6 @@ StocksChecked --> [*] : Not enough stocks
 StocksChecked --> StocksReduced : Enough stocks
 StocksReduced --> ShoppingCartCreated
 ShoppingCartCreated --> StocksReverted : Shopping cart already exist
-StocksReverted --> [*]
 ShoppingCartCreated --> ShoppingCartFetch
 ShoppingCartFetch --> PriceFetched
 
@@ -17,6 +16,7 @@ PriceFetched --> PaymentRefused : Payment is lower than fetched price
 PaymentRefused --> StocksReverted
 
 ShoppingCartDeleted --> SagaEnded
+StocksReverted --> ShoppingCartDeleted
 
 SagaEnded --> [*]
 @enduml

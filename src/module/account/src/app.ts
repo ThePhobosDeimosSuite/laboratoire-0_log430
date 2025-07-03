@@ -1,14 +1,7 @@
-import winston from 'winston';
+import { logger } from 'shared-utils'
 import server from "./server.js"
 
 const PORT = process.env.PORT || 3000
-
-// Logger
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console()
-  ]
-});
 
 server.use((req, res, next) => {
     logger.info(req.url)

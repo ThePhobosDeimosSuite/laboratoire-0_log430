@@ -5,21 +5,13 @@ import swagger from './swagger.js'
 import SwaggerUiExpress from 'swagger-ui-express'
 import { isProductSalesType, ProductSale } from 'shared-utils'
 import SalesOrchestratorService from './sales-orchestrator-service.js'
-// import { logger } from './app.js'
-import winston from 'winston';
+import { logger } from 'shared-utils'
 import APIError from './api-error.js'
 
-
-const logger = winston.createLogger({
-    transports: [
-        new winston.transports.Console()
-    ]
-});
 
 const app = express()
 const router = express.Router()
 
-// TODO move this to other file???
 const register = new prometheusClient.Registry()
 const sagaCounter = new prometheusClient.Counter({
     name: 'saga_counter',
@@ -33,8 +25,6 @@ const sagaStateTimeHistogram = new prometheusClient.Histogram({
     labelNames: ['state'],
     buckets: [0.005, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5]
 })
-
-
 
 register.registerMetric(sagaCounter)
 
@@ -63,14 +53,13 @@ enum State {
     SagaEnded
 }
 
-// let state: State
+
 let timerEnd
 function updateState(newState: State) {
     if (timerEnd) {
         timerEnd()
     }
     logger.info(newState.toString())
-    // state = newState
     timerEnd = sagaStateTimeHistogram.startTimer({ state: newState })
 }
 
@@ -213,8 +202,8 @@ router.post('/store/:storeId/client/:clientId/cart/checkout', async (req: Reques
 
             } else {
                 updateState(State.PaymentRefused)
-                await SalesOrchestratorService.increaseStocks(Number(storeId), productSales)
-                updateState(State.StocksReverted)
+                // await SalesOrchestratorService.increaseStocks(Number(storeId), productSales)
+                // updateState(State.StocksReverted)
 
                 res.status(400).send("Payment denied")
             }

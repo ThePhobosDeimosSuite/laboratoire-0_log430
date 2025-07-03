@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-
+import winston from 'winston';
 export { kafkaConst, waitForKafka, kafka } from './kafka.js'
 
 interface ParsedQuery {
@@ -49,3 +49,9 @@ export type ProductSale = {
     amount: number
     productId: number
 }
+
+export const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console()
+  ]
+});
