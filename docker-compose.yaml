@@ -49,18 +49,18 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     ports:
       - "4002:3000"
-  # account-service:
-  #   depends_on:
-  #     - account-db
-  #   build:
-  #     context: .
-  #     dockerfile: src/module/account/Dockerfile  
-  #   environment:
-  #     DATABASE_URL: postgresql://postgres:123@account_db:5432/account
-  #     PORT: 3000
-  #   command: sh -c "npx prisma db push && npm run api"
-  #   ports:
-  #     - "4003:3000"
+  account-service:
+    depends_on:
+      - account-db
+    build:
+      context: .
+      dockerfile: src/module/account/Dockerfile  
+    environment:
+      DATABASE_URL: postgresql://postgres:123@account_db:5432/account
+      PORT: 3000
+    command: sh -c "npx prisma db push && npm run api"
+    ports:
+      - "4003:3000"
   shopping-cart-service:
     depends_on:
       - shopping-cart-db
@@ -113,15 +113,15 @@ services:
       POSTGRES_DB: stocks
     ports:
       - "5435:5432"
-  # account-db:
-  #   image: postgres
-  #   container_name: account_db
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: 123
-  #     POSTGRES_DB: account
-  #   ports:
-  #     - "5436:5432"
+  account-db:
+    image: postgres
+    container_name: account_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: account
+    ports:
+      - "5436:5432"
   shopping-cart-db:
     image: postgres
     container_name: shopping_cart_db
@@ -147,7 +147,7 @@ services:
       - product-service
       # - product-service2
       - sales-service
-      # - account-service
+      - account-service
       - shopping-cart-service
       - online-sales-orchestrator
     volumes:
