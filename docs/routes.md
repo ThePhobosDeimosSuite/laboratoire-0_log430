@@ -306,7 +306,7 @@ Get all account
 # Shopping cart service
 
 ## Add shopping cart
-Create a shopping cart with items for a specific account 
+Create a shopping cart, check stocks and reserve stocks with items for a specific account 
 - `POST /api/store/{:storeId}/client/{:clientId}/cart`
 
 #### Body 
@@ -322,24 +322,21 @@ Create a shopping cart with items for a specific account
 }
 ```
 
-## Get cart
-Get the current shopping cart of an account
-- `GET /api/store/{:storeId}/client/{:clientId}/cart`
+#### Response
+Amount due
 
-#### Response 
+## Checkout service
+Delete everyting in the cart and create a new sale if payment is accepted. 
+- `POST /api/store/{:storeId}/client/{:clientId}/cart/checkout`
+
+#### Body 
 
 ```json
 {
-    "productSales": [
-        {
-            "productId": 1,
-            "amount": 2
-        }
-    ]
+    "payment": 10
 }
 ```
 
-# Checkout service
-Delete everyting in the cart and remove stock from stock service
-- `POST /api/store/{:storeId}/client/{:clientId}/cart/checkout`
-
+#### Response
+- Success if payment is accepted
+- Error if payment is rejected
