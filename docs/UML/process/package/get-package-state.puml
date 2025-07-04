@@ -1,0 +1,14 @@
+@startuml get-package-state
+title Get package state
+actor User
+
+User -> Kong : getPackageState(packageId: String)
+Kong -> EventStoreService : getPackageState(packageId: String)
+
+EventStoreService -> Redis : getPackageState(packageId: String)
+Redis --> EventStoreService : getPackageState(packageId: String)
+
+
+EventStoreService --> Kong  : Package state
+Kong --> User : Package state
+@enduml

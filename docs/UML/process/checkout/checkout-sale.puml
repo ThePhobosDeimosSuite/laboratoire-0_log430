@@ -1,11 +1,24 @@
-' @startuml checkout-sale
-' title Checkout sale
-' actor User
+@startuml checkout-sale
+title Checkout sale
+actor User
 
-' User -> Kong :checkoutSale(storeId: Number, accountId: Number)
-' Kong -> OnlineSalesOrchestator : checkoutSale(storeId: Number, accountId: Number)
-' OnlineSalesOrchestator -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
-' StocksService --> CheckoutService  :Success
-' CheckoutService --> Kong  :Success
-' Kong --> User : Success
-' @enduml
+User -> Kong :checkoutSale(storeId: Number, accountId: Number)
+Kong -> SalesOrchestrator : checkoutSale(storeId: Number, accountId: Number)
+
+SalesOrchestrator -> ShoppingCartService : getCart(storeId: Number, accountId: Number)
+ShoppingCartService -> SalesOrchestrator : Shopping cart
+
+loop until no more product 
+    SalesOrchestrator -> ProductService : GetProductPrice(product: Product)
+    ProductService --> SalesOrchestrator : Product price
+end
+
+SalesOrchestrator -> SalesService : addSales(productSales: ProductSales, storeId: Number)
+ShoppingCartService -> SalesOrchestrator : Shopping cart
+
+SalesOrchestrator -> ShoppingCartService : clearCart(storeId: Number, accountId: Number)
+ShoppingCartService -> SalesOrchestrator : Done
+
+SalesOrchestrator --> Kong : Success
+Kong --> User : Success
+@enduml

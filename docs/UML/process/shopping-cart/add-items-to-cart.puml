@@ -1,9 +1,26 @@
-' @startuml add-item-to-cart
-' title Add items to cart
-' actor User
+@startuml add-item-to-cart
+title Add items to cart
+actor User
 
-' User -> Kong : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
-' Kong -> ShoppingCartService : AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number)
-' ShoppingCartService --> Kong : Done
-' Kong --> User : Done
-' @enduml
+User -> Kong : AddItemsToCart(productSales: ProductSales, storeId: Number, accountId: Number)
+
+Kong ->  SalesOrchestrator: AddItemsToCart(productSales: ProductSales, storeId: Number, accountId: Number)
+
+SalesOrchestrator -> StocksService : CheckStock(productSales: ProductSales, storeId: Number, accountId: Number)
+StocksService --> SalesOrchestrator : Enough Stock
+
+SalesOrchestrator -> StocksService : DecreaseStocks(productSales: ProductSales, storeId: Number, accountId: Number)
+StocksService --> SalesOrchestrator : Done
+
+SalesOrchestrator -> ShoppingCartService : CreateShoppingCart(productSales: ProductSales, storeId: Number, accountId: Number)
+ShoppingCartService --> SalesOrchestrator : Done
+
+loop until no more product 
+    SalesOrchestrator -> ProductService : GetProductPrice(product: Product)
+    ProductService --> SalesOrchestrator : Product price
+end
+
+SalesOrchestrator --> Kong : Total price
+
+Kong -->  User: Total price
+@enduml

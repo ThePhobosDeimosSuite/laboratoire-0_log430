@@ -17,13 +17,15 @@ usecase "Create Sales" as UC8
 usecase "Get Sales" as UC9
 
 usecase "Add item to cart" as UC10
-usecase "Clear cart" as UC11
-usecase "Get cart" as UC12
+usecase "Checkout cart" as UC11
 
-usecase "Add order" as UC13
-usecase "Add stocks" as UC14
-usecase "Get order" as UC15
-usecase "Get stocks" as UC16
+usecase "Add order" as UC12
+usecase "Add stocks" as UC13
+usecase "Get order" as UC14
+usecase "Get stocks" as UC15
+
+usecase "Update package state" as UC16
+usecase "Get package state" as UC17
 
 
 User --> UC1
@@ -42,6 +44,7 @@ User --> UC13
 User --> UC14
 User --> UC15
 User --> UC16
+User --> UC17
 
 
 @enduml

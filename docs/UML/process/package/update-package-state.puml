@@ -1,0 +1,14 @@
+@startuml update-package-state
+title Update package state
+actor User
+
+User -> Kong : updatePackageState(packageId: String, state:State)
+Kong -> PackageService : updatePackageState(packageId: String, state:State)
+
+PackageService -> EmailService : sendPackageUpdate(packageId: String, state:State)
+PackageService -> EventStoreService : sendPackageUpdate(packageId: String, state:State)
+
+
+PackageService --> Kong  :Success
+Kong --> User : Success
+@enduml

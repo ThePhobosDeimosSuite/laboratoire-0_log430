@@ -325,7 +325,7 @@ Create a shopping cart, check stocks and reserve stocks with items for a specifi
 #### Response
 Amount due
 
-## Checkout service
+## Checkout
 Delete everyting in the cart and create a new sale if payment is accepted. 
 - `POST /api/store/{:storeId}/client/{:clientId}/cart/checkout`
 
@@ -340,3 +340,29 @@ Delete everyting in the cart and create a new sale if payment is accepted.
 #### Response
 - Success if payment is accepted
 - Error if payment is rejected
+
+
+# Package service
+## Update package state
+- `POST /api/package/{:packageId}`
+
+#### Body 
+```json 
+{
+    "state": "OutForDelivery"
+}
+```
+
+#### Response 
+- `200` if event is sent
+- `400` if body is wrongly formated
+
+## Get package state
+- `GET /api/package/{:packageId}/state`
+
+#### Response 
+```json 
+{
+    "state": "OutForDelivery"
+}
+```

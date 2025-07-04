@@ -92,6 +92,42 @@ node "ShoppingCart Service"  {
     [ShoppingCartService] --> [ShoppingCartPrisma]
     [ShoppingCartPrisma] --> [ShoppingCartDB]
 
+artifact Kafka
+
+node "Package Service" {
+    artifact PackageServer
+    artifact PackageService
+}
+
+    [Kong] --> [PackageServer]
+    [PackageServer] --> [PackageService]
+    [PackageService] --> [Kafka]
+    [PackageService] --> [Prometheus]
+
+node "EventStore Service"{
+    artifact EventStoreServer
+    artifact EventStoreService
+    artifact "Prisma" as EventStorePrisma
+}
+
+node "EventStore Database" {
+    database "PostgreSQL" as EventStoreDB
+}
+
+    [Kafka] --> [EventStoreServer]
+    [Kong] --> [EventStoreServer]
+    [EventStoreServer] --> [EventStoreService]
+    [EventStoreService] --> [EventStorePrisma]
+    [EventStorePrisma] --> [EventStoreDB]
+    [EventStoreService] --> [Kafka]
+    [EventStoreService] --> [Prometheus]
+
+node "Email Service"{
+    artifact EmailServer
+}
+
+    [Kafka] --> [EmailServer]
+
 
 node "Online Sales Orchestrator"  {
     artifact SalesOrchestator

@@ -1,0 +1,30 @@
+@startuml package
+title Kafka + CQRS
+
+artifact Kafka
+database "Read database (Redis)" as Redis
+database "Write database (PostgreSQL)" as EventDatabase
+
+artifact EmailService
+artifact PackageService
+
+
+node EventStore {
+    component ReadQuery 
+    component WriteQuery 
+    component OnServiceStart
+    component Replay
+}
+
+ReadQuery --> Redis : "Get state"
+WriteQuery --> Redis : "Update state"
+WriteQuery --> EventDatabase : "Add event"
+
+OnServiceStart --> Replay
+Replay --> EventDatabase: "Get all event"
+Replay --> Redis : "Put state"
+
+PackageService --> Kafka
+Kafka --> EmailService
+Kafka --> WriteQuery
+@enduml

@@ -34,8 +34,10 @@ const eventStoreService = new EventStoreService(eventCounter, requestTimeCounter
 
 router.get('/package/:packageId/state', async (req: Request, res: Response) => {
     const { packageId } = req.params
-
-    res.send(await eventStoreService.getPackageStatus(Number(packageId)))
+    const state = await eventStoreService.getPackageStatus(Number(packageId))
+    res.send({
+      state
+    })
 })
 
 

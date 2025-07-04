@@ -11,10 +11,6 @@ package "Monitoring" {
   [Grafana]
 }
 
-package "Shared Code" {
-  [shared-utils] as SharedUtils
-}
-
 
 package "Microservices" {
   component Product
@@ -23,6 +19,9 @@ package "Microservices" {
   component Account
   component ShoppingCart
   component OnlineSalesOrchestrator
+  component EventStore
+  component Package as p
+  component Email
 }
 
 database "ProductDB" as dbProduct
@@ -30,6 +29,8 @@ database "SalesDB" as dbSales
 database "StocksDB" as dbStocks
 database "AccountDB" as dbAccount
 database "CartDB" as dbCart
+database "EventDB" as dbEvent
+database "Redis" as redis
 
 
 Kong --> Product
@@ -37,19 +38,19 @@ Kong --> Sales
 Kong --> Stocks
 Kong --> Account
 Kong --> OnlineSalesOrchestrator
+Kong --> EventStore
+Kong --> p
 
-SharedUtils ..> Product
-SharedUtils ..> Sales
-SharedUtils ..> Stocks
-SharedUtils ..> Account
-SharedUtils ..> ShoppingCart
-SharedUtils ..> OnlineSalesOrchestrator
+p --> Email
+p --> EventStore
 
 Product --> dbProduct
 Sales --> dbSales
 Stocks --> dbStocks
 Account --> dbAccount
 ShoppingCart --> dbCart
+EventStore --> dbEvent
+EventStore --> redis
 
 
 OnlineSalesOrchestrator --> Product
@@ -62,7 +63,8 @@ Prometheus --> Sales
 Prometheus --> Stocks
 Prometheus --> Account
 Prometheus --> ShoppingCart
-Prometheus --> Checkout
+Prometheus --> p
+Prometheus --> EventStore
 
 Grafana --> Prometheus
 

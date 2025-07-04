@@ -79,7 +79,6 @@ AccountService ..> Account
 package ShoppingCartMicroservice {
     class ShoppingCartService{
         + AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
-        + GetCart(storeId: Number, accountId: Number): Sales
         + ClearCart(storeId: Number, accountId: Number): Void
     }
 
@@ -93,18 +92,55 @@ package ShoppingCartMicroservice {
     }
 }
 
-ShoppingCartService ..> ProductSalesCart
-ShoppingCartService ..> SalesCart
-ShoppingCartService ..> StocksService
+SalesOrchestrator ..> ShoppingCartService
+SalesOrchestrator ..> SalesService
+SalesOrchestrator ..> ProductService
+SalesOrchestrator ..> StocksService
 
-package CheckoutMicroservice {
-    class CheckoutService {
-        + checkoutSale(storeId: Number, accountId: Number): Void
+package SalesOrchestrator {
+    class SalesOrchestratorService {
+        + createCart(productSales: ProductSales, storeId: Number, accountId: Number): Void
+        + checkoutCart(storeId: Number, accountId: Number): Void
     }
 }
 
-CheckoutService ..> ShoppingCartService
+package PackageMicroservice {
+    class PackageService {
+        + sendPackageUpdate(packageId: number, state: State): Void
+    }
+}
 
+package EmailMicroservice {
+    class EmailService {
+        + sendEmail(productSales: ProductSales, storeId: Number, accountId: Number): Void
+    }
+}
+
+package EventStoreMicroservice {
+    class EventStoreService {
+        + getPackageState(packageId: number): State
+        + savePackageState(packageId: number, state: State): Void
+        + replay(): State[]
+    }
+
+    class PackageEvent {
+        + date: DateTime
+        + packageId: number
+    }
+
+    enum "State" as s {
+        LabelCreated
+        PackageSent
+        OutForDelivery
+        Delivered
+    }
+}
+
+PackageService ..> EmailService
+PackageService ..> EventStoreService
+
+
+PackageEvent "*" o-- "1" s
 
 Sales "1" *-- "*" ProductSales
 
