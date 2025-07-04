@@ -106,15 +106,21 @@ services:
   event-store-service:
     depends_on:
       - event-store-db
+      - redis
     build:
       context: .
       dockerfile: src/module/event-store/Dockerfile  
     environment:
+      REDIS_URL: redis://redis:6379
       DATABASE_URL: postgresql://postgres:123@event-store-db:5432/event_store
       PORT: 3000
     command: sh -c "npx prisma db push && npm run api"
     ports:
       - "4008:3000"
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
   # product-db:
   #   image: postgres
   #   container_name: product_db
@@ -192,17 +198,17 @@ services:
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 
-  # prometheus:
-  #   image: prom/prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     
-  # grafana:
-  #   image: grafana/grafana
-  #   ports:
-  #     - "3001:3000"
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0

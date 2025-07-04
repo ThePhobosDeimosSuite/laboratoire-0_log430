@@ -1,6 +1,8 @@
 import { Consumer } from "kafkajs";
 import { packageEvent, PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { logger, kafka, packageState, waitForKafka } from "shared-utils";
+import { kafka, packageState, waitForKafka } from "shared-utils";
+import { getRedis, setRedis } from "./redis.js";
+import { Counter, Gauge } from "prom-client";
 
 const dbURL = process.env.DATABASE_URL
 const prisma = new PrismaClient({
@@ -13,10 +15,24 @@ const prisma = new PrismaClient({
 
 export class EventStoreService {
     private consumer: Consumer
-    constructor() {
+    private eventTime: Gauge
+    private eventCounter: Counter
+    constructor(eventCounter: Counter, eventTime: Gauge) {
+        this.eventCounter = eventCounter
+        this.eventTime = eventTime
+        
         this.consumer = kafka.consumer({groupId: 'event-store'})
 
-        // TODO initializeRedis
+        this.initializeRedis().then(() => {
+            this.initializeKafka().then()
+        })
+    }
+
+    async initializeRedis() {
+        const values = await this.replay()
+        for (const value of Object.values(values)) {
+            await setRedis(value.packageId.toString(), value.state)
+        }
     }
 
     async initializeKafka() {
@@ -31,6 +47,11 @@ export class EventStoreService {
     }
 
     async registerEvent(packageId: number, state: packageState) {
+        // Prometheus
+        const now = Date.now() / 1000;
+        this.eventCounter.labels(state).inc(1)
+        this.eventTime.labels(state).set(now)
+
         await prisma.packageEvent.create({
             data:{
                 packageId,
@@ -38,13 +59,14 @@ export class EventStoreService {
             }
         })
 
-        // TODO send to redis
+        // Update redis
+        await setRedis(packageId.toString(), state)
     }
 
     async replay() {
         const packageEvents = await prisma.packageEvent.findMany()
 
-        const test = packageEvents.reduce<Record<string,packageEvent>>((acc, item) => {
+        return packageEvents.reduce<Record<string,packageEvent>>((acc, item) => {
             const existing = acc[item.packageId]
             if(!existing || new Date(existing.date).getTime() < new Date(item.date).getTime() ) {
                 acc[item.packageId] = item
@@ -52,13 +74,9 @@ export class EventStoreService {
             
             return acc
         }, {})
-
-
-        console.log(test)
-        return test
     }
 
     async getPackageStatus(id: number) {
-        return await this.replay()
+        return await getRedis(id.toString())
     }
 }

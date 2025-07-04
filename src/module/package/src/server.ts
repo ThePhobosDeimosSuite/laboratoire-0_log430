@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express'
-import { ParsedRequest, parseQueryParam, packageState  } from 'shared-utils'
+import { packageState } from 'shared-utils'
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 import swagger from './swagger.js'
 import SwaggerUiExpress from 'swagger-ui-express'
 import PackageService from './package-service.js'
+import prometheusClient from 'prom-client'
 
 
 const app = express()
@@ -15,10 +16,26 @@ app.use(express.json())
 
 app.use('/api-docs', SwaggerUiExpress.serve, SwaggerUiExpress.setup(swagger))
 
+const register = new prometheusClient.Registry()
+const eventCounter = new prometheusClient.Counter({
+    name: 'event_created_counter',
+    help: 'counts the number of created event',
+    labelNames: ['state']
+})
+const requestTimeCounter = new prometheusClient.Gauge({
+  name: 'last_request_created_time',
+  help: 'Timestamp of the last request created',
+  labelNames: ['state']
+});
+
+register.registerMetric(eventCounter)
+register.registerMetric(requestTimeCounter)
+
+
 let packageService: PackageService
 async function getPackageService() {
     if(!packageService) {
-        packageService = new PackageService()
+        packageService = new PackageService(eventCounter, requestTimeCounter)
         await packageService.initializeKafka()
     }
     return packageService

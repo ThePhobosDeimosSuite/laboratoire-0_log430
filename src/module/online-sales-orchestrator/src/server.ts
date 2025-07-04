@@ -27,6 +27,7 @@ const sagaStateTimeHistogram = new prometheusClient.Histogram({
 })
 
 register.registerMetric(sagaCounter)
+register.registerMetric(sagaStateTimeHistogram)
 
 app.use(new ExpressPrometheusMiddleware().handler)
 
