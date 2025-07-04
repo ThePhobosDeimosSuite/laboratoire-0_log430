@@ -2,45 +2,53 @@ _format_version: "3.0"
 _transform: true
 
 services:
-  - name: product-service
-    host: product-service
-    routes:
-      - name: product-route
-        paths:
-          - /api/product
-        strip_path: false
+  # - name: product-service
+  #   host: product-service
+  #   routes:
+  #     - name: product-route
+  #       paths:
+  #         - /api/product
+  #       strip_path: false
 
-  - name: sales-service
-    url: http://sales-service:3000
-    routes:
-      - name: sales-route
-        paths:
-          - ~/api/store/[0-9]+/sales.*$
-        strip_path: false
+  # - name: sales-service
+  #   url: http://sales-service:3000
+  #   routes:
+  #     - name: sales-route
+  #       paths:
+  #         - ~/api/store/[0-9]+/sales.*$
+  #       strip_path: false
 
-  - name: stocks-service
-    url: http://stocks-service:3000
-    routes:
-      - name: stocks-route
-        paths:
-          - ~/api/store/[0-9]+/stock.*$
-          - ~/api/store/[0-9]+/order.*$
-        strip_path: false
+  # - name: stocks-service
+  #   url: http://stocks-service:3000
+  #   routes:
+  #     - name: stocks-route
+  #       paths:
+  #         - ~/api/store/[0-9]+/stock.*$
+  #         - ~/api/store/[0-9]+/order.*$
+  #       strip_path: false
 
-  - name: account-service
-    url: http://account-service:3000
-    routes:
-      - name: account-route
-        paths:
-          - /api/account
-        strip_path: false
+  # - name: account-service
+  #   url: http://account-service:3000
+  #   routes:
+  #     - name: account-route
+  #       paths:
+  #         - /api/account
+  #       strip_path: false
 
-  - name: online-sales-orchestrator
-    url: http://online-sales-orchestrator:3000
+  # - name: online-sales-orchestrator
+  #   url: http://online-sales-orchestrator:3000
+  #   routes:
+  #     - name: online-sales-orchestrator-route
+  #       paths:
+  #         - ~/api/store/[0-9]+/client/[0-9]+/cart.*$
+  #       strip_path: false
+
+  - name: event-store-service
+    url: http://event-store-service:3000
     routes:
-      - name: online-sales-orchestrator-route
+      - name: event-store-route
         paths:
-          - ~/api/store/[0-9]+/client/[0-9]+/cart.*$
+          - ~/api/package/[0-9]+/state*$
         strip_path: false
 
   - name: package-service
@@ -48,23 +56,16 @@ services:
     routes:
       - name: package-service-route
         paths:
-          - ~/api/package/[0-9]+.*$
+          - ~/api/package/[0-9]+$
         strip_path: false
 
-  - name: event-store-service
-    url: http://event-store-service:3000
-    routes:
-      - name: event-store-route
-        paths:
-          - ~/api/package/state/[0-9]+.*$
-        strip_path: false
         
-upstreams:
-  - name: product-service
-    algorithm: round-robin
-    targets:
-      - target: product-service:3000
-        weight: 100
+# upstreams:
+#   - name: product-service
+#     algorithm: round-robin
+#     targets:
+#       - target: product-service:3000
+#         weight: 100
       # - target: product-service2:3000
       #   weight: 100
 

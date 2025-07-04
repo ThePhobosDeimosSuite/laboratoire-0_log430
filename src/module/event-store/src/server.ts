@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express'
-import { ParsedRequest, parseQueryParam, packageState  } from 'shared-utils'
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 import swagger from './swagger.js'
 import SwaggerUiExpress from 'swagger-ui-express'
@@ -19,9 +18,10 @@ const eventStoreService = new EventStoreService()
 await eventStoreService.initializeKafka()
 
 
-router.get('/package/state/:packageId', async (req: Request, res: Response) => {
+router.get('/package/:packageId/state', async (req: Request, res: Response) => {
     const { packageId } = req.params
 
+    res.send(await eventStoreService.getPackageStatus(Number(packageId)))
 })
 
 

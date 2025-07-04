@@ -32,6 +32,7 @@ router.post('/package/:packageId', async (req: Request, res: Response) => {
     if(state && Object.values(packageState).includes(state)) {
         const service = await getPackageService()
         await service.sendPackageUpdate(Number(packageId), state as packageState)
+        res.send("Event sent!")
     } else {
         res.status(400).send("State is invalid.")
     }

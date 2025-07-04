@@ -112,7 +112,7 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:123@event-store-db:5432/event_store
       PORT: 3000
-    command: sh -c "npm run api"
+    command: sh -c "npx prisma db push && npm run api"
     ports:
       - "4008:3000"
   # product-db:

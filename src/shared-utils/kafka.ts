@@ -2,7 +2,12 @@ import { Kafka } from "kafkajs";
 
 export const kafka = new Kafka({
     clientId: 'service', 
-    brokers: ['kafka:9092']
+    brokers: ['kafka:9092'],
+    retry: {
+      initialRetryTime: 700,
+      retries: 10,
+      maxRetryTime: 10000
+    }
 })
 
 export enum packageState {

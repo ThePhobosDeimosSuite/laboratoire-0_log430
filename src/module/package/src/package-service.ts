@@ -9,7 +9,6 @@ export default class PackageService {
     }
 
     async initializeKafka() {
-        await waitForKafka()
         await this.producer.connect()
     }
 
