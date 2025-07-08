@@ -1,0 +1,11 @@
+@startuml checkout-sale
+title Checkout sale
+actor User
+
+User -> Kong :CheckoutCart(storeId: Number, accountId: Number)
+Kong -> ShoppingCartService : CheckoutCart(storeId: Number, accountId: Number)
+ShoppingCartService -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> ShoppingCartService  :Success
+ShoppingCartService --> Kong  :Success
+Kong --> User : Success
+@enduml

@@ -24,7 +24,6 @@ package "Microservices" {
   component Stocks
   component Account
   component ShoppingCart
-  component Checkout
 }
 
 database "ProductDB" as dbProduct
@@ -32,7 +31,6 @@ database "SalesDB" as dbSales
 database "StocksDB" as dbStocks
 database "AccountDB" as dbAccount
 database "CartDB" as dbCart
-database "CheckoutDB" as dbCheckout
 
 
 Kong --> Product
@@ -40,33 +38,28 @@ Kong --> Sales
 Kong --> Stocks
 Kong --> Account
 Kong --> ShoppingCart
-Kong --> Checkout
 
 SharedUtils ..> Product
 SharedUtils ..> Sales
 SharedUtils ..> Stocks
 SharedUtils ..> Account
 SharedUtils ..> ShoppingCart
-SharedUtils ..> Checkout
 
 Product --> dbProduct
 Sales --> dbSales
 Stocks --> dbStocks
 Account --> dbAccount
 ShoppingCart --> dbCart
-Checkout --> dbCheckout
 
 Sales --> Kafka
 Stocks --> Kafka
 ShoppingCart --> Kafka
-Checkout --> Kafka
 
 Prometheus --> Product
 Prometheus --> Sales
 Prometheus --> Stocks
 Prometheus --> Account
 Prometheus --> ShoppingCart
-Prometheus --> Checkout
 
 Grafana --> Prometheus
 

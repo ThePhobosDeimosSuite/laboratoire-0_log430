@@ -40,15 +40,7 @@ services:
     routes:
       - name: shopping-cart-route
         paths:
-          - ~/api/store/[0-9]+/client/[0-9]+/cart$
-        strip_path: false
-
-  - name: checkout-service
-    url: http://checkout-service:3000
-    routes:
-      - name: checkout-route
-        paths:
-          - ~/api/store/[0-9]+/client/[0-9]+/cart/checkout.*$
+          - ~/api/store/[0-9]+/client/[0-9]+/cart.*$
         strip_path: false
         
 upstreams:

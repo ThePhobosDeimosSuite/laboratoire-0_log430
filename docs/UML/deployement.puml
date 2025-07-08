@@ -100,16 +100,6 @@ node "ShoppingCart Service"  {
 
     [ShoppingCartService] --> [Kafka]
 
-
-node "Checkout Service"  {
-    artifact CheckoutServer
-    artifact CheckoutService
-}
-
-    [Kong] --> [CheckoutServer]
-    [CheckoutServer] --> [CheckoutService]
-    [CheckoutService] --> [Prometheus]
-
     [ProductService] --> [Kafka]
 
 

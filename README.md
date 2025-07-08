@@ -10,7 +10,6 @@ And the online store by:
 
  - *Account-service*
  - *Shopping-cart-service*
- - *Checkout-service*
 
 Everything is packed together using Kong as the API gateway
 

@@ -103,6 +103,32 @@ router.get('/store/:storeId/client/:clientId/cart', async (req: Request, res: Re
     res.send(cart)
 })
 
+ /**
+ * @swagger
+ * /api/store/:storeId/client/:clientId/cart/checkout:
+ *   post:
+ *     description: Confirm a sale and clear the shopping cart
+ *     parameters: 
+ *       - name: storeId
+ *         in: path
+ *         description: Store ID
+ *         type: integer
+ *         required: true
+ *       - name: clientId
+ *         in: path
+ *         description: Client ID
+ *         type: integer
+ *         required: true
+ *     responses:
+ *       204:
+ *         description: Success
+ */
+router.post('/store/:storeId/client/:clientId/cart/checkout', async (req: Request, res: Response) => {
+    const { storeId, clientId } = req.params
+    await shoppingCartService.checkoutCart(Number(storeId), Number(clientId))
+    res.status(204).send()
+})
+
 
 app.use("/api", router)
 

@@ -78,9 +78,9 @@ AccountService ..> Account
 
 package ShoppingCartMicroservice {
     class ShoppingCartService{
-        + AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
-        + GetCart(storeId: Number, accountId: Number): Sales
-        + ClearCart(storeId: Number, accountId: Number): Void
+        + addItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
+        + getCart(storeId: Number, accountId: Number): Sales
+        + checkoutCart(storeId: Number, accountId: Number): Void
     }
 
     class ProductSalesCart as "ProductSales" {
@@ -97,13 +97,6 @@ ShoppingCartService ..> ProductSalesCart
 ShoppingCartService ..> SalesCart
 ShoppingCartService ..> StocksService
 
-package CheckoutMicroservice {
-    class CheckoutService {
-        + checkoutSale(storeId: Number, accountId: Number): Void
-    }
-}
-
-CheckoutService ..> ShoppingCartService
 
 
 Sales "1" *-- "*" ProductSales
@@ -119,8 +112,5 @@ ProductSales "*" o-- "1" Product
 Stock "*" o-- "1" Product
 
 Order "*" o-- "1" Product
-
-
-
 
 @enduml

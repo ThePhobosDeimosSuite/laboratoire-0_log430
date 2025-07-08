@@ -74,17 +74,6 @@ services:
     command: sh -c "npx prisma db push && npm run api"
     ports:
       - "4004:3000"
-  checkout-service:
-    depends_on:
-      - kafka
-    build:
-      context: .
-      dockerfile: src/module/checkout/Dockerfile  
-    environment:
-      PORT: 3000
-    command: sh -c "npm run api"
-    ports:
-      - "4005:3000"
   product-db:
     image: postgres
     container_name: product_db
@@ -148,7 +137,6 @@ services:
       - sales-service
       - account-service
       - shopping-cart-service
-      - checkout-service
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
 

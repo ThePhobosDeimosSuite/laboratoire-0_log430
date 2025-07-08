@@ -1,4 +1,4 @@
-import { Consumer, Producer } from "kafkajs"
+import { Producer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
 import { kafka, kafkaConst, waitForKafka } from 'shared-utils'
 
@@ -13,26 +13,15 @@ const prisma = new PrismaClient({
 
 export default class ShoppingCartService {
   private producer: Producer;    
-  private consumer: Consumer
   constructor() {
     this.producer = kafka.producer()
-    this.consumer = kafka.consumer({groupId: 'checkoutSale'})
   }
 
   async initializeKafka() {
     await waitForKafka()
     await this.producer.connect()
-
-    await this.consumer.connect()
-    await this.consumer.subscribe({ topic: kafkaConst.checkoutSale, fromBeginning: false })
-
-    await this.consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        const data = JSON.parse(message.value.toString())
-        await this.clearCart(data.shopId, data.clientId)
-      }
-    })
   }
+
   async addItemsToCart(productSales: { productId: number, amount: number }[], shopId: number, clientId: number) {
     await prisma.sales.create({
       data: {
@@ -61,7 +50,7 @@ export default class ShoppingCartService {
     return cart
   }
 
-  async clearCart(shopId: number, clientId: number) {
+  async checkoutCart(shopId: number, clientId: number) {
     const deletedSale = await prisma.sales.findUnique({
       where: {
         shopId_clientId: {

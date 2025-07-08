@@ -339,7 +339,7 @@ Get the current shopping cart of an account
 }
 ```
 
-# Checkout service
+## Checkout cart
 Delete everyting in the cart and remove stock from stock service
 - `POST /api/store/{:storeId}/client/{:clientId}/cart/checkout`
 
