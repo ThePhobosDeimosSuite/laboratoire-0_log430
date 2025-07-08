@@ -12,6 +12,11 @@ And the online store by:
  - *Shopping-cart-service*
  - *Online-Sales-Orchestrator*
 
+ And a Package delivery system is handled by :
+- *Package-service*
+- *Email-service*
+- *Event-Store-Service*
+
 Everything is packed together using Kong as the API gateway
 
 #### Online Sales Orchestrator
@@ -34,6 +39,7 @@ When a user tries to checkout their shopping cart, the online sales orchestrator
 ## How to run
 
 #### Running using docker compose
+- Run `docker compose build`
 - Run `docker compose up`
 - Grafana URL is : `http://localhost:3001`
 - Kong URL is : `http://localhost:80`
