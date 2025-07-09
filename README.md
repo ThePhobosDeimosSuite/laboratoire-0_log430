@@ -16,9 +16,10 @@ Everything is packed together using Kong as the API gateway
 ## How to run
 
 #### Running using docker compose
+- Run `docker compose build`
 - Run `docker compose up`
 - Grafana URL is : `http://localhost:3001`
-- Kong URL is : `http://localhost:80`
+- Kong URL is : `http://localhost:8000`
 
 #### Swagger
 Each service has a Swagger url:
@@ -33,11 +34,10 @@ Each service has a Swagger url:
 - A postman collection is available for testing the api : `/docs/postman_collection.json`
 
 #### Testing the project
-- Run `npm run test`
+- Run `npm run test` (*NOTE*: the databases has to be running with `docker compose`, you also have to build each individual module with `npx prisma generate` and `npm run build`)
 
     - Each service can be tested individually: `npm run test:product` or `npm run test:sales`
 
-**NOTE**: For unknown reason, testing this project with jest doesn't work on Linux
 
 #### Stress testing with K6
 

@@ -8,44 +8,6 @@
 	},
 	"item": [
 		{
-			"name": "Sales-report",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/api/store/5/sales-report",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"store",
-						"5",
-						"sales-report"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Dashboard",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/api/dashboard",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"dashboard"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Get stock",
 			"request": {
 				"method": "GET",
@@ -246,7 +208,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"cribbage\",\r\n    \"category\": \"jeu\",\r\n    \"price\": 10\r\n}",
+					"raw": "{\r\n    \"name\": \"fraise\",\r\n    \"category\": \"fruit\",\r\n    \"price\": 10\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -459,7 +421,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"cribbage\",\r\n    \"password\": \"jeu\"\r\n}",
+					"raw": "{\r\n    \"name\": \"user1\",\r\n    \"password\": \"123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
