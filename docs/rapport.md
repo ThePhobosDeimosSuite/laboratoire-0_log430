@@ -633,7 +633,7 @@ Using the *workspaces* feature in *npm*, it's possible to create a `/shared-util
 Accepted
 
 #### Consequence
-This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on lab6, test are now working on Linux.
+This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on *lab6*, I found a way to make Jest work on Linux, the fix is implemented in *lab5*.
 
 
 
