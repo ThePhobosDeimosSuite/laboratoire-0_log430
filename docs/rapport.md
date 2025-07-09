@@ -6,7 +6,7 @@ Repo : https://github.com/ThePhobosDeimosSuite/laboratoire-0_log430
 
 Projet is available in production here : log430@10.194.32.176
 
-Run `docker compose up` in projet folder which is located at `~/lab0`
+Run `docker compose build` and `docker compose up` in projet folder which is located at `~/lab0`
 
 # Introduction and Goals
 
@@ -40,7 +40,6 @@ The service has been split into 6 different parts, each being implemented into a
 - Sales
 - Account
 - Shopping Cart
-- Checkout
 
 These will have their own database and be able to communicate with each other when needed. (For instance: reducing stocks after a sale)
 An api gateway will analyse requests and forward it to the corresponding microservice.
@@ -127,9 +126,9 @@ AccountService ..> Account
 
 package ShoppingCartMicroservice {
     class ShoppingCartService{
-        + AddItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
-        + GetCart(storeId: Number, accountId: Number): Sales
-        + ClearCart(storeId: Number, accountId: Number): Void
+        + addItemsToCart(productSalesCart: ProductSalesCart, storeId: Number, accountId: Number): Void
+        + getCart(storeId: Number, accountId: Number): Sales
+        + checkoutCart(storeId: Number, accountId: Number): Void
     }
 
     class ProductSalesCart as "ProductSales" {
@@ -146,13 +145,6 @@ ShoppingCartService ..> ProductSalesCart
 ShoppingCartService ..> SalesCart
 ShoppingCartService ..> StocksService
 
-package CheckoutMicroservice {
-    class CheckoutService {
-        + checkoutSale(storeId: Number, accountId: Number): Void
-    }
-}
-
-CheckoutService ..> ShoppingCartService
 
 
 Sales "1" *-- "*" ProductSales
@@ -275,16 +267,6 @@ node "ShoppingCart Service"  {
 
     [ShoppingCartService] --> [Kafka]
 
-
-node "Checkout Service"  {
-    artifact CheckoutServer
-    artifact CheckoutService
-}
-
-    [Kong] --> [CheckoutServer]
-    [CheckoutServer] --> [CheckoutService]
-    [CheckoutService] --> [Prometheus]
-
     [ProductService] --> [Kafka]
 
 
@@ -320,7 +302,6 @@ package "Microservices" {
   component Stocks
   component Account
   component ShoppingCart
-  component Checkout
 }
 
 database "ProductDB" as dbProduct
@@ -328,7 +309,6 @@ database "SalesDB" as dbSales
 database "StocksDB" as dbStocks
 database "AccountDB" as dbAccount
 database "CartDB" as dbCart
-database "CheckoutDB" as dbCheckout
 
 
 Kong --> Product
@@ -336,37 +316,33 @@ Kong --> Sales
 Kong --> Stocks
 Kong --> Account
 Kong --> ShoppingCart
-Kong --> Checkout
 
 SharedUtils ..> Product
 SharedUtils ..> Sales
 SharedUtils ..> Stocks
 SharedUtils ..> Account
 SharedUtils ..> ShoppingCart
-SharedUtils ..> Checkout
 
 Product --> dbProduct
 Sales --> dbSales
 Stocks --> dbStocks
 Account --> dbAccount
 ShoppingCart --> dbCart
-Checkout --> dbCheckout
 
 Sales --> Kafka
 Stocks --> Kafka
 ShoppingCart --> Kafka
-Checkout --> Kafka
 
 Prometheus --> Product
 Prometheus --> Sales
 Prometheus --> Stocks
 Prometheus --> Account
 Prometheus --> ShoppingCart
-Prometheus --> Checkout
 
 Grafana --> Prometheus
 
 @enduml
+
 
 
 ---
@@ -452,11 +428,11 @@ Kong --> User : Account[]
 title Checkout sale
 actor User
 
-User -> Kong :checkoutSale(storeId: Number, accountId: Number)
-Kong -> CheckoutService : checkoutSale(storeId: Number, accountId: Number)
-CheckoutService -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
-StocksService --> CheckoutService  :Success
-CheckoutService --> Kong  :Success
+User -> Kong :checkoutCart(storeId: Number, accountId: Number)
+Kong -> ShoppingCartService : checkoutCart(storeId: Number, accountId: Number)
+ShoppingCartService -> StocksService : decrementStocks(productId: Number, amount: Number, storeId: Number)
+StocksService --> ShoppingCartService  :Success
+ShoppingCartService --> Kong  :Success
 Kong --> User : Success
 @enduml
 
@@ -639,9 +615,11 @@ An event based messaging system like *Kafka* would allow microservices to send m
 Accepted
 
 #### Consequence
-After a sale has been complete, the *SalesService* will send an event to the *StocksService* to decrease the stock of the sold items. Same thing is done with the *CheckoutService* advising the *StocksService* after an online sale. 
+After a sale has been complete, the *SalesService* will send an event to the *StocksService* to decrease the stock of the sold items.
 
-When starting the project using *docker-compose*, there's no way of waiting until *Kafka* has initialized before sending request to it. Hence, the microservices start sending message while *Kafka* is still down and i wasn't able to find a good way to fix this.  
+When starting the project using *docker-compose*, there's no way of waiting until *Kafka* has initialized before sending request to it. Hence, the microservices start sending message while *Kafka* is still down and i wasn't able to find a good way to fix this. 
+
+Also, i can't find a way to make Kafka work with Jest, which means that the unit tests can't run anymore for any service implementing a Kafka consumer/producer. 
 
 ---
 ### Shared utils
@@ -655,13 +633,17 @@ Using the *workspaces* feature in *npm*, it's possible to create a `/shared-util
 Accepted
 
 #### Consequence
-This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on lab6, test are now working.
+This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on *lab6*, I found a way to make Jest work on Linux, the fix is implemented in *lab5*.
 
 
 
 # Risks and Technical Debts
 ### Jest
-~~Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices~~. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion.
+~~Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices~~. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion. (**Edit:** This should be somewhat fixed in *lab7* as I've added a way to mock the database)
+
+To run Jest, you need to manually generate the prisma client with `npx generate prisma` and build with `npm run build` for **each** modules beforehand. This is annoying.
+
+Also, any service that has a Kafka producer/consumer doesn't run with Jest which is definitely something that has to be fixed at some point because the unit test for SalesService always fail now.  
 ### Docker image
 Each microservice generates a huge docker image. I had a lot of issues trying to add the `/shared-utils` to each image so instead i'm copying the entire project to each image (minus what's defined in .dockerignore). This on top of `/node_modules` taking around 300MB means alot of storage and memory is taken by Docker.
 ### Adding product description
