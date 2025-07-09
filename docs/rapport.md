@@ -6,7 +6,7 @@ Repo : https://github.com/ThePhobosDeimosSuite/laboratoire-0_log430
 
 Projet is available in production here : log430@10.194.32.176
 
-Run `docker compose up` in projet folder which is located at `~/lab0`
+Run `docker compose build` and `docker compose up` in projet folder which is located at `~/lab0`
 
 # Introduction and Goals
 
@@ -617,7 +617,9 @@ Accepted
 #### Consequence
 After a sale has been complete, the *SalesService* will send an event to the *StocksService* to decrease the stock of the sold items.
 
-When starting the project using *docker-compose*, there's no way of waiting until *Kafka* has initialized before sending request to it. Hence, the microservices start sending message while *Kafka* is still down and i wasn't able to find a good way to fix this.  
+When starting the project using *docker-compose*, there's no way of waiting until *Kafka* has initialized before sending request to it. Hence, the microservices start sending message while *Kafka* is still down and i wasn't able to find a good way to fix this. 
+
+Also, i can't find a way to make Kafka work with Jest, which means that the unit tests can't run anymore for any service implementing a Kafka consumer/producer. 
 
 ---
 ### Shared utils
@@ -631,13 +633,17 @@ Using the *workspaces* feature in *npm*, it's possible to create a `/shared-util
 Accepted
 
 #### Consequence
-This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on lab6, test are now working.
+This is great because it avoids copying code but i've had issues with the implementation. Packaging each microservice to a docker image was really difficult because the `/shared-utils` folder has to be included. Also, I've had so many issues with `rootdir` in `jest.config.ts` ~~and to this day running *jest* on Linux still isn't working.~~ **UPDATE**: After working on lab6, test are now working on Linux.
 
 
 
 # Risks and Technical Debts
 ### Jest
-~~Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices~~. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion.
+~~Like mentionned previously, *jest* doesn't work on Linux because of the shared packages between microservices~~. It's also very annoying to test with *jest* because you need a database up and running with the correct schema. A different connection URL to *PostgreSQL* is defined in `jest.setup.js` but it's not the cleanest way in my opinion. (**Edit:** This should be somewhat fixed in *lab7* as I've added a way to mock the database)
+
+To run Jest, you need to manually generate the prisma client with `npx generate prisma` and build with `npm run build` for **each** modules beforehand. This is annoying.
+
+Also, any service that has a Kafka producer/consumer doesn't run with Jest which is definitely something that has to be fixed at some point because the unit test for SalesService always fail now.  
 ### Docker image
 Each microservice generates a huge docker image. I had a lot of issues trying to add the `/shared-utils` to each image so instead i'm copying the entire project to each image (minus what's defined in .dockerignore). This on top of `/node_modules` taking around 300MB means alot of storage and memory is taken by Docker.
 ### Adding product description
