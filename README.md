@@ -6,13 +6,13 @@ The physical store is handled by these microservices:
 - *Sales-service*
 - *Stocks-service*
 
-And the online store by:
+The online store by:
 
  - *Account-service*
  - *Shopping-cart-service*
  - *Online-Sales-Orchestrator*
 
- And a Package delivery system is handled by :
+ And the Package delivery system is handled by :
 - *Package-service*
 - *Email-service*
 - *Event-Store-Service*
@@ -42,7 +42,7 @@ When a user tries to checkout their shopping cart, the online sales orchestrator
 - Run `docker compose build`
 - Run `docker compose up`
 - Grafana URL is : `http://localhost:3001`
-- Kong URL is : `http://localhost:80`
+- Kong URL is : `http://localhost:8000`
 
 #### Swagger
 Each service has a Swagger url:
@@ -59,9 +59,7 @@ Each service has a Swagger url:
 #### Testing the project
 - Run `npm run test`
 
-    - Each service can be tested individually: `npm run test:product` or `npm run test:sales`
-
-**NOTE**: For unknown reason, testing this project with jest doesn't work on Linux
+    - Each service can be tested individually: `npm run test:product`, `npm run test:sales` or `test:onlineSalesOrchestrator`
 
 #### Stress testing with K6
 
@@ -88,4 +86,4 @@ Each microservice has its own pipeline with 4 differents steps:
 1. Check syntaxe with ESLint
 2. Create PostgreSQL database and run unit tests
 3. Create Docker image
-4. Push Docker image to DockerHub under the repository *pebrassard/lab6_{service_name}*
+4. Push Docker image to DockerHub under the repository *pebrassard*

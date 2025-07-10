@@ -16,7 +16,6 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.3",
-    "@types/node": "^24.0.1",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
@@ -31,8 +30,9 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@matteodisabatino/express-prometheus-middleware": "^6.1.0",
+    "@types/node": "^24.0.1",
     "@prisma/client": "^6.8.2",
+    "@matteodisabatino/express-prometheus-middleware": "^6.1.0",
     "express": "^5.1.0",
     "kafkajs": "^2.2.4",
     "prisma": "^6.8.2",

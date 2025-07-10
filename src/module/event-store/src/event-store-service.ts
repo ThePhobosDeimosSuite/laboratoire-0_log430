@@ -1,6 +1,6 @@
 import { Consumer } from "kafkajs";
 import { packageEvent, PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { kafka, packageState, waitForKafka } from "shared-utils";
+import { kafka, packageState, waitForKafka, logger } from "shared-utils";
 import { getRedis, setRedis } from "./redis.js";
 import { Counter, Gauge } from "prom-client";
 
@@ -47,6 +47,7 @@ export class EventStoreService {
     }
 
     async registerEvent(packageId: number, state: packageState) {
+        logger.info(`Updating package ${packageId} with state ${state}`)
         // Prometheus
         const now = Date.now() / 1000;
         this.eventCounter.labels(state).inc(1)

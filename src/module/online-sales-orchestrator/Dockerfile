@@ -1,11 +1,13 @@
 FROM node:lts-alpine
 
 WORKDIR /app
-# I'm sure there's a better way than copying everything...
-COPY . . 
 
-RUN npm install --production
-RUN npm prune
+COPY . . 
+RUN rm -rf /src/module
+COPY ./src/module/online-sales-orchestrator ./src/module/online-sales-orchestrator
+
+RUN npm install --omit=dev
+RUN npm prune --omit=dev
 
 WORKDIR /app/src/shared-utils
 RUN npm run build

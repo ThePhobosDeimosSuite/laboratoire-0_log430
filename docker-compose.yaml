@@ -3,7 +3,6 @@ services:
   #   depends_on:
   #     - product-db
   #   build:
-  #     context: .
   #     dockerfile: src/module/product/Dockerfile 
   #   environment:
   #     DATABASE_URL: postgresql://postgres:123@product_db:5432/product
@@ -15,7 +14,6 @@ services:
   #   depends_on:
   #     - product-db
   #   build:
-  #     context: .
   #     dockerfile: src/module/product/Dockerfile 
   #   environment:
   #     DATABASE_URL: postgresql://postgres:123@product_db:5432/product
@@ -27,7 +25,6 @@ services:
   #   depends_on:
   #     - sales-db
   #   build:
-  #     context: .
   #     dockerfile: src/module/sales/Dockerfile 
   #   environment:
   #     DATABASE_URL: postgresql://postgres:123@sales_db:5432/sales
@@ -39,7 +36,6 @@ services:
   #   depends_on:
   #     - stocks-db
   #   build:
-  #     context: .
   #     dockerfile: src/module/stocks/Dockerfile  
   #   environment:
   #     DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
@@ -51,7 +47,6 @@ services:
   #   depends_on:
   #     - account-db
   #   build:
-  #     context: .
   #     dockerfile: src/module/account/Dockerfile  
   #   environment:
   #     DATABASE_URL: postgresql://postgres:123@account_db:5432/account
@@ -63,7 +58,6 @@ services:
   #   depends_on:
   #     - shopping-cart-db
   #   build:
-  #     context: .
   #     dockerfile: src/module/shopping-cart/Dockerfile  
   #   environment:
   #     DATABASE_URL: postgresql://postgres:123@shopping_cart_db:5432/shopping_cart
@@ -73,7 +67,6 @@ services:
   #     - "4004:3000"
   # online-sales-orchestrator:
   #   build:
-  #     context: .
   #     dockerfile: src/module/online-sales-orchestrator/Dockerfile  
   #   environment:
   #     SHOPPING_CART_SERVICE_URL: http://shopping-cart-service:3000
@@ -87,7 +80,6 @@ services:
 
   package-service:
     build:
-      context: .
       dockerfile: src/module/package/Dockerfile  
     environment:
       PORT: 3000
@@ -96,7 +88,6 @@ services:
       - "4006:3000"
   email-service:
     build:
-      context: .
       dockerfile: src/module/email/Dockerfile  
     environment:
       PORT: 3000
@@ -108,7 +99,6 @@ services:
       - event-store-db
       - redis
     build:
-      context: .
       dockerfile: src/module/event-store/Dockerfile  
     environment:
       REDIS_URL: redis://redis:6379
