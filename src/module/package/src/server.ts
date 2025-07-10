@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { packageState } from 'shared-utils'
+import { PackageState, isProductSalesType, ProductSale } from 'shared-utils'
 import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
 import swagger from './swagger.js'
 import SwaggerUiExpress from 'swagger-ui-express'
@@ -46,15 +46,27 @@ router.post('/package/:packageId', async (req: Request, res: Response) => {
     const { packageId } = req.params
     const { state } = req.body
 
-    if(state && Object.values(packageState).includes(state)) {
+    if(state && Object.values(PackageState).includes(state)) {
         const service = await getPackageService()
-        await service.sendPackageUpdate(Number(packageId), state as packageState)
+        await service.sendPackageUpdate(Number(packageId), state as PackageState)
         res.send("Event sent!")
     } else {
         res.status(400).send("State is invalid.")
     }
 })
 
+router.post('/package', async(req: Request, res: Response) => {
+    const { productSales, packageId } = req.body
+    const storeId = Number(req.body.storeId)
+
+    if(isProductSalesType(productSales) && storeId) {
+        const service = await getPackageService()
+        await service.createPackage(storeId, productSales as ProductSale, packageId)
+        res.status(200).send("Message sent.")
+    } else {
+        res.status(400).send("Body is invalid.")
+    }
+})
 
 
 

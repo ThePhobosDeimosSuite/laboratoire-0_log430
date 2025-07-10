@@ -9,7 +9,7 @@ const app = express()
 const router = express.Router()
 
 const stocksService = new StocksService()
-// await stocksService.initializeKafka()
+await stocksService.initializeKafka()
 
 app.use(new ExpressPrometheusMiddleware().handler)
 

@@ -1,6 +1,6 @@
 import { Consumer } from "kafkajs";
 import { packageEvent, PrismaClient } from "../prisma/generated/prisma/client/client.js"
-import { kafka, packageState, waitForKafka, logger } from "shared-utils";
+import { kafka, PackageState, waitForKafka, logger, PackageKafkaTopic, PackageMessage } from "shared-utils";
 import { getRedis, setRedis } from "./redis.js";
 import { Counter, Gauge } from "prom-client";
 
@@ -38,15 +38,21 @@ export class EventStoreService {
     async initializeKafka() {
         await waitForKafka()
         await this.consumer.connect()
-        await this.consumer.subscribe({topics: Object.values(packageState) })
+        await this.consumer.subscribe({topics: Object.values(PackageState) })
+        await this.consumer.subscribe({topic: PackageKafkaTopic.PackageStocksRemoved })
         await this.consumer.run({
             eachMessage: async  ({topic, partition, message}) => {
-                await this.registerEvent(Number(message.value), topic as packageState)
+                if(topic == PackageKafkaTopic.PackageStocksRemoved) {
+                    const data = JSON.parse(message.value.toString()) as PackageMessage
+                    await this.registerEvent(data.packageId, PackageState.LabelCreated)
+                } else {
+                    await this.registerEvent(Number(message.value), topic as PackageState)
+                }
             }
         })
     }
 
-    async registerEvent(packageId: number, state: packageState) {
+    async registerEvent(packageId: number, state: PackageState) {
         logger.info(`Updating package ${packageId} with state ${state}`)
         // Prometheus
         const now = Date.now() / 1000;

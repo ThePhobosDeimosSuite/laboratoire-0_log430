@@ -1,4 +1,5 @@
 import { Kafka } from "kafkajs";
+import { ProductSale } from "./index.js";
 
 export const kafka = new Kafka({
     clientId: 'service', 
@@ -10,11 +11,23 @@ export const kafka = new Kafka({
     }
 })
 
-export enum packageState {
+export enum PackageState {
   LabelCreated = "LabelCreated",
   PackageSent = "PackageSent",
   OutForDelivery = "OutForDelivery",
   Delivered = "Delivered",
+}
+
+export enum PackageKafkaTopic {
+  PackageOrderReceived = "PackageOrderReceived",
+  PackageStocksRemoved = "PackageStocksRemoved",
+  PackageError = "PackageError"
+}
+
+export interface PackageMessage {
+  storeId: number,
+  productSales: ProductSale[],
+  packageId: number
 }
 
 

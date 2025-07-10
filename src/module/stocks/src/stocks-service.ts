@@ -1,35 +1,29 @@
-import { Consumer } from "kafkajs"
+import { Consumer, Producer } from "kafkajs"
 import { PrismaClient } from "../prisma/generated/prisma/client/client.js"
+import { kafka, logger, PackageKafkaTopic, PackageMessage } from "shared-utils"
 
 const prisma = new PrismaClient()
 
 export default class StocksService {
     private consumer: Consumer
+    private producer: Producer
     constructor() {
-        // this.consumer = kafka.consumer({groupId: 'service'})
+        this.producer = kafka.producer()
+        this.consumer = kafka.consumer({groupId: 'stocks'})
     }
 
-    // async initializeKafka() {
-    //     await waitForKafka()
-    //     await this.consumer.connect()
-    //     await this.consumer.subscribe({ topic: kafkaConst.decreaseStocks, fromBeginning: false })
-    //     await this.consumer.subscribe({ topic: kafkaConst.increaseStocks, fromBeginning: false })
+    async initializeKafka() {
+        await this.producer.connect()
+        await this.consumer.connect()
+        await this.consumer.subscribe({ topic: PackageKafkaTopic.PackageOrderReceived, fromBeginning: false })
 
-    //     await this.consumer.run({
-    //         eachMessage: async ({ topic, partition, message }) => {
-    //             const data = JSON.parse(message.value.toString())
-
-    //             switch (topic) {
-    //                 case kafkaConst.decreaseStocks:
-    //                     await this.decrementStocks(data.productId, data.amount, data.shopId)
-    //                     break
-    //                 case kafkaConst.increaseStocks:
-    //                     await this.addStocks(data.productId, data.amount, data.shopId)
-    //                     break
-    //             }
-    //         }
-    //     })
-    // }
+        await this.consumer.run({
+            eachMessage: async ({ topic, partition, message }) => {
+                const data = JSON.parse(message.value.toString()) as PackageMessage
+                await this.removeStocksFromPackage(data)
+            }
+        })
+    }
 
 
     async addStocks(productId: number, amount: number, shopId: number) {
@@ -140,5 +134,45 @@ export default class StocksService {
                 }
             }
         })
+    }
+
+    async removeStocksFromPackage(packageMessage: PackageMessage) {
+        let failed = false;
+        const { storeId, productSales } = packageMessage
+        console.log(storeId)
+        
+        // Check stocks
+        for(const productSale of productSales) {
+            const stocks = await this.getStocks(storeId, productSale.productId)
+            const stock = stocks.find(s => s.productId == productSale.productId)
+
+            if (!stock || stock.amount < productSale.amount) {
+                failed = true
+                logger.info(`Sending event ${PackageKafkaTopic.PackageError}`)
+                await this.producer.send({
+                    topic: PackageKafkaTopic.PackageError, messages: [
+                        {
+                            value: JSON.stringify(packageMessage)
+                        }
+                    ]
+                })
+                break;
+            }
+        }
+
+        if (!failed) {
+            // Remove stocks 
+            for(const productSale of productSales) {
+                await this.decrementStocks(productSale.productId, productSale.amount, storeId)
+            }
+            logger.info(`Sending event ${PackageKafkaTopic.PackageStocksRemoved}`)
+            await this.producer.send({
+                topic: PackageKafkaTopic.PackageStocksRemoved, messages: [
+                    {
+                        value: JSON.stringify(packageMessage)
+                    }
+                ]
+            })
+        }
     }
 }

@@ -1,6 +1,6 @@
 import { Producer } from 'kafkajs'
 import { Counter, Gauge } from 'prom-client'
-import { kafka, packageState, waitForKafka } from 'shared-utils'
+import { kafka, logger, PackageKafkaTopic, PackageState, ProductSale, waitForKafka } from 'shared-utils'
 
 
 export default class PackageService {
@@ -17,7 +17,7 @@ export default class PackageService {
         await this.producer.connect()
     }
 
-    async sendPackageUpdate(packageId: number, state: packageState) {
+    async sendPackageUpdate(packageId: number, state: PackageState) {
         // Prometheus
         const now = Date.now() / 1000;
         this.eventCounter.labels(state).inc(1)
@@ -33,4 +33,19 @@ export default class PackageService {
         })
     }
 
+    async createPackage(storeId: number, productSales: ProductSale, packageId:number) {
+        logger.info(`Sending event ${PackageKafkaTopic.PackageOrderReceived}`)
+        await this.producer.send({
+            topic: PackageKafkaTopic.PackageOrderReceived,
+            messages: [
+                {
+                    value: JSON.stringify({
+                        storeId,
+                        productSales, 
+                        packageId
+                    })
+                }
+            ]
+        })
+    }   
 }

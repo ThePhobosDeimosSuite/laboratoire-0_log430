@@ -32,17 +32,17 @@ services:
   #   command: sh -c "npx prisma db push && npm run api"
   #   ports:
   #     - "4001:3000"
-  # stocks-service:
-  #   depends_on:
-  #     - stocks-db
-  #   build:
-  #     dockerfile: src/module/stocks/Dockerfile  
-  #   environment:
-  #     DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
-  #     PORT: 3000
-  #   command: sh -c "npx prisma db push && npm run api"
-  #   ports:
-  #     - "4002:3000"
+  stocks-service:
+    depends_on:
+      - stocks-db
+    build:
+      dockerfile: src/module/stocks/Dockerfile  
+    environment:
+      DATABASE_URL: postgresql://postgres:123@stocks_db:5432/stocks
+      PORT: 3000
+    command: sh -c "npx prisma db push && npm run api"
+    ports:
+      - "4002:3000"
   # account-service:
   #   depends_on:
   #     - account-db
@@ -129,15 +129,15 @@ services:
   #     POSTGRES_DB: sales
   #   ports:
   #     - "5434:5432"
-  # stocks-db:
-  #   image: postgres
-  #   container_name: stocks_db
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: 123
-  #     POSTGRES_DB: stocks
-  #   ports:
-  #     - "5435:5432"
+  stocks-db:
+    image: postgres
+    container_name: stocks_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: stocks
+    ports:
+      - "5435:5432"
   # account-db:
   #   image: postgres
   #   container_name: account_db
@@ -166,6 +166,11 @@ services:
     ports:
       - "5438:5432"
 
+  test-runner:
+    build:
+      dockerfile: src/test/test-runner/Dockerfile
+    command: tail -f /dev/null
+
   kong:
     image: kong:3.5
     container_name: kong
@@ -177,7 +182,7 @@ services:
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
     depends_on:
-      # - stocks-service
+      - stocks-service
       # - product-service
       # - product-service2
       # - sales-service

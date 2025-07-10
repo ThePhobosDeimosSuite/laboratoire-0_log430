@@ -18,14 +18,14 @@ services:
   #         - ~/api/store/[0-9]+/sales.*$
   #       strip_path: false
 
-  # - name: stocks-service
-  #   url: http://stocks-service:3000
-  #   routes:
-  #     - name: stocks-route
-  #       paths:
-  #         - ~/api/store/[0-9]+/stock.*$
-  #         - ~/api/store/[0-9]+/order.*$
-  #       strip_path: false
+  - name: stocks-service
+    url: http://stocks-service:3000
+    routes:
+      - name: stocks-route
+        paths:
+          - ~/api/store/[0-9]+/stock.*$
+          - ~/api/store/[0-9]+/order.*$
+        strip_path: false
 
   # - name: account-service
   #   url: http://account-service:3000
@@ -57,6 +57,7 @@ services:
       - name: package-service-route
         paths:
           - ~/api/package/[0-9]+$
+          - /api/package
         strip_path: false
 
         

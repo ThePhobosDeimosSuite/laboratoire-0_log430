@@ -61,6 +61,11 @@ Each service has a Swagger url:
 
     - Each service can be tested individually: `npm run test:product`, `npm run test:sales` or `test:onlineSalesOrchestrator`
 
+#### End to end testing
+A docker service called *test-runner* is present for testing the package update messaging.
+- Run project with docker compose (see above)
+- Run `docker compose exec test-runner npm run test`
+
 #### Stress testing with K6
 
 - Install K6
