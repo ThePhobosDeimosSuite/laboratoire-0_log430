@@ -9,6 +9,7 @@
     "test:product": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects product",
     "test:sales": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects sales",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "cross-env KONG_URL=http://localhost:8000 node dist/menu-view.js",
     "build": "tsc"
   },
   "devDependencies": {
@@ -19,11 +20,14 @@
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "@types/terminal-kit": "^2.5.7",
+    "cross-env": "^7.0.3",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.1",
+    "terminal-kit": "^3.1.2",
     "ts-jest": "^29.1.1",
     "tsx": "^4.19.4",
     "typescript": "^5.1.6"

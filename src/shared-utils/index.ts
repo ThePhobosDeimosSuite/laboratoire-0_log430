@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-
+export { askInput, askNumber, askString } from './input-utils.js'
+export { colorizeJSON } from './output-utils.js'
 export { kafkaConst, waitForKafka, kafka } from './kafka.js'
 
 interface ParsedQuery {
