@@ -5,14 +5,23 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
 import cors from 'cors'
 import winston from 'winston';
-import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+import Prometheus from 'prom-client'
+import promMid from 'express-prometheus-middleware'
 import { initializeRedisConnection } from './utils/redis-middleware.js'
+// import { ExpressPrometheusMiddleware } from '@matteodisabatino/express-prometheus-middleware'
+// import { initializeRedisConnection } from './utils/redis-middleware.js'
 
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
-app.use(new ExpressPrometheusMiddleware().handler)
+app.use(promMid({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.001, 0.002, 0.003, 0.005, 0.01, 0.05, 0.1, 0.2, 0.5, 0.7, 1],
+  requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+  responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400]
+}))
 
 
 // Logger

@@ -48,7 +48,7 @@ async function handleCacheRequest(objectType:string ,req: Request, res: Response
         })) {
             for(const key of keys) {
                 redisClient.del(key)
-                logger.info(`Deleting Redis key: ${key}`)
+                // logger.info(`Deleting Redis key: ${key}`)
             }
         }
         next()
@@ -64,7 +64,7 @@ async function getCacheData (url: string, res: Response, next: NextFunction) {
     const cachedData = await redisClient.get(url)
 
     if(cachedData) {
-        logger.info(`Data taken from cache : ${url}`)
+        // logger.info(`Data taken from cache : ${url}`)
         res.send(JSON.parse(cachedData))
         return
     } else {
@@ -73,7 +73,7 @@ async function getCacheData (url: string, res: Response, next: NextFunction) {
         res.send = (data): Response<any, Record<string, any>> => {
             res.send = oldSend
             if (res.statusCode.toString().startsWith("2")) {
-                logger.info(`New data saved to cache : ${url}`)
+                // logger.info(`New data saved to cache : ${url}`)
                 redisClient.set(url, data, 
                     {
                         EX:21600 // Save cache for 6h
