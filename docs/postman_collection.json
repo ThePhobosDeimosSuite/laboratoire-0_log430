@@ -8,6 +8,44 @@
 	},
 	"item": [
 		{
+			"name": "Sales-report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/store/5/sales-report",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"store",
+						"5",
+						"sales-report"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/dashboard",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get stock",
 			"request": {
 				"method": "GET",
@@ -331,6 +369,63 @@
 						"store",
 						"2",
 						"sales"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"cribbage\",\r\n    \"password\": \"jeu\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/account",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all account",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/account",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"account"
 					]
 				}
 			},
