@@ -97,36 +97,4 @@ export default class StocksService {
             }
         })
     }
-
-    async addOrder(productId: number, amount: number, shopId: number) {
-        await prisma.order.create({
-            data: {
-                amount,
-                shopId,
-                productId
-            }
-        })
-    }
-
-    async getOrder(shopId: number) {
-        return await prisma.order.findMany({
-            where:{
-                shopId
-            }
-            // include: {
-            //     product: true
-            // }
-        })
-    }
-
-    async removeOrder(productId: number, shopId: number) {
-        return await prisma.order.delete({
-            where: {
-                productId_shopId: {
-                    productId,
-                    shopId
-                }
-            }
-        })
-    }
 }
