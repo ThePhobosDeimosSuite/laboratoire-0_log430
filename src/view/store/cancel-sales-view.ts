@@ -1,22 +1,18 @@
-// import StoreEmployee from "../../controller/store-employee.js"
-// import { askNumber } from "../../utils/input-utils.js"
-// import businessView from "./store-view.js"
-// import terminalKit from "terminal-kit";
-// const { terminal } = terminalKit
+import { askNumber, headers } from "shared-utils";
+import businessView from "./store-view.js"
+import terminalKit from "terminal-kit";
+const { terminal } = terminalKit
 
 
-// export default async (shopId: number) => {
-//     terminal.clear()
+export default async (shopId: number) => {
+    terminal.clear()
 
-//     const id = await askNumber("Enter sales id:")
+    const id = await askNumber("Enter sales id:")
 
-//     await StoreEmployee.cancelSales(id, shopId)
-//     const res = await StoreEmployee.searchSales(id, shopId)
+    const url = new URL(process.env.KONG_URL)
+    url.pathname = `/api/store/${shopId}/sales/${id}`
 
-//     terminal.clear()
-//     terminal(JSON.stringify(res))
-        
-//     terminal.inputField((error, input) => {
-//         businessView(shopId)
-//     })
-// }
+    await fetch(url.toString(), { method: 'DELETE', headers: headers })
+
+    businessView(shopId)
+}

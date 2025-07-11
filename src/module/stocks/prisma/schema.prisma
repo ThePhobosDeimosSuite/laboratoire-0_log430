@@ -23,12 +23,4 @@ model Stock {
   @@id([productId, shopId])
 }
 
-model Order {
-  productId   Int
-  amount      Int
-  shopId      Int
-
-  @@id([productId, shopId])
-}
-
 

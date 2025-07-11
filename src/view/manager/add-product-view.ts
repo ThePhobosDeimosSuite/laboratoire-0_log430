@@ -1,7 +1,7 @@
 import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
 import mainBusinessView from './main-business-view.js'
-import { askNumber, askString } from "shared-utils";
+import { askNumber, askString, headers } from "shared-utils";
 
 export default async() => {
     terminal.clear()
@@ -12,6 +12,7 @@ export default async() => {
     await fetch(`${process.env.KONG_URL}/api/product`, {
         method: 'POST',
         headers: {
+            ...headers,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({

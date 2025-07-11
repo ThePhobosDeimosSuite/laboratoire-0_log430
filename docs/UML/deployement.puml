@@ -92,6 +92,11 @@ node "ShoppingCart Service"  {
     artifact "Prisma" as ShoppingCartPrisma
 }
 
+node "UI Service" {
+    artifact FetchAPI
+}
+
+    [FetchAPI] --> [Kong]
     [Kong] --> [ShoppingCartServer]
     [ShoppingCartServer] --> [ShoppingCartService]
     [ShoppingCartService] --> [Prometheus]

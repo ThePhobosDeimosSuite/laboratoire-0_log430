@@ -126,43 +126,6 @@ Add stocks for a specific store
     "amount": 5
 }
 ```
-
-## Get order
-Get the order for a specific store
-
-- `GET /api/store/{:storeId}/order`
-- Query params: 
-    - Pagination: **page, size, sort**
-
-#### Response 
-```json
-[
-    {
-        "productId": 1,
-        "amount": 10,
-        "shopId": 1,
-        "product": {
-            "id": 1,
-            "name": "concombre",
-            "price": 2,
-            "category": "légume"
-        }
-    }
-]
-```
-
-## Add order
-Add order for a specific store
-
-- `POST /api/store/{:storeId}/stock`
-
-#### Body
-```json
-{
-    "productId": 1,
-    "amount": 5
-}
-```
 # Product service
 ## Update product
 Update product

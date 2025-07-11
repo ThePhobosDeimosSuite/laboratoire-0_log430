@@ -2,7 +2,7 @@ import terminalKit from "terminal-kit";
 const { terminal } = terminalKit
 import businessView from "./store/store-view.js"
 import mainBusinessView from "./manager/main-business-view.js"
-// import supplyCenterView from "./supply-center/supply-center-view.js"
+import supplyCenterView from "./supply-center/supply-center-view.js"
 
 function menuView () {   
     terminal.clear()
@@ -23,7 +23,7 @@ function menuView () {
         if(Number(input) <= 1 || Number(input) <= 5) {
             businessView(Number(input))
         } else if (input == "6") {
-            // supplyCenterView()
+            supplyCenterView()
         } else if (input == "7") {
             mainBusinessView()
         } else {

@@ -15,11 +15,21 @@ Everything is packed together using Kong as the API gateway
 
 ## How to run
 
-#### Running using docker compose
+#### Running API
 - Run `docker compose build`
 - Run `docker compose up`
 - Grafana URL is : `http://localhost:3001`
 - Kong URL is : `http://localhost:8000`
+
+#### Running user interface
+- Build project `npm run build`
+- Build shared-utils 
+    - `cd /src/shared-utils`
+    - `npm run build`
+- Go back to root folder
+- Run `docker compose build`
+- Run `docker compose up`
+- Run `npm run start`
 
 #### Swagger
 Each service has a Swagger url:

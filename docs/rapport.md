@@ -8,6 +8,8 @@ Projet is available in production here : log430@10.194.32.176
 
 Run `docker compose build` and `docker compose up` in projet folder which is located at `~/lab0`
 
+The interface can be started with `npm run start`
+
 # Introduction and Goals
 
 ## Requirements Overview
@@ -72,22 +74,16 @@ package StocksMicroservice {
         + addStocks(productId: Number, amount: Number, storeId: Number): Void
         + getStocks(productId: Number, storeId: Number): Stock
         + decrementStocks(productId: Number, amount: Number, storeId: Number): Void
-        + addOrder(productId: Number, amount: Number, storeId: Number)
-        + getOrder(): Order
-    }
-    class Order {
-        amount: Number
-        storeId: Number
     }
 
     class Stock {
         amount: Number
         storeId: Number
+        productId: Number
     }
 }
 
 StocksService ..> Stock
-StocksService ..> Order
 
 
 package SalesMicroservice {
@@ -98,6 +94,7 @@ package SalesMicroservice {
     }
     class ProductSales {
         amount: Number
+        productId: Number
     }
 
     class Sales {
@@ -109,6 +106,7 @@ package SalesMicroservice {
 
 SalesService ..> ProductSales
 SalesService ..> Sales
+SalesService ..> StocksService
 
 package AccountMicroservice{
     class AccountService {
@@ -132,12 +130,14 @@ package ShoppingCartMicroservice {
     }
 
     class ProductSalesCart as "ProductSales" {
+        productId: Number
         amount: Number
     }
 
     class SalesCart as "Sales" {
         date: DateTime
         storeId: Number
+        clientId: Number
     }
 }
 
@@ -151,15 +151,6 @@ Sales "1" *-- "*" ProductSales
 
 SalesCart "1" *-- "*" ProductSalesCart
 
-ProductSalesCart "*" o-- "1" Product
-
-ProductSalesCart "0..1" o-- "1" Account
-
-ProductSales "*" o-- "1" Product
-
-Stock "*" o-- "1" Product
-
-Order "*" o-- "1" Product
 
 @enduml
 
@@ -259,6 +250,11 @@ node "ShoppingCart Service"  {
     artifact "Prisma" as ShoppingCartPrisma
 }
 
+node "UI Service" {
+    artifact FetchAPI
+}
+
+    [FetchAPI] --> [Kong]
     [Kong] --> [ShoppingCartServer]
     [ShoppingCartServer] --> [ShoppingCartService]
     [ShoppingCartService] --> [Prometheus]
@@ -282,6 +278,13 @@ skinparam defaultTextAlignment center
 
 package "API Gateway" {
   [Kong]
+}
+
+package "View" {
+    component "manager-views" as managerView
+    component "store-employee-views" as storeEmployeeView
+    component "supply-center-employee-views" as supplyCenterEmployeeView
+    component "main-menu-views" as mainMenuView
 }
 
 package "Monitoring" {
@@ -341,9 +344,15 @@ Prometheus --> ShoppingCart
 
 Grafana --> Prometheus
 
+mainMenuView --> storeEmployeeView
+mainMenuView --> managerView
+mainMenuView --> supplyCenterEmployeeView
+
+storeEmployeeView --> Kong
+managerView --> Kong
+supplyCenterEmployeeView --> Kong
+
 @enduml
-
-
 
 ---
 
